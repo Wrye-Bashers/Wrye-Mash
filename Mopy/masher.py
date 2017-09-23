@@ -62,18 +62,18 @@ settings = None
 # --Load config/defaults
 settingDefaults = {
     # --Morrowind Directory
-    'mwDir': r'C:\Program Files\Bethesda Softworks\Morrowind',
+    'mwDir'                                       : r'C:\Program Files\Bethesda Softworks\Morrowind',
     # --Wrye Mash
-    'mash.version': 0,
-    'mash.readme': (0, '0'),
-    'mash.framePos': (-1, -1),
-    'mash.frameSize': (600, 500),
-    'mash.frameSize.min': (400, 500),
-    'mash.page': 0,
+    'mash.version'                                : 0,
+    'mash.readme'                                 : (0, '0'),
+    'mash.framePos'                               : (-1, -1),
+    'mash.frameSize'                              : (600, 500),
+    'mash.frameSize.min'                          : (400, 500),
+    'mash.page'                                   : 0,
     # --Wrye Mash: Windows
-    'mash.window.sizes': {},
+    'mash.window.sizes'                           : {},
     # --Wrye Mash: Load Lists
-    'mash.loadLists.data': {
+    'mash.loadLists.data'                         : {
         'Bethesda ESMs': [
             'Morrowind.esm',
             'Tribunal.esm',
@@ -81,54 +81,56 @@ settingDefaults = {
         ],
     },
     # --Wrye Mash: Statistics
-    'mash.fileStats.cols': ['Type', 'Count', 'Size'],
-    'mash.fileStats.sort': 'Type',
-    'mash.fileStats.colReverse': {
+    'mash.fileStats.cols'                         : ['Type', 'Count', 'Size'],
+    'mash.fileStats.sort'                         : 'Type',
+    'mash.fileStats.colReverse'                   : {
         'Count': 1,
-        'Size': 1,
+        'Size' : 1,
     },
-    'mash.fileStats.colWidths': {
-        'Type': 50,
+    'mash.fileStats.colWidths'                    : {
+        'Type' : 50,
         'Count': 50,
-        'Size': 75,
+        'Size' : 75,
     },
-    'mash.fileStats.colAligns': {
+    'mash.fileStats.colAligns'                    : {
         'Count': 1,
-        'Size': 1,
+        'Size' : 1,
     },
     # --Installers
-    'bash.installers.page': 0,
-    'bash.installers.enabled': True,
-    'bash.installers.autoAnneal': True,
-    'bash.installers.fastStart': True,
-    'bash.installers.removeEmptyDirs': True,
-    'bash.installers.skipDistantLOD': False,
-    'bash.installers.sortProjects': True,
-    'bash.installers.sortActive': False,
-    'bash.installers.sortStructure': False,
-    'bash.installers.conflictsReport.showLower': True,
+    'bash.installers.page'                        : 0,
+    'bash.installers.enabled'                     : True,
+    'bash.installers.autoAnneal'                  : True,
+    'bash.installers.fastStart'                   : True,
+    'bash.installers.removeEmptyDirs'             : True,
+    'bash.installers.skipDistantLOD'              : False,
+    'bash.installers.sortProjects'                : True,
+    'bash.installers.sortActive'                  : False,
+    'bash.installers.sortStructure'               : False,
+    'bash.installers.conflictsReport.showLower'   : True,
     'bash.installers.conflictsReport.showInactive': False,
     # --Wrye Bash: Screens
-    'bash.screens.cols': ['File'],
-    'bash.screens.sort': 'File',
-    'bash.screens.colReverse': {
+    'bash.screens.cols'                           : ['File'],
+    'bash.screens.sort'                           : 'File',
+    'bash.screens.colReverse'                     : {
         'Modified': 1,
     },
-    'bash.screens.colWidths': {
-        'File': 150,
+    'bash.screens.colWidths'                      : {
+        'File'    : 150,
         'Modified': 150,
-        'Size': 75,
+        'Size'    : 75,
     },
-    'bash.screens.colAligns': {},
+    'bash.screens.colAligns'                      : {},
     # --Wrye Mash: Group and Rating
-    'mash.mods.groups': ['Body', 'Bethesda', 'Clothes', 'Creature', 'Fix',
+    'mash.mods.groups'                            : ['Body', 'Bethesda',
+        'Clothes', 'Creature', 'Fix',
         'Last', 'Test', 'Game', 'GFX', 'Location', 'Misc.', 'NPC', 'Quest',
         'Race', 'Resource', 'Sound'],
-    'mash.mods.ratings': ['+', '1', '2', '3', '4', '5', '=', '~'],
+    'mash.mods.ratings'                           : ['+', '1', '2', '3', '4',
+        '5', '=', '~'],
     # --Wrye Mash: RefRemovers
-    'mash.refRemovers.data': {
+    'mash.refRemovers.data'                       : {
     },
-    'mash.refRemovers.safeCells': [
+    'mash.refRemovers.safeCells'                  : [
         _("Balmora, Caius Cosades' House"),
         _("Indarys Manor"),
         _("Raven Rock, Factor's Estate"),
@@ -139,96 +141,98 @@ settingDefaults = {
         _("Tel Uvirith, Tower Upper"),
     ],
     # --Wrye Mash: RefReplacers
-    'mash.refReplacers.data': {
+    'mash.refReplacers.data'                      : {
     },
     # --Wrye Mash: Col (Sort) Names
-    'mash.colNames': {
-        'Author': _('Author'),
-        'Cell': _('Cell'),
-        'Count': _('Count'),
-        'Day': _('Day'),
-        'File': _('File'),
-        'Rating': _('Rating'),
-        'Group': _('Group'),
+    'mash.colNames'                               : {
+        'Author'    : _('Author'),
+        'Cell'      : _('Cell'),
+        'Count'     : _('Count'),
+        'Day'       : _('Day'),
+        'File'      : _('File'),
+        'Rating'    : _('Rating'),
+        'Group'     : _('Group'),
         'Load Order': _('Load Order'),
-        'Modified': _('Modified'),
-        'Num': _('Num'),
-        'Player': _('Player'),
-        'Rating': _('Rating'),
-        'Save Name': _('Save Name'),
-        'Size': _('Size'),
-        'Status': _('Status'),
-        'Type': _('Type'),
-        'Version': _('Version'),
+        'Modified'  : _('Modified'),
+        'Num'       : _('Num'),
+        'Player'    : _('Player'),
+        'Rating'    : _('Rating'),
+        'Save Name' : _('Save Name'),
+        'Size'      : _('Size'),
+        'Status'    : _('Status'),
+        'Type'      : _('Type'),
+        'Version'   : _('Version'),
     },
     # --Wrye Mash: Masters
-    'mash.masters.cols': ['File', 'Num'],
-    'mash.masters.esmsFirst': 1,
-    'mash.masters.selectedFirst': 0,
-    'mash.masters.sort': 'Load Order',
-    'mash.masters.colReverse': {},
-    'mash.masters.colWidths': {
+    'mash.masters.cols'                           : ['File', 'Num'],
+    'mash.masters.esmsFirst'                      : 1,
+    'mash.masters.selectedFirst'                  : 0,
+    'mash.masters.sort'                           : 'Load Order',
+    'mash.masters.colReverse'                     : {},
+    'mash.masters.colWidths'                      : {
         'File': 80,
-        'Num': 20,
+        'Num' : 20,
     },
-    'mash.masters.colAligns': {
+    'mash.masters.colAligns'                      : {
         'Num': 1,
     },
     # --Wrye Mash: Mod Notes
-    'mash.modNotes.show': False,
-    'mash.modNotes.size': (200, 300),
-    'mash.modNotes.pos': wx.DefaultPosition,
+    'mash.modNotes.show'                          : False,
+    'mash.modNotes.size'                          : (200, 300),
+    'mash.modNotes.pos'                           : wx.DefaultPosition,
     # --Wrye Mash: Mod Docs
-    'mash.modDocs.show': False,
-    'mash.modDocs.size': (300, 400),
-    'mash.modDocs.pos': wx.DefaultPosition,
-    'mash.modDocs.dir': None,
+    'mash.modDocs.show'                           : False,
+    'mash.modDocs.size'                           : (300, 400),
+    'mash.modDocs.pos'                            : wx.DefaultPosition,
+    'mash.modDocs.dir'                            : None,
     # --Wrye Mash: Mods
-    'mash.mods.cols': ['File', 'Rating', 'Group', 'Modified', 'Size', 'Author'],
-    'mash.mods.esmsFirst': 1,
-    'mash.mods.selectedFirst': 0,
-    'mash.mods.sort': 'File',
-    'mash.mods.colReverse': {},
-    'mash.mods.colWidths': {
-        'File': 200,
-        'Rating': 20,
-        'Group': 20,
-        'Rating': 20,
+    'mash.mods.cols'                              : ['File', 'Rating', 'Group',
+        'Modified', 'Size', 'Author'],
+    'mash.mods.esmsFirst'                         : 1,
+    'mash.mods.selectedFirst'                     : 0,
+    'mash.mods.sort'                              : 'File',
+    'mash.mods.colReverse'                        : {},
+    'mash.mods.colWidths'                         : {
+        'File'    : 200,
+        'Rating'  : 20,
+        'Group'   : 20,
+        'Rating'  : 20,
         'Modified': 150,
-        'Size': 75,
-        'Author': 100,
+        'Size'    : 75,
+        'Author'  : 100,
     },
-    'mash.mods.colAligns': {
+    'mash.mods.colAligns'                         : {
         'Size': 1,
     },
-    'mash.mods.renames': {},
+    'mash.mods.renames'                           : {},
     # --Wrye Mash: Journal
-    'mash.journal.show': False,
-    'mash.journal.size': (300, 400),
-    'mash.journal.pos': wx.DefaultPosition,
+    'mash.journal.show'                           : False,
+    'mash.journal.size'                           : (300, 400),
+    'mash.journal.pos'                            : wx.DefaultPosition,
     # --Wrye Mash: Save Sets
-    'mash.saves.sets': [],
+    'mash.saves.sets'                             : [],
     # --Wrye Mash: Saves
-    'mash.saves.cols': ['File', 'Modified', 'Size', 'Save Name', 'Player',
+    'mash.saves.cols'                             : ['File', 'Modified', 'Size',
+        'Save Name', 'Player',
         'Cell'],
-    'mash.saves.sort': 'Modified',
-    'mash.saves.colReverse': {
+    'mash.saves.sort'                             : 'Modified',
+    'mash.saves.colReverse'                       : {
         'Modified': 1,
     },
-    'mash.saves.colWidths': {
-        'File': 150,
-        'Modified': 150,
-        'Size': 75,
+    'mash.saves.colWidths'                        : {
+        'File'     : 150,
+        'Modified' : 150,
+        'Size'     : 75,
         'Save Name': 100,
-        'Player': 100,
-        'Cell': 150,
-        'Day': 30,
+        'Player'   : 100,
+        'Cell'     : 150,
+        'Day'      : 30,
     },
-    'mash.saves.colAligns': {
+    'mash.saves.colAligns'                        : {
         'Size': 1,
     },
     # --Wrye Mash: World Map Reapir
-    'mash.worldMap.gridLines': True,
+    'mash.worldMap.gridLines'                     : True,
 }
 
 
@@ -358,7 +362,7 @@ def LogMessage(parent, message, logText, title='', style=0, asDialog=True):
     else:
         window = wx.Frame(parent, -1, title, pos=pos, size=(200, 300),
             style=(
-            wx.RESIZE_BORDER | wx.CAPTION | wx.SYSTEM_MENU | wx.CLOSE_BOX | wx.CLIP_CHILDREN))
+                wx.RESIZE_BORDER | wx.CAPTION | wx.SYSTEM_MENU | wx.CLOSE_BOX | wx.CLIP_CHILDREN))
         window.SetIcons(images['mash.icons2'].GetIconBundle())
     window.SetSizeHints(200, 200)
     sizer = wx.BoxSizer(wx.VERTICAL)
@@ -507,39 +511,53 @@ class Checkboxes(balt.ImageList):
 installercons = balt.ImageList(16, 16)
 installercons.data.extend({
     # --Off/Archive
-    'off.green': Image(r'images/checkbox_green_off.png', wx.BITMAP_TYPE_PNG),
-    'off.grey': Image(r'images/checkbox_grey_off.png', wx.BITMAP_TYPE_PNG),
-    'off.red': Image(r'images/checkbox_red_off.png', wx.BITMAP_TYPE_PNG),
-    'off.white': Image(r'images/checkbox_white_off.png', wx.BITMAP_TYPE_PNG),
-    'off.orange': Image(r'images/checkbox_orange_off.png', wx.BITMAP_TYPE_PNG),
-    'off.yellow': Image(r'images/checkbox_yellow_off.png', wx.BITMAP_TYPE_PNG),
+    'off.green'     : Image(r'images/checkbox_green_off.png',
+        wx.BITMAP_TYPE_PNG),
+    'off.grey'      : Image(r'images/checkbox_grey_off.png',
+        wx.BITMAP_TYPE_PNG),
+    'off.red'       : Image(r'images/checkbox_red_off.png', wx.BITMAP_TYPE_PNG),
+    'off.white'     : Image(r'images/checkbox_white_off.png',
+        wx.BITMAP_TYPE_PNG),
+    'off.orange'    : Image(r'images/checkbox_orange_off.png',
+        wx.BITMAP_TYPE_PNG),
+    'off.yellow'    : Image(r'images/checkbox_yellow_off.png',
+        wx.BITMAP_TYPE_PNG),
     # --On/Archive
-    'on.green': Image(r'images/checkbox_green_inc.png', wx.BITMAP_TYPE_PNG),
-    'on.grey': Image(r'images/checkbox_grey_inc.png', wx.BITMAP_TYPE_PNG),
-    'on.red': Image(r'images/checkbox_red_inc.png', wx.BITMAP_TYPE_PNG),
-    'on.white': Image(r'images/checkbox_white_inc.png', wx.BITMAP_TYPE_PNG),
-    'on.orange': Image(r'images/checkbox_orange_inc.png', wx.BITMAP_TYPE_PNG),
-    'on.yellow': Image(r'images/checkbox_yellow_inc.png', wx.BITMAP_TYPE_PNG),
+    'on.green'      : Image(r'images/checkbox_green_inc.png',
+        wx.BITMAP_TYPE_PNG),
+    'on.grey'       : Image(r'images/checkbox_grey_inc.png',
+        wx.BITMAP_TYPE_PNG),
+    'on.red'        : Image(r'images/checkbox_red_inc.png', wx.BITMAP_TYPE_PNG),
+    'on.white'      : Image(r'images/checkbox_white_inc.png',
+        wx.BITMAP_TYPE_PNG),
+    'on.orange'     : Image(r'images/checkbox_orange_inc.png',
+        wx.BITMAP_TYPE_PNG),
+    'on.yellow'     : Image(r'images/checkbox_yellow_inc.png',
+        wx.BITMAP_TYPE_PNG),
     # --Off/Directory
-    'off.green.dir': Image(r'images/diamond_green_off.png', wx.BITMAP_TYPE_PNG),
-    'off.grey.dir': Image(r'images/diamond_grey_off.png', wx.BITMAP_TYPE_PNG),
-    'off.red.dir': Image(r'images/diamond_red_off.png', wx.BITMAP_TYPE_PNG),
-    'off.white.dir': Image(r'images/diamond_white_off.png', wx.BITMAP_TYPE_PNG),
+    'off.green.dir' : Image(r'images/diamond_green_off.png',
+        wx.BITMAP_TYPE_PNG),
+    'off.grey.dir'  : Image(r'images/diamond_grey_off.png', wx.BITMAP_TYPE_PNG),
+    'off.red.dir'   : Image(r'images/diamond_red_off.png', wx.BITMAP_TYPE_PNG),
+    'off.white.dir' : Image(r'images/diamond_white_off.png',
+        wx.BITMAP_TYPE_PNG),
     'off.orange.dir': Image(r'images/diamond_orange_off.png',
         wx.BITMAP_TYPE_PNG),
     'off.yellow.dir': Image(r'images/diamond_yellow_off.png',
         wx.BITMAP_TYPE_PNG),
     # --On/Directory
-    'on.green.dir': Image(r'images/diamond_green_inc.png', wx.BITMAP_TYPE_PNG),
-    'on.grey.dir': Image(r'images/diamond_grey_inc.png', wx.BITMAP_TYPE_PNG),
-    'on.red.dir': Image(r'images/diamond_red_inc.png', wx.BITMAP_TYPE_PNG),
-    'on.white.dir': Image(r'images/diamond_white_inc.png', wx.BITMAP_TYPE_PNG),
-    'on.orange.dir': Image(r'images/diamond_orange_inc.png',
+    'on.green.dir'  : Image(r'images/diamond_green_inc.png',
         wx.BITMAP_TYPE_PNG),
-    'on.yellow.dir': Image(r'images/diamond_yellow_inc.png',
+    'on.grey.dir'   : Image(r'images/diamond_grey_inc.png', wx.BITMAP_TYPE_PNG),
+    'on.red.dir'    : Image(r'images/diamond_red_inc.png', wx.BITMAP_TYPE_PNG),
+    'on.white.dir'  : Image(r'images/diamond_white_inc.png',
+        wx.BITMAP_TYPE_PNG),
+    'on.orange.dir' : Image(r'images/diamond_orange_inc.png',
+        wx.BITMAP_TYPE_PNG),
+    'on.yellow.dir' : Image(r'images/diamond_yellow_inc.png',
         wx.BITMAP_TYPE_PNG),
     # --Broken
-    'corrupt': Image(r'images/red_x.png', wx.BITMAP_TYPE_PNG),
+    'corrupt'       : Image(r'images/red_x.png', wx.BITMAP_TYPE_PNG),
 }.items())
 
 
@@ -1013,7 +1031,7 @@ class MasterList(List):
             if newName not in self.newMasters:
                 self.newMasters.append(newName)
             if (oldName in self.newMasters) and (
-            not self.getMasterInfos(oldName)):
+                not self.getMasterInfos(oldName)):
                 self.newMasters.remove(oldName)
             if newName not in self.allMasters:
                 self.allMasters.append(newName)
@@ -1070,7 +1088,7 @@ class MasterList(List):
         newIndex = self.newMasters.index(masterName)
         mwIniLoadOrder = mosh.mwIniFile.loadOrder
         if (not self.edited) and (
-            newIndex != self.oldMasters.index(masterName)):
+                newIndex != self.oldMasters.index(masterName)):
             return 20
         elif status > 0 or self.fileIsMod:
             return status
@@ -1878,7 +1896,7 @@ class ModPanel(NotebookPanel):
     def SetStatusCount(self):
         """Sets mod count in last field."""
         text = _("Mods: %d/%d") % (
-        len(mosh.mwIniFile.loadFiles), len(mosh.modInfos.data))
+            len(mosh.mwIniFile.loadFiles), len(mosh.modInfos.data))
         statusBar.SetStatusText(text, 2)
 
     def OnSize(self, event):
@@ -2900,8 +2918,8 @@ class MashFrame(wx.Frame):
         # --Was load list too long?
         if mosh.mwIniFile.loadFilesExtra:
             message = (
-            _("Load list has been truncated because it was too long. (%s)")
-            % (', '.join(mosh.mwIniFile.loadFilesExtra),))
+                _("Load list has been truncated because it was too long. (%s)")
+                % (', '.join(mosh.mwIniFile.loadFilesExtra),))
             mosh.mwIniFile.safeSave()
             WarningMessage(self, message)
         # --Any new corrupted files?
@@ -3148,7 +3166,7 @@ class DocBrowser(wx.Frame):
         os.rename(oldPath, path)
         if self.docIsWtxt:
             oldHtml, newHtml = (os.path.splitext(xxx)[0] + '.html' for xxx in
-            (oldPath, path))
+                (oldPath, path))
             if os.path.exists(newHtml):
                 os.remove(newHtml)
             if os.path.exists(oldHtml):
@@ -3219,7 +3237,7 @@ class DocBrowser(wx.Frame):
                 template = ''.join(open(mashTemplate).readlines())
             else:
                 template = '= $modName ' + (
-                '=' * (74 - len(modName))) + '#\n' + docPath
+                    '=' * (74 - len(modName))) + '#\n' + docPath
             defaultText = string.Template(template).substitute(modName=modName)
             self.plainText.SetValue(defaultText)
             self.SetDocType('txt')
@@ -3239,7 +3257,7 @@ class DocBrowser(wx.Frame):
             self.plainText.SetEditable(editing)
             self.docIsWtxt = self.GetIsWtxt(docPath)
             htmlPath = self.docIsWtxt and (
-            os.path.splitext(docPath)[0] + '.html')
+                os.path.splitext(docPath)[0] + '.html')
             if htmlPath and (not os.path.exists(htmlPath) or
                 (os.path.getmtime(docPath) > os.path.getmtime(htmlPath))
             ):
@@ -3699,7 +3717,7 @@ class File_Duplicate(Link):
         fileInfo = self.window.data[fileName]
         (root, ext) = os.path.splitext(fileName)
         (destDir, destName, wildcard) = (
-        fileInfo.dir, root + ' Copy' + ext, '*' + ext)
+            fileInfo.dir, root + ' Copy' + ext, '*' + ext)
         if not os.path.exists(destDir):
             os.makedirs(destDir)
         dialog = wx.FileDialog(self.window, _('Duplicate as:'), destDir,
@@ -4368,7 +4386,7 @@ class File_Replace_Refs:
                 else:
                     ErrorMessage(self.window,
                         _("Source mod %s is not in Data Files folder.") % (
-                        srcModName,))
+                            srcModName,))
                     return
             log.setHeader(_("Source Mod"))
             log(srcModName or _("None"))
@@ -4590,7 +4608,7 @@ class File_Stats(Link):
         fileInfo.getStats()
         frame = wx.Frame(self.window, -1, fileName, size=(200, 300),
             style=(
-            wx.RESIZE_BORDER | wx.CAPTION | wx.SYSTEM_MENU | wx.CLOSE_BOX | wx.CLIP_CHILDREN))
+                wx.RESIZE_BORDER | wx.CAPTION | wx.SYSTEM_MENU | wx.CLOSE_BOX | wx.CLIP_CHILDREN))
         frame.SetIcons(images['mash.icons2'].GetIconBundle())
         sizer = wx.BoxSizer(wx.VERTICAL)
         sizer.Add(File_StatsList(frame, fileInfo.stats), 1, wx.EXPAND)
@@ -4913,7 +4931,7 @@ class Installer_Duplicate(InstallerLink):
             curName).isfile() and curName.cext != newName.cext:
             balt.ShowWarning(self.gTank,
                 _("%s does not have correct extension (%s).") % (
-                newName.s, curName.ext))
+                    newName.s, curName.ext))
             return
         # --Duplicate
         try:
@@ -4953,7 +4971,7 @@ class Installer_HasExtraData(InstallerLink):
 class Installer_Install(InstallerLink):
     """Install selected packages."""
     mode_title = {'DEFAULT': _('Install'), 'LAST': _('Install Last'),
-        'MISSING': _('Install Missing')}
+        'MISSING'          : _('Install Missing')}
 
     def __init__(self, mode='DEFAULT'):
         Link.__init__(self)
@@ -6252,7 +6270,7 @@ class Saves_ProfilesData(ListEditorData):
             return False
         # --Rename
         oldDir, newDir = (os.path.join(self.hidden, dir) for dir in
-        (oldName, newName))
+            (oldName, newName))
         os.rename(oldDir, newDir)
         if oldName == settings['mash.profile']:
             settings['mash.profile'] = newName
@@ -6274,7 +6292,7 @@ class Saves_ProfilesData(ListEditorData):
         if files:
             message = _(
                 'Delete profile %s and the %d save files it contains?') % (
-                      profile, len(files))
+                          profile, len(files))
             if WarningQuery(self.parent, message,
                 _('Delete Profile')) != wx.ID_YES:
                 return False
@@ -6346,7 +6364,7 @@ class Saves_Profiles:
         progress = None
         arcFiles = sorted(mosh.saveInfos.data)
         srcFiles = sorted(name for name in os.listdir(srcDir) if
-        (len(name) > 5 and name[-4:].lower() == '.ess'))
+            (len(name) > 5 and name[-4:].lower() == '.ess'))
         arcCount, srcCount = len(arcFiles), len(srcFiles)
         if (arcCount + srcCount) == 0:
             return
@@ -6478,8 +6496,8 @@ class Save_LoadMasters(Link):
         # --Missing masters?
         if missing:
             message = (
-            _('Please update masters to correct for missing masters (%s).')
-            % (','.join(missing),))
+                _('Please update masters to correct for missing masters (%s).')
+                % (','.join(missing),))
             WarningMessage(self.window, message)
 
 
@@ -6679,7 +6697,7 @@ class Save_RepairAll(Link):
             cntLists = worldRefs.removeOverLists(fileRefs)
             # --No problems?
             if not (
-                                cntRepaired or cntDeleted or cntUnnamed or cntDebris or cntOrphans or cntLists):
+                                    cntRepaired or cntDeleted or cntUnnamed or cntDebris or cntOrphans or cntLists):
                 progress = progress.Destroy()
                 InfoMessage(self.window, _("No problems found!"))
                 return
@@ -6689,8 +6707,9 @@ class Save_RepairAll(Link):
             message = (_("Objects repaired: %d.\nObjects deleted: %d.") %
                        (cntRepaired, cntDeleted))
             message += (
-            _("\nDebris records deleted: %d.\nOrphan contents deleted: %d.") %
-            (cntDebris, cntOrphans))
+                _(
+                    "\nDebris records deleted: %d.\nOrphan contents deleted: %d.") %
+                (cntDebris, cntOrphans))
             message += (_("\nOverriding lists deleted: %d.") % (cntLists,))
             LogMessage(self.window, message, log.out.getvalue(), caption)
         # --Done
@@ -6984,8 +7003,8 @@ class Screens_NextScreenShot(Link):
         newBase, newNext = maPattern.groups()
         settings = {LString('General'): {
             LString('Screen Shot Base Name'): newBase,
-            LString('Screen Shot Index'): (newNext or next),
-            LString('Screen Shot Enable'): '1',
+            LString('Screen Shot Index')    : (newNext or next),
+            LString('Screen Shot Enable')   : '1',
         }}
         screensDir = GPath(newBase).head
         if screensDir:
