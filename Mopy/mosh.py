@@ -33,8 +33,7 @@ import struct
 import sys
 
 import bolt
-from bolt import BoltError
-from bolt import LString, GPath, Flags, DataDict, SubProgress
+from bolt import BoltError, LString, GPath, Flags, DataDict, SubProgress
 
 import mush
 
