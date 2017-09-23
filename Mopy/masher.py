@@ -2,9 +2,8 @@
 # --Localization
 # ..Handled by mosh, so import that.
 import mosh
-from mosh import _
-from mosh import AbstractError, ArgumentError, StateError, UncodedError
-from mosh import formatInteger, formatDate
+from mosh import _, AbstractError, ArgumentError, StateError, UncodedError, \
+    formatInteger, formatDate
 
 bosh = mosh  # --Cheap compatibility for imported code.
 
