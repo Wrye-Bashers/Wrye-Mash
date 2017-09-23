@@ -1350,8 +1350,7 @@ class Cell(Record):
                 # --New Record?
                 else:
                     if size != 4:
-                        raise Tes3SizeError(self.inName, 'CELL.FRMR', size, 4,
-                            True)
+                        raise Tes3SizeError(self.inName, 'CELL.FRMR', size, 4, True)
                     rawData = ins.read(4, 'CELL.FRMR')
                     iMod = struct.unpack('3xB', rawData)[0]
                     iObj = struct.unpack('i', rawData[:3] + '\x00')[0]
@@ -1432,7 +1431,7 @@ class Cell(Record):
                 self.endRecords.append(SubRecord(name, size, ins))
                 bytesRead += 8 + size
                 # print ' ',name,size
-                # print ' ',name,size
+            # print ' ',name,size
         # --Nam0 miscount?
         if nam0 != len(self.tempObjects):
             self.setChanged()
@@ -1590,8 +1589,7 @@ class Dial(Record):
         infosById = {}
         for info in self.infos:
             if info.id == None:
-                raise Tes3Error(self.inName,
-                    _('Dialog %s: info with missing id.') % (self.id,))
+                raise Tes3Error(self.inName, _('Dialog %s: info with missing id.') % (self.id,))
             infosById[info.id] = info
         # --Heads
         heads = []
@@ -2316,8 +2314,7 @@ class Tes3(Record):
         while bytesRead < self.size:
             (name, size) = ins.unpackSubHeader('TES3')
             if size > MAX_SUB_SIZE:
-                raise Tes3SizeError(self.inName, name, size, -MAX_SUB_SIZE,
-                    True)
+                raise Tes3SizeError(self.inName, name, size, -MAX_SUB_SIZE, True)
             # --Masters
             if name == 'MAST':
                 # --FileName
@@ -3199,13 +3196,13 @@ class ResourceReplacer:
     # --Class data
     textureExts = set(['.dds', '.tga', '.bmp'])
     dirExts = {
-        'bookart': textureExts,
-        'fonts': set(['.fnt', '.tex']),
-        'icons': textureExts,
-        'meshes': set(['.nif', '.kf']),
-        'music': set(['.mp3']),
-        'sound': set(['.wav']),
-        'splash': textureExts,
+        'bookart' : textureExts,
+        'fonts'   : set(['.fnt', '.tex']),
+        'icons'   : textureExts,
+        'meshes'  : set(['.nif', '.kf']),
+        'music'   : set(['.mp3']),
+        'sound'   : set(['.wav']),
+        'splash'  : textureExts,
         'textures': textureExts,
     }
 
@@ -5587,7 +5584,7 @@ class FileRefs(FileRep):
                         if objId != objIdBase:
                             # print 'Mismatch:',object[:3]
                             pass
-                            # --Deleted object?
+                        # --Deleted object?
                         elif newIObj == -1:
                             # print 'Deleted',object[:3]
                             objects.remove(object)
@@ -5879,8 +5876,7 @@ class WorldRefs:
         cumSize = 0
         for (masterName, size) in proItems:
             if size:
-                self.progress.setBaseScale(1.0 * cumSize / totSize,
-                    1.0 * size / totSize)
+                self.progress.setBaseScale(1.0 * cumSize / totSize, 1.0 * size / totSize)
             self.addMaster(masterName)
             cumSize += size
 
@@ -5969,8 +5965,7 @@ class WorldRefs:
         # --Done
         return masterMap
 
-        # --Repair ---------------------------------------------
-
+    # --Repair ---------------------------------------------
     def removeDebrisCells(self, fileRefs):
         """Removes debris cells -- cells that are not supported by any of the master files."""
         # --Make sure fileRefs for a save file!
@@ -6876,8 +6871,7 @@ class ScheduleGenerator:
         # --Functions/Translators
         replDef = lambda a: defs[a.group(1)]
         # --0: awake, 1: sleep+trespass, 2: sleep 3: dim trespass
-        sleepStates = {'=': None, '-': 0, '+': 1, '*': 2, '^': 3, '~': 4,
-            'x': 5}
+        sleepStates = {'=': None, '-': 0, '+': 1, '*': 2, '^': 3, '~': 4, 'x': 5}
         # --Log
         header = os.path.split(fileName)[-1]
         if len(header) < 70:
