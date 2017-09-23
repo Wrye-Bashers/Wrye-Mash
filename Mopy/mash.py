@@ -1,8 +1,10 @@
 # Imports ---------------------------------------------------------------------
 import sys
-#--Force wxversion for Python 2.4
+
+# --Force wxversion for Python 2.4
 if sys.version[:3] == '2.4':
     import wxversion
+
     wxversion.select("2.5.3.1")
 import masher
 
