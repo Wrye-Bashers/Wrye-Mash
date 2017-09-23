@@ -831,7 +831,7 @@
 <h2><a name='Doubling'>Doubling</a></h2>
 <h3><a name='DoublingTheory'>Doubling Theory</a></h3>
 <p class=list-1>&bull;&nbsp; <B><I>Full Explanation</I></B> 
-  <p class=list-2>&bull;&nbsp; What follows is an extremely abridged summary of the long answer given in <a href="http://wrye.ufrealms.net/Wrye%20Mash.html"">Wrye Matching</a>.
+  <p class=list-2>&bull;&nbsp; What follows is an extremely abridged summary of the long answer given in <a href="http://wrye.ufrealms.net/Wrye%20Mash.html">Wrye Matching</a>.
 <p class=list-1>&bull;&nbsp; <B><I>Background: Reference Ids</I></B> 
   <p class=list-2>&bull;&nbsp; So, you start Morrowind, load your last saved game, and find yourself in Balmora. There on the bridge is the same MCA character. There at your feet is the potion that you just dropped. Over there is the door that you opened. And it occurs to you... How does Morrowind keep track of all this stuff? How does it know <I>this</I> potion is supposed to be here? How does it know <I>that</I> door needs to be open?
   <p class=list-2>&bull;&nbsp; The answer is <B><I>reference ids</I></B> &#150 every object that you see in the game world has an unique numerical id attached to it, defining it. When you load a set of mods (as you do when Morrowind starts up), Morrowind first recreates the world in a "virgin" (i.e. unchanged state). Then, when you load a savegame, it reapplies all the changes that you made &#150 killing bandits, filling quests, opening doors, moving NPCs, etc. It makes those changes by matching the reference ids stored in the savegame against the reference ids as calculated for the virgin gameworld (i.e. for the the set of loaded mods).
