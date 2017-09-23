@@ -12,26 +12,22 @@ class Callables:
         self.callObjs = {}
         self.callHelp = {}
 
-        # --Add a callable
-
+    # --Add a callable
     def add(self, callKey, callObj, callHelp=''):
         self.callObjs[callKey] = callObj
         self.callHelp[callKey] = callHelp
 
-        # --Help
-
+    # --Help
     def help(self, callKey):
         raise "Undefined."
 
-        # --List
-
+    # --List
     def list(self):
         for key in self.callObjs.keys():
             print ' ', key, sel
         raise "Undefined."
 
-        # --Main
-
+    # --Main
     def main(self):
         callObjs = self.callObjs
         # --Call key, tail
@@ -42,17 +38,17 @@ class Callables:
         if callKey == '-h':
             self.help()
             sys.exit(0)
-            # --Not have key?
+        # --Not have key?
         if not callObjs.has_key(callKey):
             print "Unknown function/object:", callKey
             return
-            # --Callable
+        # --Callable
         callObj = callObjs[callKey]
         if type(callObj) == types.StringType:
             callObj = eval(callObj)
         if callTail:
             callObj = eval('callObj.' + callTail)
-            # --Args
+        # --Args
         args = sys.argv[2:]
         # --Keywords?
         keywords = {}
@@ -72,7 +68,7 @@ class Callables:
                 del args[argDex]
             else:
                 argDex = argDex + 1
-                # --Apply
+        # --Apply
         apply(callObj, args, keywords)
 
 
