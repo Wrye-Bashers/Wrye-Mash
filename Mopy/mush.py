@@ -67,61 +67,61 @@ SPLM +
 """
 
 # Installer -------------------------------------------------------------------
-bethDataFiles = set((
-    #--Vanilla
+bethDataFiles = {
+    # --Vanilla
     'morrowind.esm',
     'tribunal.esm',
     'bloodmoon.esm',
     'morrowind.bsa',
     'tribunal.bsa',
     'bloodmoon.bsa',
-    ))
+}
 
 # Game Info ===================================================================
 # Skill Related
 
 primaryAttributes = (
-"Agility",
-"Endurance",
-"Intelligence",
-"Personality",
-"Speed",
-"Strength",
-"Willpower",
-"Luck",
+    "Agility",
+    "Endurance",
+    "Intelligence",
+    "Personality",
+    "Speed",
+    "Strength",
+    "Willpower",
+    "Luck",
 )
 combatSkills = (
-"Armorer",
-"Athletics",
-"Axe",
-"Block",
-"Blunt Weapon",
-"Heavy Armor",
-"Long Blade",
-"Medium Armor",
-"Spear",
+    "Armorer",
+    "Athletics",
+    "Axe",
+    "Block",
+    "Blunt Weapon",
+    "Heavy Armor",
+    "Long Blade",
+    "Medium Armor",
+    "Spear",
 )
 magicSkills = (
-"Alchemy",
-"Alteration",
-"Conjuration",
-"Destruction",
-"Enchant",
-"Illusion",
-"Mysticism",
-"Restoration",
-"Unarmored",
+    "Alchemy",
+    "Alteration",
+    "Conjuration",
+    "Destruction",
+    "Enchant",
+    "Illusion",
+    "Mysticism",
+    "Restoration",
+    "Unarmored",
 )
 stealthSkills = (
-"Acrobatics",
-"Hand To Hand",
-"Light Armor",
-"Marksman",
-"Mercantile",
-"Security",
-"Short Blade",
-"Sneak",
-"Speechcraft",
+    "Acrobatics",
+    "Hand To Hand",
+    "Light Armor",
+    "Marksman",
+    "Mercantile",
+    "Security",
+    "Short Blade",
+    "Sneak",
+    "Speechcraft",
 )
 
 # Wrye Level Set ==============================================================
