@@ -2,7 +2,7 @@
 # Record Types/Order
 # - Used for record sorting.
 # - Order increment flags:
-#   + increment order by 1 
+#   + increment order by 1
 #   . don't increment order
 recordTypes = """
 TES3 +
@@ -211,7 +211,7 @@ if ( onActivate )
     if ( menuMode == 0 )
         activate
     endif
-    return  
+    return
 elseif ( action != lib_action )
     ;pass
 elseif ( disabled != ${libId}G )
@@ -404,8 +404,8 @@ s01:  0  5 20 40 15 60  0 10
 s02:  0 15 15 20 10 40  0 25
 
 i00:  0  5  5  5 10 10
-i10:  0 10 60 20 10 10 
-i30:  0 30 10 10 
+i10:  0 10 60 20 10 10
+i30:  0 30 10 10
 i31:  0 30 20 30 30  0 15 15 # fidget/heartburn
 i40:  0 40 20 10 10
 i40a: 0 40 20 10 10  0 20 # fidget
@@ -426,10 +426,10 @@ i60:  0 60 20 10
 i61:  0 60 20 10  0 10
 i62:  0 60 20 10 10
 i62a: 0 60 20 10 10  0 10
-i63:  0 60 20 10 10  0  0 10 
+i63:  0 60 20 10 10  0  0 10
 i63a: 0 60 20 10 10  0  0 10 10 #heart/weaps
 i63b: 0 60 20 10 10  0  0  0 10 #weap
-i64:  0 60 20 10 10 10 
+i64:  0 60 20 10 10 10
 i65:  0 60 20 20 10
 i65a: 0 60 20 20 20
 i66:  0 60 20 20 10 10
