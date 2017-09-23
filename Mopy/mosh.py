@@ -52,9 +52,9 @@ settings = None
 # --Default settings
 settingDefaults = {
     'mosh.modInfos.resetMTimes': 0,
-    'mosh.modInfos.objectMaps': r'Mash\ObjectMaps.pkl',
-    'mosh.fileInfo.backupDir': r'Mash\Backups',
-    'mosh.fileInfo.hiddenDir': r'Mash\Hidden',
+    'mosh.modInfos.objectMaps' : r'Mash\ObjectMaps.pkl',
+    'mosh.fileInfo.backupDir'  : r'Mash\Backups',
+    'mosh.fileInfo.hiddenDir'  : r'Mash\Hidden',
     'mosh.fileInfo.snapshotDir': r'Mash\Snapshots',
 }
 
