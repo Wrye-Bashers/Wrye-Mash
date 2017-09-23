@@ -16,10 +16,10 @@ import mush
 
 # ------------------------------------------------------------------------------
 class Callables:
-    """A singleton set of objects (typically functions or class instances) that 
-    can be called as functions from the command line. 
-    
-    Functions are called with their arguments, while object instances are called 
+    """A singleton set of objects (typically functions or class instances) that
+    can be called as functions from the command line.
+
+    Functions are called with their arguments, while object instances are called
     with their method and then their functions. E.g.:
     * bish afunction arg1 arg2 arg3
     * bish anInstance.aMethod arg1 arg2 arg3"""
@@ -31,12 +31,12 @@ class Callables:
 
     # --Add a callable
     def add(self, callObj, callKey=None):
-        """Add a callable object. 
-        
+        """Add a callable object.
+
         callObj:
-            A function or class instance. 
-        callKey: 
-            Name by which the object will be accessed from the command line. 
+            A function or class instance.
+        callKey:
+            Name by which the object will be accessed from the command line.
             If callKey is not defined, then callObj.__name__ is used."""
         callKey = callKey or callObj.__name__
         self.callObjs[callKey] = callObj
@@ -313,7 +313,7 @@ def genHtml(fileName):
         raise "Unrecognized file type: " + ext
 
 
-# Translation -----------------------------------------------------------------
+# Translation ------------------------------------------------------------------
 @mainFunction
 def getTranslatorName():
     """Prints locale."""
@@ -354,7 +354,7 @@ def dumpTranslator():
     print keyCount, 'translation keys written to', outPath
 
 
-# Testing ---------------------------------------------------------------------
+# Testing ----------------------------------------------------------------------
 def init(initLevel):
     """Initializes mosh environment to specified level.
     initLevels:
@@ -409,7 +409,7 @@ def fileRefs_testWrite(fileName):
             pass
 
 
-# Information -----------------------------------------------------------------
+# Information ------------------------------------------------------------------
 @mainFunction
 def refInfo(fileName, forMods=-1, forCellId=None):
     """Prints reference info for specified file."""
@@ -435,7 +435,7 @@ def refInfo(fileName, forMods=-1, forCellId=None):
             print ' ', object[:3], master
 
 
-# Misc. -----------------------------------------------------------------------
+# Misc. ------------------------------------------------------------------------
 # --Library Generator
 @mainFunction
 def genLibrary(modName, textName):
@@ -502,7 +502,7 @@ def fixFix(fileName):
         fileDials.safeSave()
 
 
-# Edit Plus Text Editors ------------------------------------------------------
+# Edit Plus Text Editors -------------------------------------------------------
 def lcvNightSort():
     """TextMunch: Sort LCV evening/night schedule cells, ignoring sleep state setting."""
     import sys
@@ -596,12 +596,12 @@ def etxtToWtxt(fileName=None):
 
 @mainFunction
 def textMunch(fileName=None):
-    """TextMunch: This is a standin for EditPlus Text munching. It should just 
+    """TextMunch: This is a standin for EditPlus Text munching. It should just
     call whatever text muncher is currently being used."""
     etxtToWtxt(fileName)
 
 
-# Temp ------------------------------------------------------------------------
+# Temp -------------------------------------------------------------------------
 # --Temp
 @mainFunction
 def temp(fileName):
