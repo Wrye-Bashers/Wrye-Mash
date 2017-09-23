@@ -235,7 +235,7 @@ def setCheckListItems(gList, names, values):
 
 # Elements --------------------------------------------------------------------
 def bell(arg=None):
-    """"Rings the system bell and returns the input argument (useful for return bell(value))."""
+    """Rings the system bell and returns the input argument (useful for return bell(value))."""
     wx.Bell()
     return arg
 
@@ -485,8 +485,7 @@ def askOk(parent, message, title=''):
 
 def askYes(parent, message, title='', default=True):
     """Shows a modal warning message."""
-    style = wx.YES_NO | wx.ICON_EXCLAMATION | (
-        (wx.NO_DEFAULT, wx.YES_DEFAULT)[default])
+    style = wx.YES_NO | wx.ICON_EXCLAMATION | ((wx.NO_DEFAULT, wx.YES_DEFAULT)[default])
     return askStyled(parent, message, title, style)
 
 
@@ -550,8 +549,7 @@ def showLog(parent, logText, title='', style=0, asDialog=True, fixedFont=False,
             style=wx.DEFAULT_DIALOG_STYLE | wx.RESIZE_BORDER)
     else:
         window = wx.Frame(parent, defId, title, pos=pos, size=size,
-            style=(
-                wx.RESIZE_BORDER | wx.CAPTION | wx.SYSTEM_MENU | wx.CLOSE_BOX | wx.CLIP_CHILDREN))
+            style=(wx.RESIZE_BORDER | wx.CAPTION | wx.SYSTEM_MENU | wx.CLOSE_BOX | wx.CLIP_CHILDREN))
         if icons:
             window.SetIcons(icons)
     window.SetSizeHints(200, 200)
@@ -600,8 +598,7 @@ def showWryeLog(parent, logText, title='', style=0, asDialog=True, icons=None):
             style=wx.DEFAULT_DIALOG_STYLE | wx.RESIZE_BORDER)
     else:
         window = wx.Frame(parent, defId, title, pos=pos, size=size,
-            style=(
-                wx.RESIZE_BORDER | wx.CAPTION | wx.SYSTEM_MENU | wx.CLOSE_BOX | wx.CLIP_CHILDREN))
+            style=(wx.RESIZE_BORDER | wx.CAPTION | wx.SYSTEM_MENU | wx.CLOSE_BOX | wx.CLIP_CHILDREN))
         if icons:
             window.SetIcons(icons)
     window.SetSizeHints(200, 200)
@@ -779,8 +776,7 @@ class ListEditor(wx.Dialog):
         # --Infobox
         if data.showInfo:
             self.gInfoBox = wx.TextCtrl(self, -1, " ", size=(130, -1),
-                style=(
-                          self.data.infoReadOnly * wx.TE_READONLY) | wx.TE_MULTILINE | wx.SUNKEN_BORDER)
+                style=(self.data.infoReadOnly * wx.TE_READONLY) | wx.TE_MULTILINE | wx.SUNKEN_BORDER)
             if not self.data.infoReadOnly:
                 self.gInfoBox.Bind(wx.EVT_TEXT, self.OnInfoEdit)
         else:
@@ -965,8 +961,7 @@ class Picture(wx.Window):
         if not bitmap:
             return
         imgWidth, imgHeight = bitmap.GetWidth(), bitmap.GetHeight()
-        if self.scaling == 2 or (self.scaling == 1 and (
-                    imgWidth > picWidth or imgHeight > picHeight)):
+        if self.scaling == 2 or (self.scaling == 1 and (imgWidth > picWidth or imgHeight > picHeight)):
             image = bitmap.ConvertToImage()
             factor = min(1.0 * picWidth / imgWidth, 1.0 * picHeight / imgHeight)
             newWidth, newHeight = int(factor * imgWidth), int(
@@ -1017,8 +1012,7 @@ class Progress(bolt.Progress):
         if not self.dialog:
             raise StateError(_('Dialog already destroyed.'))
         elif (state == 0 or state == 1 or (message != self.prevMessage) or
-                (state - self.prevState) > 0.05 or (
-                time.time() - self.prevTime) > 0.5):
+                (state - self.prevState) > 0.05 or (time.time() - self.prevTime) > 0.5):
             if message != self.prevMessage:
                 self.dialog.Update(int(state * 100), message)
             else:
@@ -1536,8 +1530,7 @@ class Tank_Duplicate(Link):
         srcDir = self.data.dir
         srcName = self.selected[0]
         (root, ext) = srcName.rootExt
-        (destDir, destName, wildcard) = (
-            srcDir, root + ' Copy' + ext, '*' + ext)
+        (destDir, destName, wildcard) = (srcDir, root + ' Copy' + ext, '*' + ext)
         destPath = askSave(self.gTank, _('Duplicate as:'), destDir, destName,
             wildcard)
         if not destPath:
