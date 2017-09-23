@@ -122,9 +122,8 @@ settingDefaults = {
     'bash.screens.colAligns'                      : {},
     # --Wrye Mash: Group and Rating
     'mash.mods.groups'                            : ['Body', 'Bethesda',
-        'Clothes', 'Creature', 'Fix',
-        'Last', 'Test', 'Game', 'GFX', 'Location', 'Misc.', 'NPC', 'Quest',
-        'Race', 'Resource', 'Sound'],
+        'Clothes', 'Creature', 'Fix', 'Last', 'Test', 'Game', 'GFX', 'Location',
+        'Misc.', 'NPC', 'Quest', 'Race', 'Resource', 'Sound'],
     'mash.mods.ratings'                           : ['+', '1', '2', '3', '4',
         '5', '=', '~'],
     # --Wrye Mash: RefRemovers
@@ -213,8 +212,7 @@ settingDefaults = {
     'mash.saves.sets'                             : [],
     # --Wrye Mash: Saves
     'mash.saves.cols'                             : ['File', 'Modified', 'Size',
-        'Save Name', 'Player',
-        'Cell'],
+        'Save Name', 'Player', 'Cell'],
     'mash.saves.sort'                             : 'Modified',
     'mash.saves.colReverse'                       : {
         'Modified': 1,
@@ -361,8 +359,7 @@ def LogMessage(parent, message, logText, title='', style=0, asDialog=True):
             style=wx.DEFAULT_DIALOG_STYLE | wx.RESIZE_BORDER)
     else:
         window = wx.Frame(parent, -1, title, pos=pos, size=(200, 300),
-            style=(
-                wx.RESIZE_BORDER | wx.CAPTION | wx.SYSTEM_MENU | wx.CLOSE_BOX | wx.CLIP_CHILDREN))
+            style=(wx.RESIZE_BORDER | wx.CAPTION | wx.SYSTEM_MENU | wx.CLOSE_BOX | wx.CLIP_CHILDREN))
         window.SetIcons(images['mash.icons2'].GetIconBundle())
     window.SetSizeHints(200, 200)
     sizer = wx.BoxSizer(wx.VERTICAL)
@@ -511,15 +508,11 @@ class Checkboxes(balt.ImageList):
 installercons = balt.ImageList(16, 16)
 installercons.data.extend({
     # --Off/Archive
-    'off.green'     : Image(r'images/checkbox_green_off.png',
-        wx.BITMAP_TYPE_PNG),
-    'off.grey'      : Image(r'images/checkbox_grey_off.png',
-        wx.BITMAP_TYPE_PNG),
+    'off.green'     : Image(r'images/checkbox_green_off.png', wx.BITMAP_TYPE_PNG),
+    'off.grey'      : Image(r'images/checkbox_grey_off.png', wx.BITMAP_TYPE_PNG),
     'off.red'       : Image(r'images/checkbox_red_off.png', wx.BITMAP_TYPE_PNG),
-    'off.white'     : Image(r'images/checkbox_white_off.png',
-        wx.BITMAP_TYPE_PNG),
-    'off.orange'    : Image(r'images/checkbox_orange_off.png',
-        wx.BITMAP_TYPE_PNG),
+    'off.white'     : Image(r'images/checkbox_white_off.png', wx.BITMAP_TYPE_PNG),
+    'off.orange'    : Image(r'images/checkbox_orange_off.png', wx.BITMAP_TYPE_PNG),
     'off.yellow'    : Image(r'images/checkbox_yellow_off.png',
         wx.BITMAP_TYPE_PNG),
     # --On/Archive
@@ -1030,8 +1023,7 @@ class MasterList(List):
             masterInfo.setName(newName)
             if newName not in self.newMasters:
                 self.newMasters.append(newName)
-            if (oldName in self.newMasters) and (
-                not self.getMasterInfos(oldName)):
+            if (oldName in self.newMasters) and (not self.getMasterInfos(oldName)):
                 self.newMasters.remove(oldName)
             if newName not in self.allMasters:
                 self.allMasters.append(newName)
@@ -1087,8 +1079,7 @@ class MasterList(List):
             return status
         newIndex = self.newMasters.index(masterName)
         mwIniLoadOrder = mosh.mwIniFile.loadOrder
-        if (not self.edited) and (
-                newIndex != self.oldMasters.index(masterName)):
+        if (not self.edited) and (newIndex != self.oldMasters.index(masterName)):
             return 20
         elif status > 0 or self.fileIsMod:
             return status
@@ -1292,8 +1283,7 @@ class MasterList(List):
                 else:
                     # self.unload(masterName)
                     masterInfo.isLoaded = False
-                if masterName in self.newMasters:
-                    self.newMasters.remove(masterName)
+                if masterName in self.newMasters: self.newMasters.remove(masterName)
             # --Fix size
             if masterInfo.modInfo:
                 masterInfo.size = masterInfo.modInfo.size
@@ -1895,8 +1885,7 @@ class ModPanel(NotebookPanel):
 
     def SetStatusCount(self):
         """Sets mod count in last field."""
-        text = _("Mods: %d/%d") % (
-            len(mosh.mwIniFile.loadFiles), len(mosh.modInfos.data))
+        text = _("Mods: %d/%d") % (len(mosh.mwIniFile.loadFiles), len(mosh.modInfos.data))
         statusBar.SetStatusText(text, 2)
 
     def OnSize(self, event):
@@ -2763,7 +2752,7 @@ class ScreensPanel(NotebookPanel):
         """Panel is shown. Update self.data."""
         if bosh.screensData.refresh():
             screensList.RefreshUI()
-            # self.Refresh()
+        # self.Refresh()
         self.SetStatusCount()
 
 
@@ -2917,9 +2906,7 @@ class MashFrame(wx.Frame):
             WarningMessage(self, message)
         # --Was load list too long?
         if mosh.mwIniFile.loadFilesExtra:
-            message = (
-                _("Load list has been truncated because it was too long. (%s)")
-                % (', '.join(mosh.mwIniFile.loadFilesExtra),))
+            message = (_("Load list has been truncated because it was too long. (%s)") % (', '.join(mosh.mwIniFile.loadFilesExtra),))
             mosh.mwIniFile.safeSave()
             WarningMessage(self, message)
         # --Any new corrupted files?
@@ -3165,8 +3152,7 @@ class DocBrowser(wx.Frame):
             os.remove(path)
         os.rename(oldPath, path)
         if self.docIsWtxt:
-            oldHtml, newHtml = (os.path.splitext(xxx)[0] + '.html' for xxx in
-                (oldPath, path))
+            oldHtml, newHtml = (os.path.splitext(xxx)[0] + '.html' for xxx in (oldPath, path))
             if os.path.exists(newHtml):
                 os.remove(newHtml)
             if os.path.exists(oldHtml):
@@ -3236,8 +3222,7 @@ class DocBrowser(wx.Frame):
             elif os.path.exists(mashTemplate):
                 template = ''.join(open(mashTemplate).readlines())
             else:
-                template = '= $modName ' + (
-                    '=' * (74 - len(modName))) + '#\n' + docPath
+                template = '= $modName ' + ('=' * (74 - len(modName))) + '#\n' + docPath
             defaultText = string.Template(template).substitute(modName=modName)
             self.plainText.SetValue(defaultText)
             self.SetDocType('txt')
@@ -3256,8 +3241,7 @@ class DocBrowser(wx.Frame):
             self.editButton.SetValue(editing)
             self.plainText.SetEditable(editing)
             self.docIsWtxt = self.GetIsWtxt(docPath)
-            htmlPath = self.docIsWtxt and (
-                os.path.splitext(docPath)[0] + '.html')
+            htmlPath = self.docIsWtxt and (os.path.splitext(docPath)[0] + '.html')
             if htmlPath and (not os.path.exists(htmlPath) or
                 (os.path.getmtime(docPath) > os.path.getmtime(htmlPath))
             ):
@@ -3716,8 +3700,7 @@ class File_Duplicate(Link):
         fileName = data[0]
         fileInfo = self.window.data[fileName]
         (root, ext) = os.path.splitext(fileName)
-        (destDir, destName, wildcard) = (
-            fileInfo.dir, root + ' Copy' + ext, '*' + ext)
+        (destDir, destName, wildcard) = (fileInfo.dir, root + ' Copy' + ext, '*' + ext)
         if not os.path.exists(destDir):
             os.makedirs(destDir)
         dialog = wx.FileDialog(self.window, _('Duplicate as:'), destDir,
@@ -4385,8 +4368,7 @@ class File_Replace_Refs:
                     refReplacer.srcModName = srcModName
                 else:
                     ErrorMessage(self.window,
-                        _("Source mod %s is not in Data Files folder.") % (
-                            srcModName,))
+                        _("Source mod %s is not in Data Files folder.") % (srcModName,))
                     return
             log.setHeader(_("Source Mod"))
             log(srcModName or _("None"))
@@ -4607,8 +4589,7 @@ class File_Stats(Link):
         fileInfo = self.window.data[fileName]
         fileInfo.getStats()
         frame = wx.Frame(self.window, -1, fileName, size=(200, 300),
-            style=(
-                wx.RESIZE_BORDER | wx.CAPTION | wx.SYSTEM_MENU | wx.CLOSE_BOX | wx.CLIP_CHILDREN))
+            style=(wx.RESIZE_BORDER | wx.CAPTION | wx.SYSTEM_MENU | wx.CLOSE_BOX | wx.CLIP_CHILDREN))
         frame.SetIcons(images['mash.icons2'].GetIconBundle())
         sizer = wx.BoxSizer(wx.VERTICAL)
         sizer.Add(File_StatsList(frame, fileInfo.stats), 1, wx.EXPAND)
@@ -4930,8 +4911,7 @@ class Installer_Duplicate(InstallerLink):
         if self.data.dir.join(
             curName).isfile() and curName.cext != newName.cext:
             balt.ShowWarning(self.gTank,
-                _("%s does not have correct extension (%s).") % (
-                    newName.s, curName.ext))
+                _("%s does not have correct extension (%s).") % (newName.s, curName.ext))
             return
         # --Duplicate
         try:
@@ -6269,8 +6249,7 @@ class Saves_ProfilesData(ListEditorData):
                 _('Name must be between 1 and 64 characters long.'))
             return False
         # --Rename
-        oldDir, newDir = (os.path.join(self.hidden, dir) for dir in
-            (oldName, newName))
+        oldDir, newDir = (os.path.join(self.hidden, dir) for dir in (oldName, newName))
         os.rename(oldDir, newDir)
         if oldName == settings['mash.profile']:
             settings['mash.profile'] = newName
@@ -6291,8 +6270,7 @@ class Saves_ProfilesData(ListEditorData):
             mosh.reSaveFile.search(file)]
         if files:
             message = _(
-                'Delete profile %s and the %d save files it contains?') % (
-                          profile, len(files))
+                'Delete profile %s and the %d save files it contains?') % (profile, len(files))
             if WarningQuery(self.parent, message,
                 _('Delete Profile')) != wx.ID_YES:
                 return False
@@ -6363,8 +6341,7 @@ class Saves_Profiles:
         # --Progress
         progress = None
         arcFiles = sorted(mosh.saveInfos.data)
-        srcFiles = sorted(name for name in os.listdir(srcDir) if
-            (len(name) > 5 and name[-4:].lower() == '.ess'))
+        srcFiles = sorted(name for name in os.listdir(srcDir) if (len(name) > 5 and name[-4:].lower() == '.ess'))
         arcCount, srcCount = len(arcFiles), len(srcFiles)
         if (arcCount + srcCount) == 0:
             return
@@ -6495,9 +6472,7 @@ class Save_LoadMasters(Link):
         self.window.details.SetFile(fileName)
         # --Missing masters?
         if missing:
-            message = (
-                _('Please update masters to correct for missing masters (%s).')
-                % (','.join(missing),))
+            message = (_('Please update masters to correct for missing masters (%s).') % (','.join(missing),))
             WarningMessage(self.window, message)
 
 
@@ -6696,8 +6671,7 @@ class Save_RepairAll(Link):
             log.setHeader(_("Overriding lists:"))
             cntLists = worldRefs.removeOverLists(fileRefs)
             # --No problems?
-            if not (
-                                    cntRepaired or cntDeleted or cntUnnamed or cntDebris or cntOrphans or cntLists):
+            if not (cntRepaired or cntDeleted or cntUnnamed or cntDebris or cntOrphans or cntLists):
                 progress = progress.Destroy()
                 InfoMessage(self.window, _("No problems found!"))
                 return
@@ -6706,10 +6680,7 @@ class Save_RepairAll(Link):
             # --Problem Dialog
             message = (_("Objects repaired: %d.\nObjects deleted: %d.") %
                        (cntRepaired, cntDeleted))
-            message += (
-                _(
-                    "\nDebris records deleted: %d.\nOrphan contents deleted: %d.") %
-                (cntDebris, cntOrphans))
+            message += (_("\nDebris records deleted: %d.\nOrphan contents deleted: %d.") % (cntDebris, cntOrphans))
             message += (_("\nOverriding lists deleted: %d.") % (cntLists,))
             LogMessage(self.window, message, log.out.getvalue(), caption)
         # --Done
