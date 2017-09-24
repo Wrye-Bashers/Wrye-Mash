@@ -247,12 +247,9 @@ class Path(object):
     @staticmethod
     def getNorm(name):
         """Return the normpath for specified name/path object."""
-        if not name:
-            return name
-        elif isinstance(name, Path):
-            return name._s
-        else:
-            return os.path.normpath(name)
+        if isinstance(name, Path): return name._s
+        elif not name: return name
+        else: return os.path.normpath(name)
 
     @staticmethod
     def getCase(name):
