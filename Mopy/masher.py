@@ -41,7 +41,11 @@ from balt import Links, Link, SeparatorLink, MenuLink
 #  - Make sure that python root directory is in PATH, so can access dll's.
 if sys.prefix not in set(os.environ['PATH'].split(';')):
     os.environ['PATH'] += ';' + sys.prefix
-import wx.lib.iewin
+try:
+    import wx.lib.iewin
+except ValueError:
+    print 'Failed to import wx.lib.iewin'
+    import wx.html
 
 # Singletons ------------------------------------------------------------------
 statusBar = None
