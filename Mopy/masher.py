@@ -63,7 +63,10 @@ settings = None
 # --Load config/defaults
 settingDefaults = {
     # --Morrowind Directory
-    'mwDir'                                       : r'C:\Program Files\Bethesda Softworks\Morrowind',
+    'mwDir': os.path.dirname( #get the parent
+                #of the current directory
+                os.path.dirname(os.path.realpath(__file__))
+            ),
     # --Wrye Mash
     'mash.version'                                : 0,
     'mash.readme'                                 : (0, '0'),
