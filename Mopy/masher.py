@@ -892,6 +892,15 @@ class List(wx.Panel):
                 selected.append(self.items[itemDex])
         return selected
 
+    def SelectAll(self):
+        itemDex = -1
+        while True:
+            itemDex = self.list.GetNextItem(itemDex, wx.LIST_NEXT_ALL)
+            if itemDex == -1:
+                break
+            else:
+                self.list.Select(itemDex);
+
     def GetSortSettings(self, col, reverse):
         """Return parsed col, reverse arguments. Used by SortSettings.
         col: sort variable.
@@ -1595,6 +1604,11 @@ class ModList(List):
             self.OnUpPress(event)
         if kc == wx.WXK_DOWN:
             self.OnDownPress(event)
+        if kc == 65:
+            self.OnAPress(event)
+
+    def OnAPress(self, event):
+        self.SelectAll()
 
     def OnUpPress(self, event):
         event.Skip()
