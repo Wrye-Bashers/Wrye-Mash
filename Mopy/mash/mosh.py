@@ -2764,7 +2764,7 @@ class FileInfos:
         if not os.path.exists(self.dir): os.makedirs(self.dir)
         #--Loop over files in directory
         for fileName in os.listdir(self.dir):
-            fileName = unicode(fileName, sys.getfilesystemencoding())
+            # fileName = unicode(fileName, sys.getfilesystemencoding())
             #--Right file type?
             filePath = os.path.join(self.dir,fileName)
             if not os.path.isfile(filePath) or not self.rightFileType(fileName): 
