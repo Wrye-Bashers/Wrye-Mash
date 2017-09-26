@@ -32,6 +32,7 @@ def CheckWx():
 
 def wxMessageBox(caption, message):
     """Creates a messagebox with its own wx application"""
+    import wx
     app = wx.App()
     dlg = wx.MessageDialog(None, message, caption, wx.OK | wx.ICON_ERROR)
     dlg.ShowModal()
