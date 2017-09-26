@@ -465,12 +465,13 @@ class Checkboxes(balt.ImageList):
     """Checkboxes ImageList. Used by several List classes."""
 
     def __init__(self):
+        imgPath = os.path.dirname(os.path.realpath(__file__)) + '/images/'
         balt.ImageList.__init__(self, 16, 16)
         for status in ('on', 'off'):
             for color in ('purple', 'blue', 'green', 'orange', 'yellow', 'red'):
                 shortKey = color + '.' + status
                 imageKey = 'checkbox.' + shortKey
-                file = r'images\checkbox_' + color + '_' + status + '.png'
+                file = imgPath + r'checkbox_'+color+'_'+status+'.png'
                 image = images[imageKey] = Image(file, wx.BITMAP_TYPE_PNG)
                 self.Add(image, shortKey)
 
@@ -506,54 +507,41 @@ class Checkboxes(balt.ImageList):
 
 
 # Icons------------------------------------------------------------------------
-installercons = balt.ImageList(16, 16)
+scriptPath = os.path.dirname(os.path.realpath(__file__))
+imgPath    = scriptPath + '/images/'
+installercons = balt.ImageList(16,16)
 installercons.data.extend({
-    # --Off/Archive
-    'off.green'     : Image(r'images/checkbox_green_off.png', wx.BITMAP_TYPE_PNG),
-    'off.grey'      : Image(r'images/checkbox_grey_off.png', wx.BITMAP_TYPE_PNG),
-    'off.red'       : Image(r'images/checkbox_red_off.png', wx.BITMAP_TYPE_PNG),
-    'off.white'     : Image(r'images/checkbox_white_off.png', wx.BITMAP_TYPE_PNG),
-    'off.orange'    : Image(r'images/checkbox_orange_off.png', wx.BITMAP_TYPE_PNG),
-    'off.yellow'    : Image(r'images/checkbox_yellow_off.png',
-        wx.BITMAP_TYPE_PNG),
-    # --On/Archive
-    'on.green'      : Image(r'images/checkbox_green_inc.png',
-        wx.BITMAP_TYPE_PNG),
-    'on.grey'       : Image(r'images/checkbox_grey_inc.png',
-        wx.BITMAP_TYPE_PNG),
-    'on.red'        : Image(r'images/checkbox_red_inc.png', wx.BITMAP_TYPE_PNG),
-    'on.white'      : Image(r'images/checkbox_white_inc.png',
-        wx.BITMAP_TYPE_PNG),
-    'on.orange'     : Image(r'images/checkbox_orange_inc.png',
-        wx.BITMAP_TYPE_PNG),
-    'on.yellow'     : Image(r'images/checkbox_yellow_inc.png',
-        wx.BITMAP_TYPE_PNG),
-    # --Off/Directory
-    'off.green.dir' : Image(r'images/diamond_green_off.png',
-        wx.BITMAP_TYPE_PNG),
-    'off.grey.dir'  : Image(r'images/diamond_grey_off.png', wx.BITMAP_TYPE_PNG),
-    'off.red.dir'   : Image(r'images/diamond_red_off.png', wx.BITMAP_TYPE_PNG),
-    'off.white.dir' : Image(r'images/diamond_white_off.png',
-        wx.BITMAP_TYPE_PNG),
-    'off.orange.dir': Image(r'images/diamond_orange_off.png',
-        wx.BITMAP_TYPE_PNG),
-    'off.yellow.dir': Image(r'images/diamond_yellow_off.png',
-        wx.BITMAP_TYPE_PNG),
-    # --On/Directory
-    'on.green.dir'  : Image(r'images/diamond_green_inc.png',
-        wx.BITMAP_TYPE_PNG),
-    'on.grey.dir'   : Image(r'images/diamond_grey_inc.png', wx.BITMAP_TYPE_PNG),
-    'on.red.dir'    : Image(r'images/diamond_red_inc.png', wx.BITMAP_TYPE_PNG),
-    'on.white.dir'  : Image(r'images/diamond_white_inc.png',
-        wx.BITMAP_TYPE_PNG),
-    'on.orange.dir' : Image(r'images/diamond_orange_inc.png',
-        wx.BITMAP_TYPE_PNG),
-    'on.yellow.dir' : Image(r'images/diamond_yellow_inc.png',
-        wx.BITMAP_TYPE_PNG),
-    # --Broken
-    'corrupt'       : Image(r'images/red_x.png', wx.BITMAP_TYPE_PNG),
+    #--Off/Archive
+    'off.green':  Image(imgPath + r'checkbox_green_off.png',wx.BITMAP_TYPE_PNG),
+    'off.grey':   Image(imgPath + r'checkbox_grey_off.png',wx.BITMAP_TYPE_PNG),
+    'off.red':    Image(imgPath + r'checkbox_red_off.png',wx.BITMAP_TYPE_PNG),
+    'off.white':  Image(imgPath + r'checkbox_white_off.png',wx.BITMAP_TYPE_PNG),
+    'off.orange': Image(imgPath + r'checkbox_orange_off.png',wx.BITMAP_TYPE_PNG),
+    'off.yellow': Image(imgPath + r'checkbox_yellow_off.png',wx.BITMAP_TYPE_PNG),
+    #--On/Archive
+    'on.green':  Image(imgPath + r'checkbox_green_inc.png',wx.BITMAP_TYPE_PNG),
+    'on.grey':   Image(imgPath + r'checkbox_grey_inc.png',wx.BITMAP_TYPE_PNG),
+    'on.red':    Image(imgPath + r'checkbox_red_inc.png',wx.BITMAP_TYPE_PNG),
+    'on.white':  Image(imgPath + r'checkbox_white_inc.png',wx.BITMAP_TYPE_PNG),
+    'on.orange': Image(imgPath + r'checkbox_orange_inc.png',wx.BITMAP_TYPE_PNG),
+    'on.yellow': Image(imgPath + r'checkbox_yellow_inc.png',wx.BITMAP_TYPE_PNG),
+    #--Off/Directory
+    'off.green.dir':  Image(imgPath + r'diamond_green_off.png',wx.BITMAP_TYPE_PNG),
+    'off.grey.dir':   Image(imgPath + r'diamond_grey_off.png',wx.BITMAP_TYPE_PNG),
+    'off.red.dir':    Image(imgPath + r'diamond_red_off.png',wx.BITMAP_TYPE_PNG),
+    'off.white.dir':  Image(imgPath + r'diamond_white_off.png',wx.BITMAP_TYPE_PNG),
+    'off.orange.dir': Image(imgPath + r'diamond_orange_off.png',wx.BITMAP_TYPE_PNG),
+    'off.yellow.dir': Image(imgPath + r'diamond_yellow_off.png',wx.BITMAP_TYPE_PNG),
+    #--On/Directory
+    'on.green.dir':  Image(imgPath + r'diamond_green_inc.png',wx.BITMAP_TYPE_PNG),
+    'on.grey.dir':   Image(imgPath + r'diamond_grey_inc.png',wx.BITMAP_TYPE_PNG),
+    'on.red.dir':    Image(imgPath + r'diamond_red_inc.png',wx.BITMAP_TYPE_PNG),
+    'on.white.dir':  Image(imgPath + r'diamond_white_inc.png',wx.BITMAP_TYPE_PNG),
+    'on.orange.dir': Image(imgPath + r'diamond_orange_inc.png',wx.BITMAP_TYPE_PNG),
+    'on.yellow.dir': Image(imgPath + r'diamond_yellow_inc.png',wx.BITMAP_TYPE_PNG),
+    #--Broken
+    'corrupt':   Image(imgPath + r'red_x.png',wx.BITMAP_TYPE_PNG),
 }.items())
-
 
 # Windows ---------------------------------------------------------------------
 # ------------------------------------------------------------------------------
@@ -7159,21 +7147,23 @@ def InitSettings():
 
 def InitImages():
     """Initialize images (icons, checkboxes, etc.)."""
+    scriptPath = os.path.dirname(os.path.realpath(__file__))
+    imgPath = scriptPath + '/images/'
     # --Standard
-    images['save.on'] = Image(r'images\save_on.png', wx.BITMAP_TYPE_PNG)
-    images['save.off'] = Image(r'images\save_off.png', wx.BITMAP_TYPE_PNG)
+    images['save.on'] = Image(imgPath + r'save_on.png', wx.BITMAP_TYPE_PNG)
+    images['save.off'] = Image(imgPath + r'save_off.png', wx.BITMAP_TYPE_PNG)
     # --Misc
-    images['morrowind'] = Image(r'images\morrowind.png', wx.BITMAP_TYPE_PNG)
-    images['help'] = Image(r'images\help.png', wx.BITMAP_TYPE_PNG)
+    images['morrowind'] = Image(imgPath + r'morrowind.png', wx.BITMAP_TYPE_PNG)
+    images['help'] = Image(imgPath + r'help.png', wx.BITMAP_TYPE_PNG)
     # --Tools
-    images['doc.on'] = Image(r'images\doc_on.png', wx.BITMAP_TYPE_PNG)
+    images['doc.on'] = Image(imgPath + r'doc_on.png', wx.BITMAP_TYPE_PNG)
     # --Checkboxes
     images['mash.checkboxes'] = Checkboxes()
     images['checkbox.green.on.32'] = (
-        Image(r'images\checkbox_green_on_32.png', wx.BITMAP_TYPE_PNG))
+        Image(imgPath + r'checkbox_green_on_32.png', wx.BITMAP_TYPE_PNG))
     images['checkbox.blue.on.32'] = (
-        Image(r'images\checkbox_blue_on_32.png', wx.BITMAP_TYPE_PNG))
-    images['checkbox.red.x'] = Image(r'images\checkbox_red_x.png',
+        Image(imgPath + r'checkbox_blue_on_32.png', wx.BITMAP_TYPE_PNG))
+    images['checkbox.red.x'] = Image(imgPath + r'checkbox_red_x.png',
         wx.BITMAP_TYPE_PNG)
     # --Applications Icons
     wryeMashIcons = balt.ImageBundle()
