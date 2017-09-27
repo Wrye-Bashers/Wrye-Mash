@@ -14,16 +14,16 @@ def dfFlattenNodeTree(heading, maxLevel=0):
 def getHtmlFromHeadings(headings):
     """Generates HTML for a heading and all decendents based on Wrye's format"""
 
-    def htmlDecorator(obj, prop, curText):
+    def htmlDecorator(obj, prop, val, text):
         """ This function is passed into the text to decorate it depening on text properties """
         mapping = {
-            'bold'  : lambda t: '<strong>' + t + '</strong>',
-            'italic': lambda t: '<em>' + t + '</em>',
-            'href'  : lambda t: '<a href="' + obj.href + '">' + t + '</a>',
+            'bold'  : lambda: text if val == False else '<strong>' + text + '</strong>',
+            'italic': lambda: text if val == False else '<em>' + text + '</em>',
+            'href'  : lambda: '<a href="' + obj.href + '">' + text + '</a>',
         }
         if prop in mapping:
-            return mapping[prop](curText)
-        return curText
+            return mapping[prop]()
+        return text
 
     def getHtmlFromLine(line):
         html = ''
@@ -38,15 +38,16 @@ def getHtmlFromHeadings(headings):
                 line.text) + '<br>'
         return html
 
-    html = ''
+    html = '<p>' + getHtmlFromHeading(headings) + '</p>'
     for heading in dfFlattenNodeTree(headings):
-        html += '<p>' + getHtmlFromHeading(heading) + '<p>'
+        html += '<p>' + getHtmlFromHeading(heading) + '</p>'
     return html
 
 
 class Text:
-    """A class that holds properties of an text, and can merge with other
-    Text objects."""
+    """
+        A class that holds properties of an text, and can merge with other Text objects
+    """
 
     def __init__(self, text):
         self.text = text
@@ -54,9 +55,9 @@ class Text:
         self.italic = False
 
     def mergeWith(self, text):
-        """ This merges two Text classes, however, if a property exists in the
-        object the function belongs to it won't be overwritten by text unless it
-        is False. (This is to account for properties such as bold)"""
+        """ This merges two Text classes, however, if a property exists in the object the function belongs to
+            it won't be overwitten by text unless it is False. (This is to account for properties such as bold)
+        """
         for name, val in text.__dict__.iteritems():
             if name in self.__dict__:
                 self.__dict__[name] = self.__dict__[name] or val
@@ -67,11 +68,11 @@ class Text:
         """
         Decorates the text by passing each property through the given function.
         The function should be of the form
-            function(textObject, propertyName, currentTextToModify)
+            function(textObject, propertyName, propertyValue, currentTextToModify)
         """
         html = self.text
-        for name in vars(self).keys():
-            html += function(self, name, html)
+        for name, value in vars(self).iteritems():
+            html = function(self, name, value, html)
 
         return html
 
@@ -236,7 +237,6 @@ class Parser:
 
         # while we can keep making matches. the text variable is reduced with every match and
         # then just the remained considered.
-        text = text.strip()
         while len(text):
             match = re.match(regex, text)
             if match == None:
@@ -306,6 +306,16 @@ class Parser:
 
 
 import unittest
+
+
+class TestHtml(unittest.TestCase):
+    def testGenerate(self):
+        wtex = "= The Name \n* Some Text"
+        p = Parser()
+        p.parseString(wtex)
+        html = getHtmlFromHeadings(p.getHeading("The Name"))
+        self.assertEqual('<p><strong>The Name</strong><br>Some Text<br></p>',
+            html)
 
 
 class TestParser(unittest.TestCase):
