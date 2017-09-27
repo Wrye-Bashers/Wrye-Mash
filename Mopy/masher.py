@@ -3195,11 +3195,9 @@ class UtilsList(List):
                     sys.argv = sys_argv_org
                     #
                     return  # <-- bad hack ?
-
                 cwd = os.getcwd()
-                os.chdir(os.path.split(u)[0])
-                if u.strip('"').strip("'")[-4:].lower() in (
-                ".bat", ".cmd", ".btm"):
+                os.chdir(os.path.dirname(u))
+                if u.strip('"').strip("'")[-4:].lower() in (".bat", ".cmd", ".btm"):
                     arguments = ""
                     argsList = self.data[name][1].split()
                     if len(argsList) > 0:
@@ -3207,14 +3205,12 @@ class UtilsList(List):
                             arguments += " %s" % a
                     os.system(u + arguments)
                 else:
-                    arguments = (os.path.split(u)[0],) + tuple(
-                        self.data[name][1].split())
+                    arguments = (os.path.basename(u),) + tuple(self.data[name][1].split())
                     os.spawnv(os.P_NOWAIT, u.strip('"'), arguments)
                 os.chdir(cwd)
             except Exception, exc:
                 WarningMessage(self, _(
-                    "A problem has occured when opening `%s`.\nYou should edit `utils.dcg` and update the corresponding line.\n\nError shouted by OS:\n%s" % (
-                    u, exc)))
+                    "A problem has occured when opening `%s`.\nYou should edit `utils.dcg` and update the corresponding line.\n\nError shouted by OS:\n%s" % (u, exc)))
                 raise exc
 
     def NewItem(self):
