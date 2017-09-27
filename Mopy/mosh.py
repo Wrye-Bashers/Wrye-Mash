@@ -1,3 +1,16 @@
+# -*- coding: cp1252 -*-
+#
+# Modified by D.C.-G. < 16:35 2010-06-11 >
+#
+# Modifications for UtilsPanel extension.
+#
+# Notes:
+#
+# mush is imported several times : first as global module, then in functions as local module.
+# Is it realy necessary ?
+#
+# ------------------------------------------------------------------------------
+#
 # Localization ----------------------------------------------------------------
 # --Not totally clear on this, but it seems to safest to put locale first...
 import locale;
@@ -3611,6 +3624,8 @@ class SaveInfo(FileInfo):
                 break
         # --Done
         ins.close()
+        # TODO: check if this should be here or not
+        print self.extras['journal']
         return self.extras['journal']
 
     def getScreenshot(self):
@@ -3738,6 +3753,89 @@ class ResPacks:
     def refresh(self):
         """Refreshes BSA and resource replacers."""
         raise UncodedError
+
+
+# ------------------------------------------------------------------------------
+# UtilsData
+# -# D.C.-G
+#
+# for UtilsPanel extension.
+#
+utilsCommands = ("mish",)
+
+
+class UtilsData(DataDict):
+    def __init__(self):
+        """Initialize."""
+        self.dir = dirs['app']
+        self.data = {}  # --data[Path] = (ext,mtime)
+
+    def refresh(self):
+        """Refresh list of utilities."""
+        self.dir = dirs['app']
+        # -# Since there is only one utils file, its name is hardcoded.
+        utilsFile = "utils.dcg"
+        newData = {}
+        if os.path.isfile(utilsFile) and os.access(utilsFile, os.R_OK):
+            f = open(utilsFile, "r")
+            lines = f.readlines()
+            f.close()
+            for line in lines:
+                line = line.strip()
+                if line.startswith(";") == False and line != "":
+                    name, commandLine, arguments, description = line.split(";")
+                    newData[name] = (
+                    commandLine.strip(), arguments, description.strip())
+        changed = (self.data != newData)
+        self.data = newData
+        return changed
+
+    def delete(self, fileName):
+        """Deletes member file."""
+        filePath = self.dir.join(fileName)
+        filePath.remove()
+        del self.data[fileName]
+
+    def save(self):
+        """Writes the file on the disk."""
+        utilsFile = "utils.dcg"
+        orgData = {}
+        lines = []
+        if os.path.isfile(utilsFile) and os.access(utilsFile, os.R_OK):
+            f = open(utilsFile, "r")
+            lines = f.readlines()
+            f.close()
+            for line in lines:
+                line = line.strip()
+                if line.startswith(";") == False and line != "":
+                    name, commandLine, arguments, description = line.split(";")
+                    orgData[name] = (
+                    commandLine.strip(), arguments, description.strip())
+        changed = (self.data != orgData)
+        if changed:
+            # items suppresed
+            lns = lines
+            for key in orgData.keys():
+                if key not in self.data.keys():
+                    for line in lns:
+                        if line.startswith(key):
+                            lines.remove(line)
+            # items added or modified
+            for key, value in self.data.iteritems():
+                val = list(value)
+                if val[0] not in utilsCommands: val[0] = '"' + val[0].strip(
+                    """ '\t"\n\r\x00""") + '"'
+                val = tuple(val)
+                if key not in orgData.keys():
+                    lines.append("%s;%s;%s;%s\n" % ((key,) + value))
+                elif key in orgData.keys() and value != orgData[key]:
+                    for line in lines:
+                        if line.startswith(key):
+                            idx = lines.index(line)
+                            lines[idx] = "%s;%s;%s;%s\n" % ((key,) + value)
+            f = open(utilsFile, "w")
+            f.writelines(lines)
+            f.close()
 
 
 # ------------------------------------------------------------------------------
@@ -4527,8 +4625,12 @@ class InstallersData(bolt.TankData, DataDict):
         """Mark as having changed."""
         self.hasChanged = hasChanged
 
+    # -# D.C.-G.
+    # -# Modified to avoid system error if installers path is not reachable.
     def refresh(self, progress=None, what='DIONS', fullRefresh=False):
         """Refresh info."""
+        if not os.access(dirs["installers"].s, os.W_OK):
+            return "noDir"
         progress = progress or bolt.Progress()
         # --MakeDirs
         self.bashDir.makedirs()
@@ -4588,6 +4690,37 @@ class InstallersData(bolt.TankData, DataDict):
             self.dictFile.data['sizeCrcDate'] = self.data_sizeCrcDate
             self.dictFile.save()
             self.hasChanged = False
+
+    # -# D.C.-G.
+    def saveCfgFile(self):
+        """Save the installers path to mash.ini."""
+        mash_ini = False
+        if GPath('mash.ini').exists():
+            mashIni = ConfigParser.ConfigParser()
+            mashIni.read('mash.ini')
+            mash_ini = True
+            instPath = GPath(mashIni.get('General', 'sInstallersDir').strip()).s
+        else:
+            instPath = ""
+        if instPath != dirs["installers"].s:
+            if not mash_ini:
+                if os.path.exists(
+                    os.path.join(os.getcwd(), "mash_default.ini")):
+                    f = open(os.path.join(os.getcwd(), "mash_default.ini"), "r")
+                    d = f.read()
+                    f.close()
+                else:
+                    d = "[General]\n"
+                f = open(os.path.join(os.getcwd(), "mash.ini"), "w")
+                f.write(d)
+                f.close()
+                mashIni = ConfigParser.ConfigParser()
+                mashIni.read('mash.ini')
+            mashIni.set("General", "sInstallersDir",
+                os.path.abspath(dirs["installers"].s))
+            f = open(os.path.join(os.getcwd(), "mash.ini"), "w")
+            mashIni.write(f)
+            f.close()
 
     def getSorted(self, column, reverse):
         """Returns items sorted according to column and reverse."""
@@ -7230,6 +7363,13 @@ class ScheduleGenerator:
 
 
 # Initialization --------------------------------------------------------------
+# -# Modified by D.C.-G.
+# -# Avoiding error return on installers path creation not allowed.
+# -#     I implemented this because my installers directory is on a remote drive ;-)
+# -# ==>> ONLY FOR WINDOWS
+# -# Errors skipped:
+# -#   * path not accessible pysically (missing drive or unaccessible URL);
+# -#   * the user does not have the rights to write in the destination folder.
 # ------------------------------------------------------------------------------
 def initDirs():
     """Init directories. Assume that settings has already been initialized."""
@@ -7249,7 +7389,34 @@ def initDirs():
         dirs['installers'] = installers
     else:
         dirs['installers'] = dirs['app'].join(installers)
-    dirs['installers'].makedirs()
+    # -# D.C.-G.
+    # dirs['installers'].makedirs()
+
+    # prevHead = ""
+    # head = dirs['installers'].s
+    # print sys.platform
+    # print "prevHead", prevHead, "head", head
+    # while prevHead != head:
+    # prevHead = head
+    # head, tail = os.path.split(prevHead)
+    # print "head", head, "tail", tail
+    # detecting Windows
+    if sys.platform.lower().startswith("win") == True:
+        drv, pth = os.path.splitdrive(dirs['installers'].s)
+        if os.access(drv, os.R_OK):
+            # -# Testing the directories
+            # class Dummy: chk = None
+
+            # def testDir(a, d, ds):
+            # if d in dirs['installers'].s:
+            # Dummy.chk = os.access(d, a)
+
+            # os.path.walk(dirs['installers'].s, testDir, os.F_OK)
+            # print "chk", Dummy.chk
+            # -#
+            # print "Installers directory found."
+            dirs['installers'].makedirs()
+        # -#
 
 
 # ------------------------------------------------------------------------------
