@@ -41,6 +41,7 @@ from gui.settings import SettingsWindow
 from gui.helpbrowser import HelpBrowser
 import conf
 import globals
+import gui
 
 bosh = mosh  # --Cheap compatibility for imported code.
 
@@ -404,25 +405,10 @@ installercons.data.extend({
 
 # Windows ---------------------------------------------------------------------
 # ------------------------------------------------------------------------------
-class NotebookPanel(wx.Panel):
-    """Parent class for notebook panels."""
-
-    def SetStatusCount(self):
-        """Sets status bar count field."""
-        globals.statusBar.SetStatusText('', 2)
-
-    def OnShow(self):
-        """To be called when particular panel is changed to and/or shown for first time.
-        Default version does nothing, but derived versions might update data."""
-        self.SetStatusCount()
-
-    def OnCloseWindow(self):
-        """To be called when containing frame is closing. Use for saving data, scrollpos, etc."""
-        pass
 
 
 # ------------------------------------------------------------------------------
-class SashTankPanel(NotebookPanel):
+class SashTankPanel(gui.NotebookPanel):
     """Subclass of a notebook panel designed for a two pane tank panel."""
 
     def __init__(self, data, parent):
@@ -1863,7 +1849,7 @@ class ModDetails(wx.Window):
 
 
 # ------------------------------------------------------------------------------
-class ModPanel(NotebookPanel):
+class ModPanel(gui.NotebookPanel):
     def __init__(self, parent):
         wx.Panel.__init__(self, parent, -1)
         sizer = wx.BoxSizer(wx.HORIZONTAL)
@@ -2271,7 +2257,7 @@ class SaveDetails(wx.Window):
 
 
 # ------------------------------------------------------------------------------
-class SavePanel(NotebookPanel):
+class SavePanel(gui.NotebookPanel):
     def __init__(self, parent):
         wx.Panel.__init__(self, parent, -1)
         sizer = wx.BoxSizer(wx.HORIZONTAL)
@@ -2727,7 +2713,7 @@ class ScreensList(List):
 
 
 # ------------------------------------------------------------------------------
-class ScreensPanel(NotebookPanel):
+class ScreensPanel(gui.NotebookPanel):
     """Screenshots tab."""
 
     def __init__(self, parent):
@@ -3074,7 +3060,7 @@ class UtilsList(List):
         self.RefreshUI()
 
 
-class UtilsPanel(NotebookPanel):
+class UtilsPanel(gui.NotebookPanel):
     """Utilities tab."""
 
     def __init__(self, parent):
