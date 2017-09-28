@@ -56,7 +56,7 @@ except ValueError:
     import wx.html
 
 # -# D.C.-G. for SettingsWindow
-from mesh import SettingsWindow
+from gui.settings import SettingsWindow
 
 settingsWindow = None
 # -#
