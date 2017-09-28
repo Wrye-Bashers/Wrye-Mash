@@ -6,17 +6,7 @@ class ErrorLogger:
     """Class can be used for a writer to write to multiple streams. Duplicated
     in both possible startup files so log can be created without external
     dependacies"""
-    def __init__(self, outStream):
-        self.outStream = outStream
-
-    def write(self, message):
-        for s in self.outStream:
-            s.write(message)
-# Setup log file ---------------------------------------------------------------
-f = file("WryeMash.log", "w+")
-sys.stdout = ErrorLogger([f, sys.__stdout__])
-sys.stderr = ErrorLogger([f, sys.__stderr__])
-f.write("Wrye Mash Log!\n")
+    pass
 
 # Functions used in startup ----------------------------------------------------
 def CheckWx():
@@ -49,6 +39,9 @@ def ForceWxVersion():
 CheckWx()
 ForceWxVersion()
 
+#required to be able to run this with py2exe
+from wx.lib.pubsub import setupv1
+from wx.lib.pubsub import Publisher
 
 import masher
 
