@@ -1090,7 +1090,18 @@ The Mash distribution includes additional files that assist in its operation and
 
 == Versions ===================================================================
 {{CONTENTS=0}}
-=== 86 [In Development]
+=== 87 [In Development]
+* Updated 7zip files
+* Removed stdout, stderr redirect
+ * Wrye Mash Log would always be empty regardless of the error
+* Temporarily added pubsub from wxPython for WMSA
+ * When pubsub isn't present the following error occurs:
+ * AttributeError: 'module' object has no attribute 'Publisher'
+* Fix for bolt.Path.getNorm on Python 2.7.8
+ * Would return a Path object if it was of the form Path(u''), apparently
+ * Path(u'') now is True for `if not name`, prior to this is was not.
+
+=== 86 [01/02/2012]
 * Fixed output logging
 * Added drag and drop for mods and installers tab
 * Fixed "Avoid at startup" option
@@ -1643,6 +1654,9 @@ The Mash distribution includes additional files that assist in its operation and
 * But give me credit of course.
 
 === Credits/Thanks
+* Sharlikran for various minor updates
+* Lojack for his tweak to getNorm for Python 2.7.8
+* Yacoby and Melchor for their work updating Wrye Mash
 * Every modder and utility developer in the Morrowind community stands on the
   collective shoulders of everyone who preceded them, contributing time, talent,
   and inspiration. So, thanks to all the past developers and folks in the 
