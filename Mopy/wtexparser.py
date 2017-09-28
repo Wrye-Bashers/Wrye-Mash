@@ -23,7 +23,8 @@ def dfFlattenDescendants(heading, maxLevel=0):
 
 
 def getHtmlFromHeadings(headings):
-    """Generates HTML for a heading and all decendents based on Wrye's format"""
+    """Generates HTML for a heading and all decendents based on Wrye's format. Due to wx.html not supporting css,
+     everything is done with HTML"""
 
     def htmlDecorator(obj, prop, val, text):
         """ This function is passed into the text to decorate it depening on text properties """
@@ -43,7 +44,8 @@ def getHtmlFromHeadings(headings):
         return html
 
     def getHtmlFromHeading(heading):
-        html = '<strong>' + heading.title + '</strong><br>'
+        html = '<a name="' + heading.title.replace(' ',
+            '') + '"><strong>' + heading.title + '</strong><br>'
         for line in heading.getTextLines():
             html += '&nbsp;' * (line.level - 1) * 2 + getHtmlFromLine(
                 line.text) + '<br>'
@@ -233,9 +235,13 @@ class Parser:
                           + '|' \
                           + '\\*\\*(.*)\\*\\*'
 
-        # matches a url in the form [[href|text]]
+        # matches a url in the form [[href|text]] or [[href]]
         linkRegex = '\\[\\[' \
                     + '([^\\|]*)\\|([^\\]]*)' \
+                    + '\\]\\]' \
+                    + '|' \
+                    + '\\[\\[' \
+                    + '([^\\]]*)' \
                     + '\\]\\]'
 
         # the last line of this matches anything, that isn't
@@ -253,8 +259,8 @@ class Parser:
             if match == None:
                 return result
 
-            bold, italic, both, linkHref, linkText, otherwise = match.groups()
-            matchText = bold or italic or both or linkText or otherwise or None
+            bold, italic, both, linkHref, linkText, onlyLinkText, otherwise = match.groups()
+            matchText = bold or italic or both or linkText or onlyLinkText or otherwise or None
             if matchText != None:
                 t = Text(matchText)
 
@@ -263,8 +269,11 @@ class Parser:
                 if not (t.bold or t.italic):
                     t.bold = t.italic = both != None
 
-                if linkHref != None:
-                    t.href = linkHref
+                if linkHref != None or onlyLinkText != None:
+                    t.href = linkHref or onlyLinkText
+                    # converts links that are just # to # and then their text
+                    if t.href == '#':
+                        t.href += t.text.replace(' ', '')
 
                 result.append(t)
 
@@ -325,7 +334,8 @@ class TestHtml(unittest.TestCase):
         p = Parser()
         p.parseString(wtex)
         html = getHtmlFromHeadings(p.getHeading("The Name"))
-        self.assertEqual('<p><strong>The Name</strong><br>Some Text<br></p>',
+        self.assertEqual(
+            '<p><strong id="The Name">The Name</strong><br>Some Text<br></p>',
             html)
 
 
@@ -348,14 +358,14 @@ class TestParser(unittest.TestCase):
         wtex = "= The Name \nSome Text"
         p = Parser()
         p.parseString(wtex)
-        firstLine = p.getHeading("The Name").getTextLines().next().rawText()
+        firstLine = p.getHeading("The Name").getTextLines().next().rawText();
         self.assertEquals("Some Text", firstLine)
 
     def test_parseSimpleTextWithAstrix(self):
         wtex = "= The Name \n* Some Text"
         p = Parser()
         p.parseString(wtex)
-        firstLine = p.getHeading("The Name").getTextLines().next().rawText()
+        firstLine = p.getHeading("The Name").getTextLines().next().rawText();
         self.assertEquals("Some Text", firstLine)
 
     def test_parseSubText(self):
@@ -393,10 +403,20 @@ class TestParser(unittest.TestCase):
         self.assertEquals(2, len(result))
 
     def test_parseLink(self):
+        inText = '[[a|b]]'
+        result = Parser().parseText(inText)[0]
+        self.assertEquals('b', result.text)
+        self.assertEquals('a', result.href)
+
         inText = '[[#|Test]]'
         result = Parser().parseText(inText)[0]
         self.assertEquals('Test', result.text)
-        self.assertEquals('#', result.href)
+        self.assertEquals('#Test', result.href)
+
+        inText = '[[Href]]'
+        result = Parser().parseText(inText)[0]
+        self.assertEquals('Href', result.text)
+        self.assertEquals('Href', result.href)
 
 
 if __name__ == '__main__':
