@@ -5926,6 +5926,26 @@ class Mods_EsmsFirst(Link):
 
 
 # ------------------------------------------------------------------------------
+class Mods_CopyActive(Link):
+    def AppendToMenu(self, menu, window, data):
+        Link.AppendToMenu(self, menu, window, data)
+        menuItem = wx.MenuItem(menu, self.id, _('Copy Active Mods'))
+        menu.AppendItem(menuItem)
+
+    def Execute(self, event):
+        """Handle selection."""
+        caption = _('Active Mods')
+        log = mosh.LogFile(cStringIO.StringIO())
+        log.setHeader(caption)
+        for num, name in enumerate(mosh.mwIniFile.loadOrder):
+            log('%03d  %s' % (num + 1, name))
+        if wx.TheClipboard.Open():
+            text = mosh.winNewLines(log.out.getvalue())
+            wx.TheClipboard.SetData(wx.TextDataObject(text))
+            wx.TheClipboard.Close()
+
+
+# ------------------------------------------------------------------------------
 class Mods_MorrowindIni(Link):
     """Open Oblivion.ini."""
 
@@ -7958,6 +7978,7 @@ def InitModLinks():
         sortMenu.links.append(Files_SortBy('Version'))
         ModList.mainMenu.append(sortMenu)
     # --------------------------------------------
+    ModList.mainMenu.append(Mods_CopyActive())
     ModList.mainMenu.append(SeparatorLink())
     ModList.mainMenu.append(Files_Open())
     ModList.mainMenu.append(Files_Unhide('mod'))
