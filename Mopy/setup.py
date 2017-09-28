@@ -104,9 +104,11 @@ class Target:
 
 # includes for py2exe
 includes = ["wx", "encodings"]
+excludes = ["Tkconstants", "Tkinter", "tcl"]
 
 opts = {'py2exe': {
     'includes'    : includes,
+    'excludes'    : excludes,
     "compressed"  : 1,
     "optimize"    : 2,
     "ascii"       : 1,
