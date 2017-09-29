@@ -110,9 +110,9 @@ class Target:
     def __init__(self, **kw):
         self.__dict__.update(kw)
         # for the versioninfo resources
-        self.version = '84.0.0.1'
-        self.company_name = "Wrye & D.C.-G."
-        self.copyright = "Wrye 2009 (see 'Wrye Mash.txt' for full credits) & D.C.-G. 2009/2010"
+        self.version = '87.0'
+        self.company_name = "Wrye, Yacoby, Sharlikran, & D.C.-G."
+        self.copyright = "Wrye 2009 (see 'Wrye Mash.txt' for full credits)"
         self.name = "WryeMash"
 
 
