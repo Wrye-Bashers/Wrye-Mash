@@ -187,14 +187,39 @@ class LString(object):
 _gpaths = {}
 Path = None
 def GPath(name):
-    """Returns common path object for specified name/path."""
+    """Path factory and cache.
+    :rtype: Path
+    """
     if name is None: return None
-    elif not name: norm = name
     elif isinstance(name,Path): norm = name._s
-    else: norm = os.path.normpath(name)
+    elif not name: norm = name # empty string - bin this if ?
+    elif isinstance(name,unicode): norm = os.path.normpath(name)
+    else: norm = os.path.normpath(decode(name))
     path = _gpaths.get(norm)
-    if path != None: return path
+    if path is not None: return path
     else: return _gpaths.setdefault(norm,Path(norm))
+
+def GPathPurge():
+    """Cleans out the _gpaths dictionary of any unused bolt.Path objects.
+       We cannot use a weakref.WeakValueDictionary in this case for 2 reasons:
+        1) bolt.Path, due to its class structure, cannot be made into weak
+           references
+        2) the objects would be deleted as soon as the last reference goes
+           out of scope (not the behavior we want).  We want the object to
+           stay alive as long as we will possibly be needing it, IE: as long
+           as we're still on the same tab.
+       So instead, we'll manually call our flushing function a few times:
+        1) When switching tabs
+        2) Prior to building a bashed patch
+        3) Prior to saving settings files
+    """
+    for key in _gpaths.keys():
+        # Using .keys() allows use to modify the dictionary while iterating
+        if sys.getrefcount(_gpaths[key]) == 2:
+            # 1 for the reference in the _gpaths dictionary,
+            # 1 for the temp reference passed to sys.getrefcount
+            # meanin the object is not reference anywhere else
+            del _gpaths[key]
 
 #------------------------------------------------------------------------------
 class Path(object):
