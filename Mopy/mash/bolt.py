@@ -1678,28 +1678,28 @@ class Log:
         """Sets the header."""
         self.header = header
         if self.prevHeader:
-            self.prevHeader += 'x'
+            self.prevHeader += u'x'
         self.doFooter = doFooter
         if writeNow: self()
 
-    def __call__(self,message=None):
+    def __call__(self,message=None,appendNewline=True):
         """Callable. Writes message, and if necessary, header and footer."""
         if self.header != self.prevHeader:
             if self.prevHeader and self.doFooter:
                 self.writeFooter()
             if self.header:
-                self.writeHeader(self.header)
+                self.writeLogHeader(self.header)
             self.prevHeader = self.header
-        if message: self.writeMessage(message)
+        if message: self.writeMessage(message,appendNewline)
 
     #--Abstract/null writing functions...
-    def writeHeader(self,header):
+    def writeLogHeader(self, header):
         """Write header. Abstract/null version."""
         pass
     def writeFooter(self):
         """Write mess. Abstract/null version."""
         pass
-    def writeMessage(self,message):
+    def writeMessage(self,message,appendNewline):
         """Write message to log. Abstract/null version."""
         pass
 
