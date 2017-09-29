@@ -37,27 +37,27 @@ To get more informations about distutils, please reffer to Python documentation.
 To get more informations about py2exe, please reffer to http://www.py2exe.org/index.cgi/FrontPage.
 
 
-*Français*
+*FranÃ§ais*
 
 Ceci est la version autonome de Wrye Mash.
 
-Tous les scripts et toutes les ressources Python nécessaires au fonctionnement de Wrye Mash sont inclues dans
-l'éxécutable et la distribution.
-Vous n'avez donc plus besoin d'installer Python et wxPython sur votre système, sauf si vous vouler travailler
+Tous les scripts et toutes les ressources Python nÃ©cessaires au fonctionnement de Wrye Mash sont inclues dans
+l'Ã©xÃ©cutable et la distribution.
+Vous n'avez donc plus besoin d'installer Python et wxPython sur votre systÃ¨me, sauf si vous vouler travailler
 les codes sources.
 
 
 Comment obtenir les codes sources ?
 
-Dézippez simplement 'sources.zip' !
+DÃ©zippez simplement 'sources.zip' !
 
 
 Comment (re)compiler ?
 
-Vous devez avoir installé sur voter système tous les fichiers et bibliothèques Python dont Wrye Mash a besoin.
-Vous devez avoir installé py2exe 0.6.8 également.
+Vous devez avoir installÃ© sur voter systÃ¨me tous les fichiers et bibliothÃ¨ques Python dont Wrye Mash a besoin.
+Vous devez avoir installÃ© py2exe 0.6.8 Ã©galement.
 
-Ouvrez un console de commandes, allez dans le répertoires des sources, et lancez 'setup.py'.
+Ouvrez un console de commandes, allez dans le rÃ©pertoires des sources, et lancez 'setup.py'.
 
 
 Notes
