@@ -1605,8 +1605,8 @@ def getMatch(reMatch,group=0):
 
 def intArg(arg,default=None):
     """Returns argument as an integer. If argument is a string, then it converts it using int(arg,0)."""
-    if arg == None: return default
-    elif isinstance(arg,StringType): return int(arg,0)
+    if arg is None: return default
+    elif isinstance(arg, basestring): return int(arg,0)
     else: return int(arg)
 
 def invertDict(indict):
