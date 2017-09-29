@@ -21,6 +21,7 @@
 
 # Imports ----------------------------------------------------------------------
 #--Standard
+import StringIO
 import cPickle
 import copy
 import locale
@@ -30,6 +31,7 @@ import shutil
 import struct
 import sys
 import time
+import traceback
 from types import *
 from binascii import crc32
 
@@ -200,6 +202,7 @@ class Path(object):
     """Paths are immutable objects that represent file directory paths."""
 
     #--Class Vars/Methods -------------------------------------------
+    sys_fs_enc = sys.getfilesystemencoding() or 'mbcs'
     norm_path = {} #--Dictionary of paths
     mtimeResets = [] #--Used by getmtime
 
@@ -1120,9 +1123,40 @@ def deprint(*args,**keyargs):
     """Prints message along with file and line location."""
     if not deprintOn and not keyargs.get('on'): return
     import inspect
-    stack = inspect.stack()
-    file,line,function = stack[1][1:4]
-    print '%s %4d %s: %s' % (GPath(file).tail.s,line,function,' '.join(map(str,args)))
+    if keyargs.get('trace', True):
+        stack = inspect.stack()
+        file_, line, function = stack[1][1:4]
+        msg = u'%s %4d %s: ' % (GPath(file_).tail.s, line, function)
+    else:
+        msg = u''
+
+    try:
+        msg += u' '.join([u'%s'%x for x in args]) # OK, even with unicode args
+    except UnicodeError:
+        # If the args failed to convert to unicode for some reason
+        # we still want the message displayed any way we can
+        for x in args:
+            try:
+                msg += u' %s' % x
+            except UnicodeError:
+                msg += u' %s' % repr(x)
+
+    if keyargs.get('traceback',False):
+        o = StringIO.StringIO()
+        traceback.print_exc(file=o)
+        value = o.getvalue()
+        try:
+            msg += u'\n%s' % unicode(value, 'utf-8')
+        except UnicodeError:
+            traceback.print_exc()
+            msg += u'\n%s' % repr(value)
+        o.close()
+    try:
+        # Should work if stdout/stderr is going to wxPython output
+        print msg
+    except UnicodeError:
+        # Nope, it's going somewhere else
+        print msg.encode(Path.sys_fs_enc)
 
 def delist(header,items,on=False):
     """Prints list as header plus items."""
