@@ -14,6 +14,8 @@ from .. import exception
 from .. import gui
 from . import dialog
 
+from types import StringTypes
+
 class FakeColumnEvent:
     """..."""
     def __init__(self, numCols):
@@ -322,7 +324,7 @@ class UtilsDialog(wx.Dialog):
         """Opens the file dialog to set the utility program."""
         dialog = wx.FileDialog(self,_("Chose the new utility."), "", "", "*.*", wx.OPEN)
         if dialog.ShowModal() != wx.ID_OK:
-            dialogDestroy()
+            dialog.Destroy()
             return
         path = dialog.GetPath()
         dialog.Destroy()
