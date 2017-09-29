@@ -43,7 +43,7 @@ import stat
 import exception
 
 import bolt
-from bolt import LString, GPath, Flags, DataDict, SubProgress, PickleDict
+from bolt import LString, GPath, Flags, DataDict, SubProgress, PickleDict, Log
 
 import compat
 
@@ -434,64 +434,6 @@ def winNewLines(inString):
     return reUnixNewLine.sub('\r\n',inString)
 
 # IO Wrappers -----------------------------------------------------------------
-#------------------------------------------------------------------------------
-class Log:
-    """Log Callable. This is the abstract/null version. Useful version should
-    override write functions.
-
-    Log is divided into sections with headers. Header text is assigned (through
-    setHeader), but isn't written until a message is written under it. I.e.,
-    if no message are written under a given header, then the header itself is
-    never written."""
-
-    def __init__(self):
-        """Initialize."""
-        self.header = None
-        self.prevHeader = None
-        self.indent = ''
-
-    def setHeader(self,header):
-        """Sets the header."""
-        self.header = header
-
-    def __call__(self,message):
-        """Callable. Writes message, and if necessary, header and footer."""
-        if self.header != self.prevHeader:
-            if self.prevHeader:
-                self.writeFooter()
-            if self.header:
-                self.writeHeader(self.header)
-            self.prevHeader = self.header
-        self.writeMessage(message)
-
-    #--Abstract/null writing functions...
-    def writeHeader(self,header):
-        """Write header. Abstract/null version."""
-        pass
-    def writeFooter(self):
-        """Write mess. Abstract/null version."""
-        pass
-    def writeMessage(self,message):
-        """Write message to log. Abstract/null version."""
-        pass
-
-#------------------------------------------------------------------------------
-class LogFile(Log):
-    """Log that writes messages to file."""
-    def __init__(self,out):
-        self.out = out
-        Log.__init__(self)
-
-    def writeHeader(self,header):
-        self.out.write(self.indent+header+'\n')
-
-    def writeFooter(self):
-        self.out.write(self.indent+'\n')
-
-    def writeMessage(self,message):
-        self.out.write(self.indent+message+'\n')
-
-#------------------------------------------------------------------------------
 class Progress:
     """Progress Callable: Shows progress on message change and at regular intervals."""
     def __init__(self,interval=0.5):

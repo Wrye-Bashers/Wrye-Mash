@@ -1710,14 +1710,15 @@ class LogFile(Log):
         self.out = out
         Log.__init__(self)
 
-    def writeHeader(self,header):
-        self.out.write(header+'\n')
+    def writeLogHeader(self, header):
+        self.out.write(header+u'\n')
 
     def writeFooter(self):
-        self.out.write('\n')
+        self.out.write(u'\n')
 
-    def writeMessage(self,message):
-        self.out.write(message+'\n')
+    def writeMessage(self,message,appendNewline):
+        self.out.write(message)
+        if appendNewline: self.out.write(u'\n')
 
 #------------------------------------------------------------------------------
 class Progress:
