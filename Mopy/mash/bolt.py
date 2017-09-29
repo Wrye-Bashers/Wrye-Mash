@@ -1078,19 +1078,21 @@ class MainFunctions:
         """Main function. Call this in __main__ handler."""
         #--Get func
         args = sys.argv[1:]
-        attrs = args.pop(0).split('.')
+        attrs = args.pop(0).split(u'.')
         key = attrs.pop(0)
         func = self.funcs.get(key)
         if not func:
-            print "Unknown function/object:", key
+            msg = _(u"Unknown function/object: %s") % key
+            try: print msg
+            except UnicodeError: print msg.encode('mbcs')
             return
         for attr in attrs:
             func = getattr(func,attr)
         #--Separate out keywords args
         keywords = {}
         argDex = 0
-        reKeyArg  = re.compile(r'^\-(\D\w+)')
-        reKeyBool = re.compile(r'^\+(\D\w+)')
+        reKeyArg  = re.compile(ur'^-(\D\w+)',re.U)
+        reKeyBool = re.compile(ur'^\+(\D\w+)',re.U)
         while argDex < len(args):
             arg = args[argDex]
             if reKeyArg.match(arg):
@@ -1103,7 +1105,7 @@ class MainFunctions:
                 keywords[keyword] = True
                 del args[argDex]
             else:
-                argDex = argDex + 1
+                argDex += 1
         #--Apply
         apply(func,args,keywords)
 
