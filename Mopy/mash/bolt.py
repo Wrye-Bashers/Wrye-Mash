@@ -1311,8 +1311,7 @@ class TableColumn:
         """Dictionary emulation."""
         tableData = self.table.data
         column = self.column
-        return [(key,tableData[key][column]) for key in tableData.keys()
-            if (column in tableData[key])]
+        return [(key,tableData[key][column]) for key in self]
     def has_key(self,key):
         """Dictionary emulation."""
         return self.__contains__(key)
