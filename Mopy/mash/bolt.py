@@ -1601,7 +1601,7 @@ def dictFromLines(lines,sep=None):
 def getMatch(reMatch,group=0):
     """Returns the match or an empty string."""
     if reMatch: return reMatch.group(group)
-    else: return ''
+    else: return u''
 
 def intArg(arg,default=None):
     """Returns argument as an integer. If argument is a string, then it converts it using int(arg,0)."""
