@@ -26,6 +26,7 @@ import cPickle
 import codecs
 import copy
 import csv
+import datetime
 import locale
 import os
 import re
@@ -272,6 +273,9 @@ class LString(object):
     def __cmp__(self, other):
         if isinstance(other,LString): return cmp(self._cs, other._cs)
         else: return cmp(self._cs, other.lower())
+
+
+def timestamp(): return datetime.datetime.now().strftime(u'%Y-%m-%d %H.%M.%S')
 
 # Paths -----------------------------------------------------------------------
 #-- To make commands executed with Popen hidden
@@ -1132,6 +1136,7 @@ class PickleDict:
     def exists(self):
         return self.path.exists() or self.backup.exists()
 
+
     def load(self):
         """Loads vdata and data from file or backup file.
 
@@ -1149,33 +1154,44 @@ class PickleDict:
         """
         self.vdata.clear()
         self.data.clear()
+        cor = cor_name =  None
         for path in (self.path,self.backup):
+            if cor is not None:
+                cor.moveTo(cor_name)
+                cor = None
             if path.exists():
-                ins = None
                 try:
-                    ins = path.open('rb')
-                    header = compat.uncpickle(ins)
-                    if header == 'VDATA':
-                        self.vdata.update(compat.uncpickle(ins))
-                        self.data.update(compat.uncpickle(ins))
-                    else:
-                        self.data.update(header)
-                    ins.close()
+                    with path.open('rb') as ins:
+                        try:
+                            firstPickle = cPickle.load(ins)
+                        except ValueError:
+                            cor = path
+                            cor_name = GPath(path.s + u' (%s)' % timestamp() +
+                                    u'.corrupted')
+                            deprint(u'Unable to load %s (moved to "%s")' % (
+                                path, cor_name.tail), traceback=True)
+                            continue # file corrupt - try next file
+                        self.vdata.update(cPickle.load(ins))
+                        self.data.update(cPickle.load(ins))
                     return 1 + (path == self.backup)
-                except EOFError:
-                    if ins: ins.close()
+                except (EOFError, ValueError):
+                    pass
         #--No files and/or files are corrupt
         return 0
 
     def save(self):
-        """Save to pickle file."""
+        """Save to pickle file.
+
+        Three objects are writen - a version string and the vdata and data
+        dictionaries, in this order. Current version string is VDATA2.
+        """
         if self.readOnly: return False
         #--Pickle it
-        out = self.path.temp.open('wb')
-        for data in ('VDATA',self.vdata,self.data):
-            cPickle.dump(data,out,-1)
-        out.close()
-        self.path.untemp(True)
+        self.vdata['boltPaths'] = True # needed so older versions don't blow
+        with self.path.temp.open('wb') as out:
+            for data in ('VDATA',self.vdata,self.data):
+                cPickle.dump(data,out,-1)
+        self.path.untemp(doBackup=True)
         return True
 
 #------------------------------------------------------------------------------
