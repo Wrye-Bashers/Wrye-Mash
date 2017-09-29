@@ -1530,11 +1530,11 @@ def cstrip(inString):
 
 def csvFormat(format):
     """Returns csv format for specified structure format."""
-    csvFormat = ''
+    csvFormat = u''
     for char in format:
-        if char in 'bBhHiIlLqQ': csvFormat += ',%d'
-        elif char in 'fd': csvFormat += ',%f'
-        elif char in 's': csvFormat += ',"%s"'
+        if char in u'bBhHiIlLqQ': csvFormat += u',%d'
+        elif char in u'fd': csvFormat += u',%f'
+        elif char in u's': csvFormat += u',"%s"'
     return csvFormat[1:] #--Chop leading comma
 
 deprintOn = False
