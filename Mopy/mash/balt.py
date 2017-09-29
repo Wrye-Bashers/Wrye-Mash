@@ -170,20 +170,22 @@ class ImageList:
     def __init__(self,width,height):
         self.width = width
         self.height = height
-        self.data = []
+        self.images = []
         self.indices = {}
         self.imageList = None
 
     def Add(self,image,key):
-        self.data.append((key,image))
+        self.images.append((key,image))
 
     def GetImageList(self):
         if not self.imageList:
             indices = self.indices
             imageList = self.imageList = wx.ImageList(self.width,self.height)
-            for key,image in self.data:
+            for key,image in self.images:
                 indices[key] = imageList.Add(image.GetBitmap())
         return self.imageList
+
+    def get_image(self, key): return self.images[self[key]][1] # YAK !
 
     def __getitem__(self,key):
         self.GetImageList()

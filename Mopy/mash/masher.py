@@ -185,7 +185,7 @@ class Checkboxes(balt.ImageList):
 # Icons------------------------------------------------------------------------
 installercons = balt.ImageList(16,16)
 imgPath       = 'images'
-installercons.data.extend({
+installercons.images.extend({
     #--Off/Archive
     'off.green':  Image(os.path.join(imgPath, r'checkbox_green_off.png'),wx.BITMAP_TYPE_PNG),
     'off.grey':   Image(os.path.join(imgPath, r'checkbox_grey_off.png'),wx.BITMAP_TYPE_PNG),
