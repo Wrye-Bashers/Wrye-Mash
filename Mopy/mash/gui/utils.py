@@ -9,7 +9,7 @@ from .. import mosh
 
 from ..balt import button, Links, leftSash, hSizer, vSizer
 from ..mosh import _
-#from ..types import *
+from .. import exception
 
 from .. import gui
 from . import dialog
@@ -157,7 +157,7 @@ class UtilsList(gui.List):
         elif col == 'Modified':
             self.items.sort(key=lambda a: data[a][1])
         else:
-            raise BashError(_('Unrecognized sort key: ')+col)
+            raise exception.BashError(_('Unrecognized sort key: ')+col)
         #--Ascending
         if reverse: self.items.reverse()
 

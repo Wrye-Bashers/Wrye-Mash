@@ -28,7 +28,6 @@ import wx.html
 
 import mosh
 from mosh import _
-from mosh import AbstractError, ArgumentError, StateError, UncodedError
 from mosh import formatInteger,formatDate
 
 import bolt
@@ -271,36 +270,36 @@ class ListEditorData:
         self.showRemove = False
     def getItemList(self):
         """Returns item list in correct order."""
-        raise mosh.AbstractError
+        raise exception.AbstractError
         return []
     def add(self):
         """Peforms add operation. Return new item on success."""
-        raise mosh.AbstractError
+        raise exception.AbstractError
         return None
     def edit(self,item=None):
         """Edits specified item. Return true on success."""
-        raise mosh.AbstractError
+        raise exception.AbstractError
         return False
     def rename(self,oldItem,newItem):
         """Renames oldItem to newItem. Return true on success."""
-        raise mosh.AbstractError
+        raise exception.AbstractError
         return False
     def remove(self,item):
         """Removes item. Return true on success."""
-        raise mosh.AbstractError
+        raise exception.AbstractError
         return False
     #--Checklist
     def getChecks(self):
         """Returns checked state of items as array of True/False values matching Item list."""
-        raise mosh.AbstractError
+        raise exception.AbstractError
         return []
     def check(self,item):
         """Checks items. Return true on success."""
-        raise mosh.AbstractError
+        raise exception.AbstractError
         return False
     def uncheck(self,item):
         """Unchecks item. Return true on success."""
-        raise mosh.AbstractError
+        raise exception.AbstractError
         return False
 
 #------------------------------------------------------------------------------
@@ -605,7 +604,7 @@ class MasterList(gui.List):
         elif col == 'Author':
             self.items.sort(lambda a,b: cmp(data[a].author.lower(),data[b].author.lower()))
         else:
-            raise exception.MashError, _('Unrecognized sort key: ')+col
+            raise exception.BoltError(u'Unrecognized sort key: '+col)
         #--Ascending
         if reverse: self.items.reverse()
         #--ESMs First?
@@ -952,7 +951,7 @@ class ModList(gui.List, gui.ListDragDropMixin):
         elif col == 'Version':
             self.items.sort(key=lambda a: data[a].tes3.hedr.version)
         else:
-            raise exception.MashError, _('Unrecognized sort key: ')+col
+            raise exception.BoltError(u'Unrecognized sort key: '+col)
         #--Ascending
         if reverse: self.items.reverse()
         #--ESMs First?
@@ -1559,7 +1558,7 @@ class SaveList(gui.List):
                 data[a].tes3.gmdt.curCell.lower(),
                 data[b].tes3.gmdt.curCell.lower()))
         else:
-            raise exception.MashError, _('Unrecognized sort key: ')+col
+            raise exception.BoltError(u'Unrecognized sort key: '+col)
         #--Ascending
         if reverse: self.items.reverse()
 
@@ -2288,7 +2287,7 @@ class ScreensList(gui.List):
         elif col == 'Modified':
             self.items.sort(key=lambda a: data[a][1])
         else:
-            raise BashError(_('Unrecognized sort key: ')+col)
+            raise exception.BoltError(u'Unrecognized sort key: '+col)
         #--Ascending
         if reverse: self.items.reverse()
 
@@ -3078,7 +3077,7 @@ class MashApp(wx.App):
 #
 #    def Execute(self, event):
 #        """Event: link execution."""
-#        raise mosh.AbstractError
+#        raise exception.AbstractError
 #
 ##------------------------------------------------------------------------------
 #class SeparatorLink(Link):
@@ -4571,7 +4570,7 @@ class InstallerProject_SyncPack(InstallerLink):
         menuItem.Enable(self.projectExists())
 
     def Execute(self,event):
-        raise UncodedError
+        raise exception.UncodedError
 
 #------------------------------------------------------------------------------
 class InstallerProject_Pack(InstallerLink):
@@ -4583,7 +4582,7 @@ class InstallerProject_Pack(InstallerLink):
         menuItem.Enable(self.projectExists())
 
     def Execute(self,event):
-        raise UncodedError
+        raise exception.UncodedError
 
 # Mods Links ------------------------------------------------------------------
 #------------------------------------------------------------------------------

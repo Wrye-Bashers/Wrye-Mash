@@ -38,6 +38,7 @@ from binascii import crc32
 
 import compat
 
+import exception
 # Localization ----------------------------------------------------------------
 reTrans = re.compile(r'^([ :=\.]*)(.+?)([ :=\.]*$)')
 def compileTranslator(txtPath,pklPath):
@@ -111,38 +112,6 @@ if os.path.exists(languagePkl):
         return text
 else:
     def _(text,encode=True): return text
-
-# Errors ----------------------------------------------------------------------
-class BoltError(Exception):
-    """Generic error with a string message."""
-    def __init__(self,message):
-        self.message = message
-    def __str__(self):
-        return self.message
-
-#------------------------------------------------------------------------------
-class AbstractError(BoltError):
-    """Coding Error: Abstract code section called."""
-    def __init__(self,message=_('Abstract section called.')):
-        BoltError.__init__(self,message)
-
-#------------------------------------------------------------------------------
-class ArgumentError(BoltError):
-    """Coding Error: Argument out of allowed range of values."""
-    def __init__(self,message=_('Argument is out of allowed ranged of values.')):
-        BoltError.__init__(self,message)
-
-#------------------------------------------------------------------------------
-class StateError(BoltError):
-    """Error: Object is corrupted."""
-    def __init__(self,message=_('Object is in a bad state.')):
-        BoltError.__init__(self,message)
-
-#------------------------------------------------------------------------------
-class UncodedError(BoltError):
-    """Coding Error: Call to section of code that hasn't been written."""
-    def __init__(self,message=_('Section is not coded yet.')):
-        BoltError.__init__(self,message)
 
 # LowStrings ------------------------------------------------------------------
 class LString(object):
@@ -590,7 +559,7 @@ class Flags(object):
             index = names[name]
             return (object.__getattribute__(self,'_field') >> index) & 1 == 1
         except KeyError:
-            raise AttributeError(name)
+            raise exception.AttributeError(name)
 
     def __setattr__(self,name,value):
         """Set value by flag name. E.g., flags.isQuestItem = False"""
@@ -849,7 +818,7 @@ class Settings(DataDict):
     def setChanged(self,key):
         """Marks given key as having been changed. Use if value is a dictionary, list or other object."""
         if key not in self.data:
-            raise ArgumentError("No settings data for "+key)
+            raise exception.ArgumentError(u'No settings data for '+key)
         if key not in self.changed:
             self.changed.append(key)
 
@@ -1101,14 +1070,14 @@ class TankData:
 
     def getSorted(self,column,reverse):
         """Returns items sorted according to column and reverse."""
-        raise AbstractError
+        raise exception.AbstractError
 
     #--Item Info
     def getColumns(self,item=None):
         """Returns text labels for item or for row header if item == None."""
         columns = self.getParam('columns',self.tankColumns)
         if item == None: return columns[:]
-        raise AbstractError
+        raise exception.AbstractError
 
     def getName(self,item):
         """Returns a string name of item for use in dialogs, etc."""
@@ -1329,7 +1298,7 @@ class LogFile(Log):
 class Progress:
     """Progress Callable: Shows progress when called."""
     def __init__(self,full=1.0):
-        if (1.0*full) == 0: raise ArgumentError('Full must be non-zero!')
+        if (1.0*full) == 0: raise exception.ArgumentError(u'Full must be non-zero!')
         self.message = ''
         self.full = full
         self.state = 0
@@ -1337,7 +1306,7 @@ class Progress:
 
     def setFull(self,full):
         """Set's full and for convenience, returns self."""
-        if (1.0*full) == 0: raise ArgumentError('Full must be non-zero!')
+        if (1.0*full) == 0: raise exception.ArgumentError(u'Full must be non-zero!')
         self.full = full
         return self
 
@@ -1347,7 +1316,7 @@ class Progress:
 
     def __call__(self,state,message=''):
         """Update progress with current state. Progress is state/full."""
-        if (1.0*self.full) == 0: raise ArgumentError('Full must be non-zero!')
+        if (1.0*self.full) == 0: raise exception.ArgumentError(u'Full must be non-zero!')
         if message: self.message = message
         if self.debug: deprint('%0.3f %s' % (1.0*state/self.full, self.message))
         self.doProgress(1.0*state/self.full, self.message)
@@ -1370,7 +1339,7 @@ class SubProgress(Progress):
         Progress.__init__(self,full)
         if baseTo == '+1': baseTo = baseFrom + 1
         if (baseFrom < 0 or baseFrom >= baseTo):
-            raise ArgumentError('BaseFrom must be >= 0 and BaseTo must be > BaseFrom')
+            raise exception.ArgumentError(u'BaseFrom must be >= 0 and BaseTo must be > BaseFrom')
         self.parent = parent
         self.baseFrom = baseFrom
         self.scale = 1.0*(baseTo-baseFrom)

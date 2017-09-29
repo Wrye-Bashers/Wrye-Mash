@@ -22,9 +22,9 @@
 # Imports ---------------------------------------------------------------------
 #--Localization
 #..Handled by bolt, so import that.
+import exception
 import bolt
 from bolt import _, GPath, deprint, delist
-from bolt import BoltError, AbstractError, ArgumentError, StateError, UncodedError
 
 #--Python
 import cStringIO
@@ -129,7 +129,7 @@ class Image:
         self.bitmap = None
         self.icon = None
         if not GPath(self.file).exists():
-            raise ArgumentError(_("Missing resource file: %s.") % (self.file,))
+            raise exception.ArgumentError(_("Missing resource file: %s.") % (self.file,))
 
     def GetBitmap(self):
         if not self.bitmap:
@@ -594,23 +594,23 @@ class ListEditorData:
         pass
     def getItemList(self):
         """Returns item list in correct order."""
-        raise AbstractError
+        raise exception.AbstractError
         return []
     def add(self):
         """Peforms add operation. Return new item on success."""
-        raise AbstractError
+        raise exception.AbstractError
         return None
     def edit(self,item=None):
         """Edits specified item. Return true on success."""
-        raise AbstractError
+        raise exception.AbstractError
         return False
     def rename(self,oldItem,newItem):
         """Renames oldItem to newItem. Return true on success."""
-        raise AbstractError
+        raise exception.AbstractError
         return False
     def remove(self,item):
         """Removes item. Return true on success."""
-        raise AbstractError
+        raise exception.AbstractError
         return False
     def close(self):
         """Called when dialog window closes."""
@@ -622,20 +622,20 @@ class ListEditorData:
         return ''
     def setInfo(self,item,text):
         """Sets string info on specified item."""
-        raise AbstractError
+        raise exception.AbstractError
 
     #--Checklist
     def getChecks(self):
         """Returns checked state of items as array of True/False values matching Item list."""
-        raise AbstractError
+        raise exception.AbstractError
         return []
     def check(self,item):
         """Checks items. Return true on success."""
-        raise AbstractError
+        raise exception.AbstractError
         return False
     def uncheck(self,item):
         """Unchecks item. Return true on success."""
-        raise AbstractError
+        raise exception.AbstractError
         return False
 
     #--Save/Cancel
@@ -749,7 +749,7 @@ class ListEditor(wx.Dialog):
 
     def DoEdit(self,event):
         """Edits the selected item."""
-        raise UncodedError
+        raise exception.UncodedError
 
     def DoRename(self,event):
         """Renames selected item."""
@@ -894,7 +894,7 @@ class Progress(bolt.Progress):
 
     def doProgress(self,state,message):
         if not self.dialog:
-            raise StateError(_('Dialog already destroyed.'))
+            raise exception.StateError(u'Dialog already destroyed.')
         elif (state == 0 or state == 1 or (message != self.prevMessage) or
             (state - self.prevState) > 0.05 or (time.time() - self.prevTime) > 0.5):
             if message != self.prevMessage:
@@ -1286,7 +1286,7 @@ class Link:
 
     def Execute(self, event):
         """Event: link execution."""
-        raise AbstractError
+        raise exception.AbstractError
 
 #------------------------------------------------------------------------------
 class SeparatorLink(Link):
@@ -1382,7 +1382,7 @@ class Tank_Duplicate(Link):
         if not destPath: return
         destDir,destName = destPath.headTail
         if (destDir == srcDir) and (destName == srcName):
-            balt.showError(self.window,_("Files cannot be duplicated to themselves!"))
+            showError(self.window,_(u'Files cannot be duplicated to themselves!'))
             return
         self.data.copy(srcName,destName,destDir)
         if destDir == srcDir:

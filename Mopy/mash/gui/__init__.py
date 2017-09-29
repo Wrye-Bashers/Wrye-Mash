@@ -35,9 +35,6 @@ class LoggerWindow(wx.Frame):
         self.txtLog.WriteText(message + '\n')
 
 
-class InterfaceError(exception.MashError):
-    pass
-
 # ------------------------------------------------------------------------------
 
 class ListDragDropMixin:
