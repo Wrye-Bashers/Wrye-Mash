@@ -1349,12 +1349,12 @@ class Table(DataDict):
     ('propName')."""
 
     def __init__(self,dictFile):
-        """Intialize and read data from dictFile, if available."""
+        """Initialize and read data from dictFile, if available."""
         self.dictFile = dictFile
         dictFile.load()
         self.vdata = dictFile.vdata
         self.data = dictFile.data
-        self.hasChanged = False
+        self.hasChanged = False ##: move to PickleDict
 
     def save(self):
         """Saves to pickle file."""
@@ -1436,7 +1436,7 @@ class Table(DataDict):
         self.hasChanged = True
     def setdefault(self,key,default):
         if key not in self.data: self.hasChanged = True
-        return self.data.setdefault(key,value)
+        return self.data.setdefault(key,default)
     def pop(self,key,default=None):
         self.hasChanged = True
         return self.data.pop(key,default)
