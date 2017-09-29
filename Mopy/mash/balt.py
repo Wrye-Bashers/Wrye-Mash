@@ -204,9 +204,10 @@ def ensureDisplayed(frame,x=100,y=100):
         frame.MoveXY(topLeft.x+x,topLeft.y+y)
 
 def setCheckListItems(checkListBox,names,values):
-    """Convenience method for setting a bunch of wxCheckListBox items. The main advantage
-    of this is that it doesn't clear the list unless it needs to. Which is good if you want
-    to preserve the scroll position of the list."""
+    """Convenience method for setting a bunch of wxCheckListBox items. The
+    main advantage of this is that it doesn't clear the list unless it needs
+    to. Which is good if you want to preserve the scroll position of the list.
+    """
     if not names:
         checkListBox.Clear()
     else:
@@ -214,6 +215,9 @@ def setCheckListItems(checkListBox,names,values):
             if index >= checkListBox.GetCount():
                 checkListBox.Append(name)
             else:
+                if index == -1:
+                    deprint("index = -1, name = %s, value = %s" % (name, value))
+                    continue
                 checkListBox.SetString(index,name)
             checkListBox.Check(index,value)
         for index in range(checkListBox.GetCount(),len(names),-1):
