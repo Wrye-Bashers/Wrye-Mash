@@ -915,7 +915,7 @@ class Flags(object):
         object.__setattr__(self,'_names',names or {})
 
     def __call__(self,newValue=None):
-        """Retuns a clone of self, optionally with new value."""
+        """Returns a clone of self, optionally with new value."""
         if newValue is not None:
             return Flags(int(newValue) | 0L,self._names)
         else:
@@ -929,7 +929,7 @@ class Flags(object):
     #--As hex string
     def hex(self):
         """Returns hex string of value."""
-        return '%08X' % (self._field,)
+        return u'%08X' % (self._field,)
     def dump(self):
         """Returns value for packing"""
         return self._field
@@ -938,6 +938,13 @@ class Flags(object):
     def __int__(self):
         """Return as integer value for saving."""
         return self._field
+    def __getstate__(self):
+        """Return values for pickling."""
+        return self._field, self._names
+    def __setstate__(self,fields):
+        """Used by unpickler."""
+        self._field = fields[0]
+        self._names = fields[1]
 
     #--As list
     def __getitem__(self, index):
