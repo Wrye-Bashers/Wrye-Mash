@@ -1015,12 +1015,14 @@ class Flags(object):
         return tuple(trueNames)
 
 #------------------------------------------------------------------------------
-class DataDict:
-    """Mixin class that handles dictionary emulation, assuming that dictionary is is 'data' attribute."""
+class DataDict(object):
+    """Mixin class that handles dictionary emulation, assuming that
+    dictionary is its 'data' attribute."""
 
     def __contains__(self,key):
         return key in self.data
     def __getitem__(self,key):
+        """Return value for key or raise KeyError if not present."""
         return self.data[key]
     def __setitem__(self,key,value):
         self.data[key] = value
@@ -1029,7 +1031,7 @@ class DataDict:
     def __len__(self):
         return len(self.data)
     def setdefault(self,key,default):
-        return self.data.setdefault(key,value)
+        return self.data.setdefault(key,default)
     def keys(self):
         return self.data.keys()
     def values(self):
