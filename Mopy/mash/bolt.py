@@ -860,7 +860,7 @@ def clearReadOnly(dirPath):
 
 # Util Constants --------------------------------------------------------------
 #--Unix new lines
-reUnixNewLine = re.compile(r'(?<!\r)\n')
+reUnixNewLine = re.compile(ur'(?<!\r)\n',re.U)
 
 # Util Classes ----------------------------------------------------------------
 #------------------------------------------------------------------------------
@@ -1656,7 +1656,7 @@ def unQuote(inString):
 
 def winNewLines(inString):
     """Converts unix newlines to windows newlines."""
-    return reUnixNewLine.sub('\r\n',inString)
+    return reUnixNewLine.sub(u'\r\n',inString)
 
 # Log/Progress ----------------------------------------------------------------
 #------------------------------------------------------------------------------
