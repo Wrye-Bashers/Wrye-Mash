@@ -1,6 +1,6 @@
-= Yacoby's Wrye Mash Fork =====================================================
-* Latest Version: [[http://wrye.ufrealms.net | Wrye Morrowind]] 
-* Discussion: [[http://www.elderscrolls.com/forums/index.php?showforum=12 | Elder Scrolls Forums]]
+= Wrye Mash =====================================================
+* Latest Version: [[https://github.com/Wrye-Bashers/Wrye-Mash/releases | Wrye Mash]]
+* Discussion: [[https://afkmods.iguanadons.net/index.php?/topic/5068-wipz-wrye-mash/ | AFK Mods Forums]]
 
 == Contents ===================================================================
 {{CONTENTS=2}}
@@ -138,20 +138,17 @@
 == Installation ===============================================================
 === Get and Install
 * Wrye Mash is written in [[http://www.python.org/doc/Summary.html|python]] and uses the [[http://wxpython.org/what.php|wxPython GUI library]] to provide the interface. So before you can run Wrye Mash, you'll need to download both of these.
-* __Download and Install Python 2.5__ 
-. Download link: [[http://www.python.org/ftp/python/2.5/python-2.5.msi|Python 2.5]]
-* __Download and Install wxPython 2.8.0.1 ANSI__  
-. Download link: [[http://prdownloads.sourceforge.net/wxpython/wxPython2.8-win32-ansi-2.8.0.1-py25.exe|wxPython 2.8.0.1 ANSI for python 2.5]]. 
+* __Download and Install Python 2.7.12__
+. Download link: [[https://www.python.org/downloads/release/python-2712/|Python 2.7.12]]
+* __Download and Install wxPython 2.8.0.1 Unicode__
+. Download link: [[https://sourceforge.net/projects/wxpython/files/wxPython/2.8.12.1/wxPython2.8-win32-unicode-2.8.12.1-py27.exe/download|wxPython 2.8.12.1 Unicode for python 2.7]].
 * __Unzip Wrye Mash XX.zip:__ 
 . Unzip the files ~~into your Morrowind installation directory.~~ If you've done this correctly, you'll find mash.py and other mash files under Morrowind\Mopy.
 
-=== Alternative Python/wxPython 
-~~Only for gearheads and/or people who need/want to use a different version of python/wxPython for some reason...~~
-* Both python and wxPython release new versions on regular basis. Many of the recent ones should work with Mash. Some of the older ones are known not to. If you want/need to use a different installation, then here are some alternatives:
-  * **Most Recent Python/wxPython**
-  . If you want to use the latest version of python and wxPython, get them from: [[http://www.python.org/download/|Python downloads]] and [[http://wxpython.org/download.php#binaries|wxPython downloads]]. When getting the wxPython download, be sure to get the **ANSI** version that **matches the version of python** you downloaded. (Note that Mash does **not** support the unicode version of wxWindows.) 
-  * **OR... Python 2.4/wxPython 2.5.3.1**
-  . If you want to use the older well tested set of python and wxPython, download [[http://www.python.org/ftp/python/2.4.3/python-2.4.3.msi|Python 2.4.3]] and [[http://prdownloads.sourceforge.net/wxpython/wxPython2.5-win32-ansi-2.5.3.1-py24.exe|wxPython 2.5.3.1 ANSI for Python 2.4]]. Most development/testing of Mash is done with this set, however it's a little dated.
+=== Wrye Mash Standalone
+You can download a standalone EXE that doesn't require Python to be installed.
+* __Wrye Mash 87 Standalone__
+. Download link: [[https://github.com/Wrye-Bashers/Wrye-Mash/releases/tag/87|Wrye Mash 87 Standalone]]
 
 === Starting Wrye Mash
 * **Double click** the "Wrye Mash for Python 2.4 (2.5)" shortcut in the Mopy directory. 
@@ -1090,16 +1087,20 @@ The Mash distribution includes additional files that assist in its operation and
 
 == Versions ===================================================================
 {{CONTENTS=0}}
+=== 88 [In Development]
+* Imported every Wrye Bash class or method that hadn't changed much from what Wrye had originally
+  * Test to see what has been Broken
+
 === 87 [In Development]
 * Updated 7zip files
 * Removed stdout, stderr redirect
- * Wrye Mash Log would always be empty regardless of the error
+  * Wrye Mash Log would always be empty regardless of the error
+  * NOTE: Two error output windows will appear until the next update
 * Temporarily added pubsub from wxPython for WMSA
- * When pubsub isn't present the following error occurs:
- * AttributeError: 'module' object has no attribute 'Publisher'
+  * When pubsub isn't present the following error occurs:
+  * AttributeError: 'module' object has no attribute 'Publisher'
 * Fix for bolt.Path.getNorm on Python 2.7.8
- * Would return a Path object if it was of the form Path(u''), apparently
- * Path(u'') now is True for `if not name`, prior to this is was not.
+  * Would return a Path object if it was of the form Path(u''), apparently Path(u'') now is True for `if not name`, prior to this is was not.
 
 === 86 [01/02/2012]
 * Fixed output logging
@@ -1126,9 +1127,9 @@ The Mash distribution includes additional files that assist in its operation and
 * Changed the icon
 * Added markers to the installer
 * A lot of code refactoring
- * Moved code out of masher.py
- * Settings now is in settings.py
- * Globals are in a file called globals.py (so it is easier to tell if a var is global)
+  * Moved code out of masher.py
+  * Settings now is in settings.py
+  * Globals are in a file called globals.py (so it is easier to tell if a var is global)
 
 === 84 [2/5/2009]
 * [[#|Installers Tab]]: Fix a bug with espm filtering of aliased mods.
