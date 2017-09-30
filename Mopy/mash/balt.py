@@ -256,7 +256,7 @@ def setCheckListItems(checkListBox,names,values):
                 checkListBox.Append(name)
             else:
                 if index == -1:
-                    deprint("index = -1, name = %s, value = %s" % (name, value))
+                    deprint(u"index = -1, name = %s, value = %s" % (name, value))
                     continue
                 checkListBox.SetString(index,name)
             checkListBox.Check(index,value)
