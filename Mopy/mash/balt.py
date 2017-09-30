@@ -440,25 +440,21 @@ def askOpen(parent,title=u'',defaultDir=u'',defaultFile=u'',wildcard=u'',style=w
     dialog.Destroy()
     return result
 
-def askOpenMulti(parent,title='',defaultDir='',defaultFile='',wildcard='',style=wx.OPEN|wx.MULTIPLE):
-    """Show as save dialog and return selected path(s)."""
-    return askOpen(parent,title,defaultDir,defaultFile,wildcard,style )
+def askOpenMulti(parent,title=u'',defaultDir=u'',defaultFile=u'',wildcard=u'',style=wx.FD_FILE_MUST_EXIST):
+    """Show as open dialog and return selected path(s)."""
+    return askOpen(parent,title,defaultDir,defaultFile,wildcard,wx.FD_OPEN|wx.FD_MULTIPLE|style)
 
-def askSave(parent,title='',defaultDir='',defaultFile='',wildcard='',style=wx.OVERWRITE_PROMPT):
+def askSave(parent,title=u'',defaultDir=u'',defaultFile=u'',wildcard=u'',style=wx.FD_OVERWRITE_PROMPT):
     """Show as save dialog and return selected path(s)."""
-    return askOpen(parent,title,defaultDir,defaultFile,wildcard,wx.SAVE|style )
+    return askOpen(parent,title,defaultDir,defaultFile,wildcard,wx.FD_SAVE|style)
 
 #------------------------------------------------------------------------------
-def askText(parent,message,title='',default=''):
+def askText(parent, message, title=u'', default=u'', strip=True):
     """Shows a text entry dialog and returns result or None if canceled."""
-    dialog = wx.TextEntryDialog(parent,message,title,default)
-    if dialog.ShowModal() != wx.ID_OK:
-        dialog.Destroy()
-        return None
-    else:
-        value = dialog.GetValue()
-        dialog.Destroy()
-        return value
+    with wx.TextEntryDialog(parent, message, title, default) as dialog:
+        if dialog.ShowModal() != wx.ID_OK: return None
+        txt = dialog.GetValue()
+        return txt.strip() if strip else txt
 
 # Message Dialogs -------------------------------------------------------------
 def askStyled(parent,message,title,style):
@@ -469,32 +465,32 @@ def askStyled(parent,message,title,style):
     dialog.Destroy()
     return result in (wx.ID_OK,wx.ID_YES)
 
-def askOk(parent,message,title=''):
+def askOk(parent,message,title=u''):
     """Shows a modal error message."""
     return askStyled(parent,message,title,wx.OK|wx.CANCEL)
 
-def askYes(parent,message,title='',default=True):
+def askYes(parent,message,title=u'',default=True):
     """Shows a modal warning message."""
     style = wx.YES_NO|wx.ICON_EXCLAMATION|((wx.NO_DEFAULT,wx.YES_DEFAULT)[default])
     return askStyled(parent,message,title,style)
 
-def askWarning(parent,message,title=_('Warning')):
+def askWarning(parent,message,title=_(u'Warning')):
     """Shows a modal warning message."""
     return askStyled(parent,message,title,wx.OK|wx.CANCEL|wx.ICON_EXCLAMATION)
 
-def showOk(parent,message,title=''):
+def showOk(parent,message,title=u''):
     """Shows a modal error message."""
     return askStyled(parent,message,title,wx.OK)
 
-def showError(parent,message,title=_('Error')):
+def showError(parent,message,title=_(u'Error')):
     """Shows a modal error message."""
     return askStyled(parent,message,title,wx.OK|wx.ICON_HAND)
 
-def showWarning(parent,message,title=_('Warning')):
+def showWarning(parent,message,title=_(u'Warning')):
     """Shows a modal warning message."""
     return askStyled(parent,message,title,wx.OK|wx.ICON_EXCLAMATION)
 
-def showInfo(parent,message,title=_('Information')):
+def showInfo(parent,message,title=_(u'Information')):
     """Shows a modal information message."""
     return askStyled(parent,message,title,wx.OK|wx.ICON_INFORMATION)
 
