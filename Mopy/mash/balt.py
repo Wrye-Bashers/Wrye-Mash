@@ -302,12 +302,13 @@ def toggleButton(parent, label=u'', pos=defPos, size=defSize, style=0,
     if toggle_tip: gButton.SetToolTip(tooltip(toggle_tip))
     return gButton
 
-def checkBox(parent,label='',pos=defPos,size=defSize,style=0,val=defVal,
-        name='checkBox',id=defId,onCheck=None,tip=None):
+def checkBox(parent, label=u'', pos=defPos, size=defSize, style=0, val=defVal,
+             name='checkBox', onCheck=None, checkbox_tip=None, checked=False):
     """Creates a checkBox, binds check function, then returns bound button."""
-    gCheckBox = wx.CheckBox(parent,id,label,pos,size,style,val,name)
-    if onCheck: gCheckBox.Bind(wx.EVT_CHECKBOX,onCheck)
-    if tip: gCheckBox.SetToolTip(tooltip(tip))
+    gCheckBox = wx.CheckBox(parent, defId, label, pos, size, style, val, name)
+    if onCheck: gCheckBox.Bind(wx.EVT_CHECKBOX, lambda __event: onCheck())
+    if checkbox_tip: gCheckBox.SetToolTip(tooltip(checkbox_tip))
+    gCheckBox.SetValue(checked)
     return gCheckBox
 
 def staticText(parent,label='',pos=defPos,size=defSize,style=0,name="staticText",id=defId,):
