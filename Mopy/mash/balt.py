@@ -381,16 +381,12 @@ def vsbSizer(boxArgs,*elements):
 
 # Modal Dialogs ---------------------------------------------------------------
 #------------------------------------------------------------------------------
-def askDirectory(parent,message=_('Choose a directory.'),defaultPath=''):
+def askDirectory(parent,message=_(u'Choose a directory.'),defaultPath=u''):
     """Shows a modal directory dialog and return the resulting path, or None if canceled."""
-    dialog = wx.DirDialog(parent,message,GPath(defaultPath).s,style=wx.DD_NEW_DIR_BUTTON)
-    if dialog.ShowModal() != wx.ID_OK:
-        dialog.Destroy()
-        return None
-    else:
-        path = dialog.GetPath()
-        dialog.Destroy()
-        return path
+    with wx.DirDialog(parent, message, GPath(defaultPath).s,
+                      style=wx.DD_NEW_DIR_BUTTON) as dialog:
+        if dialog.ShowModal() != wx.ID_OK: return None
+        return GPath(dialog.GetPath())
 
 #------------------------------------------------------------------------------
 def askContinue(parent,message,continueKey,title=_('Warning')):
