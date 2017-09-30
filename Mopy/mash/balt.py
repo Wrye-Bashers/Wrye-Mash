@@ -420,16 +420,23 @@ def askContinue(parent,message,continueKey,title=_('Warning')):
     return result in (wx.ID_OK,wx.ID_YES)
 
 #------------------------------------------------------------------------------
-def askOpen(parent,title='',defaultDir='',defaultFile='',wildcard='',style=wx.OPEN):
+def askOpen(parent,title=u'',defaultDir=u'',defaultFile=u'',wildcard=u'',style=wx.FD_OPEN,mustExist=False):
     """Show as file dialog and return selected path(s)."""
     defaultDir,defaultFile = [GPath(x).s for x in (defaultDir,defaultFile)]
-    dialog = wx.FileDialog(parent,title,defaultDir,defaultFile,wildcard, style )
+    dialog = wx.FileDialog(parent,title,defaultDir,defaultFile,wildcard, style)
     if dialog.ShowModal() != wx.ID_OK:
         result = False
-    elif style & wx.MULTIPLE:
+    elif style & wx.FD_MULTIPLE:
         result = map(GPath,dialog.GetPaths())
+        if mustExist:
+            for returned_path in result:
+                if not returned_path.exists():
+                    result = False
+                    break
     else:
         result = GPath(dialog.GetPath())
+        if mustExist and not result.exists():
+            result = False
     dialog.Destroy()
     return result
 
