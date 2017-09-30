@@ -63,7 +63,7 @@ class IdList:
             yield id
 
 # Constants -------------------------------------------------------------------
-defId = -1
+defId = wx.ID_ANY
 defVal = wx.DefaultValidator
 defPos = wx.DefaultPosition
 defSize = wx.DefaultSize
