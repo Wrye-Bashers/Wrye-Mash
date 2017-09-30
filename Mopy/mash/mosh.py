@@ -3453,7 +3453,7 @@ class Installer(object):
     def initDefault(self):
         """Inits everything to default values."""
         #--Package Only
-        self.archive = ''
+        self.archive = u''
         self.modified = 0 #--Modified date
         self.size = 0 #--size of archive file
         self.crc = 0 #--crc of archive
@@ -3468,8 +3468,8 @@ class Installer(object):
         #--User Only
         self.skipVoices = False
         self.hasExtraData = False
-        self.comments = ''
-        self.group = '' #--Default from abstract. Else set by user.
+        self.comments = u''
+        self.group = u'' #--Default from abstract. Else set by user.
         self.order = -1 #--Set by user/interface.
         self.isActive = False
         self.espmNots = set() #--Lowercase esp/m file names that user has decided not to install.
