@@ -274,12 +274,14 @@ def tooltip(text,wrap=50):
     text = textwrap.fill(text,wrap)
     return wx.ToolTip(text)
 
-def bitmapButton(parent,bitmap,pos=defPos,size=defSize,style=wx.BU_AUTODRAW,val=defVal,
-        name='button',id=defId,onClick=None,tip=None):
+def bitmapButton(parent, bitmap, button_tip=None, pos=defPos, size=defSize,
+                 style=wx.BU_AUTODRAW, val=defVal, name=u'button',
+                 onBBClick=None, onRClick=None):
     """Creates a button, binds click function, then returns bound button."""
-    gButton = wx.BitmapButton(parent,id,bitmap,pos,size,style,val,name)
-    if onClick: gButton.Bind(wx.EVT_BUTTON,onClick)
-    if tip: gButton.SetToolTip(tooltip(tip))
+    gButton = wx.BitmapButton(parent,defId,bitmap,pos,size,style,val,name)
+    if onBBClick: gButton.Bind(wx.EVT_BUTTON, lambda __event: onBBClick())
+    if onRClick: gButton.Bind(wx.EVT_CONTEXT_MENU,onRClick)
+    if button_tip: gButton.SetToolTip(tooltip(button_tip))
     return gButton
 
 def button(parent,label='',pos=defPos,size=defSize,style=0,val=defVal,
