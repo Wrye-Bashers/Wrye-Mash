@@ -315,12 +315,14 @@ def staticText(parent,label='',pos=defPos,size=defSize,style=0,name="staticText"
     """Static text element."""
     return wx.StaticText(parent,id,label,pos,size,style,name)
 
-def spinCtrl(parent,value='',pos=defPos,size=defSize,style=wx.SP_ARROW_KEYS,
-        min=0,max=100,initial=0,name='wxSpinctrl',id=defId,onSpin=None,tip=None):
+def spinCtrl(parent, value=u'', pos=defPos, size=defSize,
+             style=wx.SP_ARROW_KEYS, min=0, max=100, initial=0,
+             name=u'wxSpinctrl', onSpin=None, spin_tip=None):
     """Spin control with event and tip setting."""
-    gSpinCtrl=wx.SpinCtrl(parent,id,value,pos,size,style,min,max,initial,name)
-    if onSpin: gSpinCtrl.Bind(wx.EVT_SPINCTRL,onSpin)
-    if tip: gSpinCtrl.SetToolTip(tooltip(tip))
+    gSpinCtrl = wx.SpinCtrl(parent, defId, value, pos, size, style, min, max,
+                            initial, name)
+    if onSpin: gSpinCtrl.Bind(wx.EVT_SPINCTRL, lambda __event: onSpin())
+    if spin_tip: gSpinCtrl.SetToolTip(tooltip(spin_tip))
     return gSpinCtrl
 
 # Sub-Windows -----------------------------------------------------------------
