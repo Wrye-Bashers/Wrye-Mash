@@ -24,7 +24,6 @@
 import StringIO
 import cPickle
 import codecs
-import copy
 import csv
 import datetime
 import locale
@@ -38,10 +37,8 @@ import sys
 import tempfile
 import time
 import traceback
-from types import *
 from binascii import crc32
 from functools import partial
-import compat
 import chardet
 import exception
 # Localization ----------------------------------------------------------------
@@ -235,6 +232,21 @@ def encode(text_str, encodings=encodingOrder, firstEncoding=None,
     raise UnicodeEncodeError(
         u'Text could not be encoded using any of the following encodings: %s' % encodings)
 
+
+def formatInteger(value):
+    """Convert integer to string formatted to locale."""
+    return decode(locale.format('%d', int(value), True),
+                  locale.getpreferredencoding())
+
+def formatDate(value):
+    """Convert time to string formatted to to locale's default date/time."""
+    try:
+        local = time.localtime(value)
+    except ValueError: # local time in windows can't handle negative values
+        local = time.gmtime(value)
+        # deprint(u'Timestamp %d failed to convert to local, using %s' % (
+        #     value, local))
+    return decode(time.strftime('%c', local), locale.getpreferredencoding())
 
 # LowStrings ------------------------------------------------------------------
 class LString(object):

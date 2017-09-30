@@ -3,8 +3,6 @@
 import os
 import re
 import string
-import struct
-import StringIO
 import sys
 import types
 

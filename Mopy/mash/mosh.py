@@ -14,19 +14,12 @@
 # Localization ----------------------------------------------------------------
 #--Not totally clear on this, but it seems to safest to put locale first...
 import locale; locale.setlocale(locale.LC_ALL,'')
-#locale.setlocale(locale.LC_ALL, 'German') #--Language test
+# locale.setlocale(locale.LC_ALL, 'German') #--Language test
 import time
 
-def formatInteger(value):
-    """Convert integer to string formatted to locale."""
-    return locale.format('%d',int(value),1)
-
-def formatDate(value):
-    """Convert time to string formatted to to locale's default date/time."""
-    return time.strftime('%c',time.localtime(value))
 
 # Imports ---------------------------------------------------------------------
-#--Python
+# --Python
 import array
 import cPickle
 import cStringIO
@@ -43,15 +36,16 @@ import stat
 import exception
 
 import bolt
-from bolt import LString, GPath, Flags, DataDict, SubProgress, PickleDict, Log
+from bolt import LString, GPath, DataDict, SubProgress, PickleDict, Log, \
+    formatInteger, formatDate
 
 import compat
 
 import mush
-bush = mush #--Cheap code compatibility.
+from mush import bethDataFiles
 
 # Singletons, Constants -------------------------------------------------------
-#--File Singletons
+# --File Singletons
 mwIniFile = None #--MWIniFile singleton
 modInfos  = None  #--ModInfos singleton
 saveInfos = None #--SaveInfos singleton
@@ -3383,7 +3377,7 @@ class Installer(object):
         rootName = apRoot.stail
         progress = progress or bolt.Progress()
         new_sizeCrcDate = {}
-        bethFiles = bush.bethDataFiles
+        bethFiles = mush.bethDataFiles
         skipExts = Installer.skipExts
         asRoot = apRoot.s
         relPos = len(apRoot.s)+1
@@ -3541,7 +3535,7 @@ class Installer(object):
         dataDirsPlus = self.dataDirsPlus
         dataDirsMinus = self.dataDirsMinus
         skipExts = self.skipExts
-        bethFiles = bush.bethDataFiles
+        bethFiles = mush.bethDataFiles
         packageFiles = set(('package.txt','package.jpg'))
         unSize = 0
         espmNots = self.espmNots

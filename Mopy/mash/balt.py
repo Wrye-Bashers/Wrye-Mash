@@ -24,12 +24,11 @@
 #..Handled by bolt, so import that.
 import exception
 import bolt
-from bolt import _, GPath, deprint, delist
+from bolt import _, GPath, deprint
 
 #--Python
 import cStringIO
 import string
-import struct
 import sys
 import textwrap
 import time

@@ -8,16 +8,14 @@
 # TODO: add indexing, and research functions.
 #
 # Imports ---------------------------------------------------------------------
-#--Localization
-#..Handled by mosh, so import that.
+# --Localization
+# ..Handled by mosh, so import that.
 import cStringIO
 import os
 import re
 import shutil
 import string
-import struct
 import sys
-import textwrap
 import time
 from types import *
 
@@ -27,59 +25,45 @@ from wx.lib.evtmgr import eventManager
 import wx.html
 
 import mosh
-from mosh import _
-from mosh import formatInteger,formatDate
+from mosh import _, InstallersData, ModInfos, InstallerProject, ScreensData, \
+    InstallerArchive, dirs
 
 import bolt
-from bolt import LString,GPath, SubProgress
+from bolt import LString, GPath, SubProgress, formatInteger, formatDate, \
+    LogFile
 
 import balt
-from balt import tooltip, fill, bell
-from balt import bitmapButton, button, toggleButton, checkBox, staticText, spinCtrl
-from balt import leftSash, topSash
-from balt import spacer, hSizer, vSizer, hsbSizer, vsbSizer
-from balt import colors, images, Image
-from balt import Links, Link, SeparatorLink, MenuLink
+from balt import tooltip, fill, staticText, leftSash, hSizer, vSizer, colors, \
+    Image, Links, Link, SeparatorLink, MenuLink
 from gui.settings import SettingsWindow
 
 import conf
 import globals
 import exception
 
-
-#general messageboxes
+# general messageboxes
 import gui.dialog
-
 import gui.utils
 from gui.helpbrowser import HelpBrowser
 
-#this hides the complexities of loading mlox and imports mlox to the name mlox
+# this hides the complexities of loading mlox and imports mlox to the name mlox
 from mlox.loader import importMlox
+
 mlox = importMlox()
 
 import tes3cmd
 import tes3cmd.gui
 
-bosh = mosh #--Cheap compatibility for imported code.
-
-#--Python
-
-
-
-#--Balt
-
-#--Internet Explorer
+# --Internet Explorer
 #  - Make sure that python root directory is in PATH, so can access dll's.
 if sys.prefix not in set(os.environ['PATH'].split(';')):
-    os.environ['PATH'] += ';'+sys.prefix
+    os.environ['PATH'] += ';' + sys.prefix
 
 try:
     import wx.lib.iewin
 except (ValueError, ImportError):
-    print ( 'Failed to import wx.lib.iewin. '
-          + 'Features may not be available and there may be lots of errrors!')
-
-
+    print ('Failed to import wx.lib.iewin. '
+           + 'Features may not be available and there may be lots of errrors!')
 
 
 # Gui Ids ---------------------------------------------------------------------
@@ -1911,7 +1895,7 @@ class InstallersPanel(SashTankPanel):
     def __init__(self,parent):
         """Initialize."""
         globals.gInstallers = self
-        data = bosh.InstallersData()
+        data = mosh.InstallersData()
         SashTankPanel.__init__(self,data,parent)
         left,right = self.left,self.right
         #--Refreshing
@@ -2043,8 +2027,8 @@ class InstallersPanel(SashTankPanel):
     def RefreshUIMods(self):
         """Refresh UI plus refresh mods state."""
         self.gList.RefreshUI()
-        if bosh.modInfos.refresh():
-            del bosh.modInfos.mtimesReset[:]
+        if mosh.modInfos.refresh():
+            del mosh.modInfos.mtimesReset[:]
             globals.modList.Refresh('ALL')
 
     def RefreshDetails(self,item=None):
@@ -2122,7 +2106,7 @@ class InstallersPanel(SashTankPanel):
         if pageName == 'gGeneral':
             info = _("== Overview\n")
             info += _("Type: ")
-            info += (_('Archive'),_('Project'))[isinstance(installer,bosh.InstallerProject)]
+            info += (_('Archive'),_('Project'))[isinstance(installer,mosh.InstallerProject)]
             info += '\n'
             if installer.type == 1:
                 info += _("Structure: Simple\n")
@@ -2221,7 +2205,7 @@ class ScreensList(gui.List):
         self.colReverse = conf.settings.getChanged('bash.screens.colReverse')
         self.colWidths = conf.settings['bash.screens.colWidths']
         #--Data/Items
-        self.data = bosh.screensData = bosh.ScreensData()
+        self.data = mosh.ScreensData = mosh.ScreensData()
         self.sort = conf.settings['bash.screens.sort']
         #--Links
         self.mainMenu = ScreensList.mainMenu
@@ -2301,7 +2285,7 @@ class ScreensList(gui.List):
 
     def OnItemSelected(self,event=None):
         fileName = self.items[event.m_itemIndex]
-        filePath = bosh.screensData.dir.join(fileName)
+        filePath = mosh.ScreensData.dir.join(fileName)
         bitmap = (filePath.exists() and wx.Bitmap(filePath.s)) or None
         self.picture.SetBitmap(bitmap)
 
@@ -2345,7 +2329,7 @@ class ScreensPanel(gui.NotebookPanel):
 
     def OnShow(self):
         """Panel is shown. Update self.data."""
-        if bosh.screensData.refresh():
+        if mosh.ScreensData.refresh():
             globals.screensList.RefreshUI()
             #self.Refresh()
         self.SetStatusCount()
@@ -3699,7 +3683,7 @@ class File_Remove_Refs:
         fileInfo = self.window.data[fileName]
         caption = _('Refs Removed: ')+fileName
         progress = gui.dialog.ProgressDialog(caption)
-        log = mosh.LogFile(cStringIO.StringIO())
+        log = bolt.LogFile(cStringIO.StringIO())
         try:
             fileRefs = mosh.FileRefs(fileInfo,log=log,progress=progress)
             fileRefs.refresh()
@@ -3823,7 +3807,7 @@ class File_Replace_Refs:
         fileInfo = self.window.data[fileName]
         caption = _('Refs Replaced: ')+fileName
         progress = gui.dialog.ProgressDialog(caption)
-        log = mosh.LogFile(cStringIO.StringIO())
+        log = bolt.LogFile(cStringIO.StringIO())
         try:
             #--Replacer
             replacerName = self.GetItems()[event.GetId()-ID_REPLACERS.BASE]
@@ -3889,7 +3873,7 @@ class File_RepairRefs(Link):
             #--Log and Progress
             caption = _('Repairing ')+fileName
             progress = gui.dialog.ProgressDialog(caption)
-            log = mosh.LogFile(cStringIO.StringIO())
+            log = bolt.LogFile(cStringIO.StringIO())
             #--World Refs
             worldRefs = mosh.WorldRefs(log=log,progress=progress)
             try:
@@ -4243,17 +4227,17 @@ class InstallerLink(Link):
     def isSingleProject(self):
         """Indicates whether or not is single project."""
         if len(self.selected) != 1: return False
-        else: return isinstance(self.data[self.selected[0]],bosh.InstallerProject)
+        else: return isinstance(self.data[self.selected[0]],mosh.InstallerProject)
 
     def isSingleArchive(self):
         """Indicates whether or not is single archive."""
         if len(self.selected) != 1: return False
-        else: return isinstance(self.data[self.selected[0]],bosh.InstallerArchive)
+        else: return isinstance(self.data[self.selected[0]],mosh.InstallerArchive)
 
     def getProjectPath(self):
         """Returns whether build directory exists."""
         archive = self.selected[0]
-        return bosh.dirs['builds'].join(archive.sroot)
+        return mosh.dirs['builds'].join(archive.sroot)
 
     def projectExists(self):
         if not len(self.selected) == 1: return False
@@ -4447,7 +4431,7 @@ class Installer_Refresh(InstallerLink):
             for index,archive in enumerate(self.selected):
                 progress(index,_("Refreshing Packages...\n")+archive.s)
                 installer = self.data[archive]
-                apath = bosh.dirs['installers'].join(archive)
+                apath = mosh.dirs['installers'].join(archive)
                 installer.refreshBasic(apath,SubProgress(progress,index,index+1),True)
                 self.data.hasChanged = True
         finally:
@@ -4509,9 +4493,9 @@ class InstallerArchive_Unpack(InstallerLink):
         try:
             installer.unpackToProject(archive,project,SubProgress(progress,0,0.8))
             if project not in self.data:
-                self.data[project] = bosh.InstallerProject(project)
+                self.data[project] = mosh.InstallerProject(project)
             iProject = self.data[project]
-            pProject = bosh.dirs['installers'].join(project)
+            pProject = mosh.dirs['installers'].join(project)
             iProject.refreshed = False
             iProject.refreshBasic(pProject,SubProgress(progress,0.8,0.99),True)
             if iProject.order == -1:
@@ -4552,7 +4536,7 @@ class InstallerProject_Sync(InstallerLink):
         try:
             progress(0.1,_("Updating files."))
             installer.syncToData(project,missing|mismatched)
-            pProject = bosh.dirs['installers'].join(project)
+            pProject = mosh.dirs['installers'].join(project)
             installer.refreshed = False
             installer.refreshBasic(pProject,SubProgress(progress,0.1,0.99),True)
             self.data.refresh(what='NS')
@@ -4744,7 +4728,7 @@ class Mods_CopyActive(Link):
     def Execute(self,event):
         """Handle selection."""
         caption = _('Active Mods')
-        log = mosh.LogFile(cStringIO.StringIO())
+        log = bolt.LogFile(cStringIO.StringIO())
         log.setHeader(caption)
         for num, name in enumerate(mosh.mwIniFile.loadOrder):
             log('%03d  %s' % (num+1,name))
@@ -5386,7 +5370,7 @@ class Mod_Import_LCVSchedules(Link):
         table.setItem(fileName,'schedules.path',textPath)
         #--Import
         caption = textName
-        log = mosh.LogFile(cStringIO.StringIO())
+        log = bolt.LogFile(cStringIO.StringIO())
         try:
             generator = mosh.ScheduleGenerator()
             generator.log = log
@@ -5415,7 +5399,7 @@ class Mod_Import_MergedLists(Link):
         fileName = self.data[0]
         fileInfo = mosh.modInfos[fileName]
         caption = fileName
-        log = mosh.LogFile(cStringIO.StringIO())
+        log = bolt.LogFile(cStringIO.StringIO())
         progress = gui.dialog.ProgressDialog(caption)
         try:
             progress.setMax(10+len(mosh.mwIniFile.loadOrder))
@@ -5568,7 +5552,7 @@ class Mod_RenumberRefs(Link):
             #--Log and Progress
             caption = _('Renumbering ')+fileName
             progress = gui.dialog.ProgressDialog(caption)
-            log = mosh.LogFile(cStringIO.StringIO())
+            log = bolt.LogFile(cStringIO.StringIO())
             #--File Refs
             fileRefs = mosh.FileRefs(fileInfo,log=log,progress=progress)
             fileRefs.refresh()
@@ -5977,7 +5961,7 @@ class Save_MapNotes(Link):
         fileInfo = self.window.data[fileName]
         caption = _('Map Notes: ')+fileName
         progress = gui.dialog.ProgressDialog(caption)
-        log = mosh.LogFile(cStringIO.StringIO())
+        log = bolt.LogFile(cStringIO.StringIO())
         try:
             fileRefs = mosh.FileRefs(fileInfo,True,True,log=log,progress=progress)
             fileRefs.refresh()
@@ -6040,7 +6024,7 @@ class Save_Remove_DebrisCells(Link):
         fileName = self.data[0]
         fileInfo = self.window.data[fileName]
         progress = gui.dialog.ProgressDialog(fileName)
-        log = mosh.LogFile(cStringIO.StringIO())
+        log = bolt.LogFile(cStringIO.StringIO())
         count = 0
         try:
             #--Log and Progress
@@ -6097,7 +6081,7 @@ class Save_RepairAll(Link):
             #--Log and Progress
             caption = _('Repairing ')+fileName
             progress = gui.dialog.ProgressDialog(caption)
-            log = mosh.LogFile(cStringIO.StringIO())
+            log = bolt.LogFile(cStringIO.StringIO())
             #--World Refs
             worldRefs = mosh.WorldRefs(log=log,progress=progress)
             try:
@@ -6165,7 +6149,7 @@ class Save_Review(Link):
             #--Log and Progress
             caption = _('Review of ')+fileName
             progress = gui.dialog.ProgressDialog(caption)
-            log = mosh.LogFile(cStringIO.StringIO())
+            log = bolt.LogFile(cStringIO.StringIO())
             #--File Refs for Save File
             fileRefs = mosh.FileRefs(fileInfo,log=log,progress=progress)
             fileRefs.refresh()
@@ -6267,7 +6251,7 @@ class Masters_CopyList(Link):
         fileName = fileInfo.name
         #--Get masters list
         caption = _('Masters for %s:') % (fileName,)
-        log = mosh.LogFile(cStringIO.StringIO())
+        log = bolt.LogFile(cStringIO.StringIO())
         log.setHeader(caption)
         for num, name in enumerate(fileInfo.masterNames):
             version = mosh.modInfos.getVersion(name)
@@ -6403,10 +6387,10 @@ class Screens_NextScreenShot(Link):
             }}
         screensDir = GPath(newBase).head
         if screensDir:
-            if not screensDir.isabs(): screensDir = bosh.dirs['app'].join(screensDir)
+            if not screensDir.isabs(): screensDir = mosh.dirs['app'].join(screensDir)
             screensDir.makedirs()
         ini.saveSettings(settings)
-        bosh.screensData.refresh()
+        mosh.ScreensData.refresh()
         self.window.RefreshUI()
 
 #------------------------------------------------------------------------------
@@ -6425,7 +6409,7 @@ class Screen_ConvertToJpg(Link):
         progress = balt.Progress(_("Converting to Jpg"))
         try:
             progress.setFull(len(self.data))
-            srcDir = bosh.screensData.dir
+            srcDir = mosh.ScreensData.dir
             for index,fileName in enumerate(self.data):
                 progress(index,fileName.s)
                 srcPath = srcDir.join(fileName)
@@ -6437,7 +6421,7 @@ class Screen_ConvertToJpg(Link):
                 srcPath.remove()
         finally:
             if progress: progress.Destroy()
-            bosh.screensData.refresh()
+            mosh.ScreensData.refresh()
             self.window.RefreshUI()
 
 #------------------------------------------------------------------------------
@@ -6463,7 +6447,7 @@ class Screen_Rename(Link):
         root,numStr,ext = maPattern.groups()[:3]
         numLen = len(numStr)
         num = int(numStr or 0)
-        screensDir = bosh.screensData.dir
+        screensDir = mosh.ScreensData.dir
         for oldName in map(GPath,self.data):
             newName = GPath(root)+numStr+oldName.ext
             if newName != oldName:
@@ -6474,7 +6458,7 @@ class Screen_Rename(Link):
             num += 1
             numStr = `num`
             numStr = '0'*(numLen-len(numStr))+numStr
-        bosh.screensData.refresh()
+        mosh.ScreensData.refresh()
         self.window.RefreshUI()
 
 # App Links -------------------------------------------------------------------
