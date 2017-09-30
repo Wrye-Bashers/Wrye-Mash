@@ -292,12 +292,14 @@ def button(parent,label='',pos=defPos,size=defSize,style=0,val=defVal,
     if tip: gButton.SetToolTip(tooltip(tip))
     return gButton
 
-def toggleButton(parent,label='',pos=defPos,size=defSize,style=0,val=defVal,
-        name='button',id=defId,onClick=None,tip=None):
-    """Creates a toggle button, binds toggle function, then returns bound button."""
-    gButton = wx.ToggleButton(parent,id,label,pos,size,style,val,name)
-    if onClick: gButton.Bind(wx.EVT_TOGGLEBUTTON,onClick)
-    if tip: gButton.SetToolTip(tooltip(tip))
+def toggleButton(parent, label=u'', pos=defPos, size=defSize, style=0,
+                 val=defVal, name='button', onClickToggle=None,
+                 toggle_tip=None):
+    """Creates a toggle button, binds toggle function, then returns bound
+    button."""
+    gButton = wx.ToggleButton(parent, defId, label, pos, size, style, val, name)
+    if onClickToggle: gButton.Bind(wx.EVT_TOGGLEBUTTON, lambda __event: onClickToggle())
+    if toggle_tip: gButton.SetToolTip(tooltip(toggle_tip))
     return gButton
 
 def checkBox(parent,label='',pos=defPos,size=defSize,style=0,val=defVal,
