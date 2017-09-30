@@ -24,6 +24,7 @@
 import StringIO
 import cPickle
 import codecs
+import copy
 import csv
 import datetime
 import locale
@@ -1219,50 +1220,54 @@ class Settings(DataDict):
     to be archived). However, an indirect change (e.g., to a value that is a
     list) must be manually marked as changed by using the setChanged method."""
 
-    def __init__(self,dictFile):
+    def __init__(self, dictFile):
         """Initialize. Read settings from dictFile."""
         self.dictFile = dictFile
+        self.cleanSave = False
         if self.dictFile:
-            dictFile.load()
+            res = dictFile.load()
+            self.cleanSave = res == 0 # no data read - do not attempt to read on save
             self.vdata = dictFile.vdata.copy()
             self.data = dictFile.data.copy()
         else:
             self.vdata = {}
             self.data = {}
-        self.changed = []
-        self.deleted = []
+        self.defaults = {}
+        self.changed = set()
+        self.deleted = set()
 
     def loadDefaults(self,defaults):
         """Add default settings to dictionary. Will not replace values that are already set."""
+        self.defaults = defaults
         for key in defaults.keys():
             if key not in self.data:
-                self.data[key] = defaults[key]
-
-    def setDefault(self,key,default):
-        """Sets a single value to a default value if it has not yet been set."""
+                self.data[key] = copy.deepcopy(defaults[key])
 
     def save(self):
         """Save to pickle file. Only key/values marked as changed are saved."""
         dictFile = self.dictFile
         if not dictFile or dictFile.readOnly: return
-        dictFile.load()
+        # on a clean save ignore BashSettings.dat.bak possibly corrupt
+        if not self.cleanSave: dictFile.load()
         dictFile.vdata = self.vdata.copy()
         for key in self.deleted:
             dictFile.data.pop(key,None)
         for key in self.changed:
-            dictFile.data[key] = self.data[key]
+            if self.data[key] == self.defaults.get(key,None):
+                dictFile.data.pop(key,None)
+            else:
+                dictFile.data[key] = self.data[key]
         dictFile.save()
 
     def setChanged(self,key):
         """Marks given key as having been changed. Use if value is a dictionary, list or other object."""
         if key not in self.data:
-            raise exception.ArgumentError(u'No settings data for '+key)
-        if key not in self.changed:
-            self.changed.append(key)
+            raise exception.ArgumentError(u'No settings data for ' + key)
+        self.changed.add(key)
 
     def getChanged(self,key,default=None):
         """Gets and marks as changed."""
-        if default != None and key not in self.data:
+        if default is not None and key not in self.data:
             self.data[key] = default
         self.setChanged(key)
         return self.data.get(key)
@@ -1271,13 +1276,13 @@ class Settings(DataDict):
     def __setitem__(self,key,value):
         """Dictionary emulation. Marks key as changed."""
         if key in self.deleted: self.deleted.remove(key)
-        if key not in self.changed: self.changed.append(key)
+        self.changed.add(key)
         self.data[key] = value
 
     def __delitem__(self,key):
         """Dictionary emulation. Marks key as deleted."""
         if key in self.changed: self.changed.remove(key)
-        if key not in self.deleted: self.deleted.append(key)
+        self.deleted.add(key)
         del self.data[key]
 
     def setdefault(self,key,value):
@@ -1291,7 +1296,7 @@ class Settings(DataDict):
     def pop(self,key,default=None):
         """Dictionary emulation: extract value and delete from dictionary."""
         if key in self.changed: self.changed.remove(key)
-        if key not in self.deleted: self.deleted.append(key)
+        self.deleted.add(key)
         return self.data.pop(key,default)
 
 #------------------------------------------------------------------------------
