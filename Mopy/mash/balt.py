@@ -927,26 +927,40 @@ class Picture(wx.Window):
 #------------------------------------------------------------------------------
 class Progress(bolt.Progress):
     """Progress as progress dialog."""
-    def __init__(self,title=_('Progress'),message=' '*60,parent=None,
-        style=wx.PD_APP_MODAL|wx.PD_ELAPSED_TIME|wx.PD_AUTO_HIDE):
-        if sys.version[:3] != '2.4': style |= wx.PD_SMOOTH
-        self.dialog = wx.ProgressDialog(title,message,100,parent,style)
+    _style = wx.PD_APP_MODAL | wx.PD_AUTO_HIDE | wx.PD_SMOOTH
+
+    def __init__(self, title=_(u'Progress'), message=u' '*60, parent=None,
+                 abort=False, elapsed=True, __style=_style):
+        if abort: __style |= wx.PD_CAN_ABORT
+        if elapsed: __style |= wx.PD_ELAPSED_TIME
+        self.dialog = wx.ProgressDialog(title, message, 100, parent, __style)
         bolt.Progress.__init__(self)
         self.message = message
         self.isDestroyed = False
-        self.prevMessage = ''
+        self.prevMessage = u''
         self.prevState = -1
         self.prevTime = 0
 
-    def doProgress(self,state,message):
+    # __enter__ and __exit__ for use with the 'with' statement
+    def __exit__(self, exc_type, exc_value, exc_traceback): self.Destroy()
+
+    def getParent(self): return self.dialog.GetParent()
+
+    def setCancel(self, enabled=True):
+        cancel = self.dialog.FindWindowById(wx.ID_CANCEL)
+        cancel.Enable(enabled)
+
+    def _do_progress(self, state, message):
         if not self.dialog:
-            raise exception.StateError(u'Dialog already destroyed.')
+            raise StateError(u'Dialog already destroyed.')
         elif (state == 0 or state == 1 or (message != self.prevMessage) or
             (state - self.prevState) > 0.05 or (time.time() - self.prevTime) > 0.5):
             if message != self.prevMessage:
-                self.dialog.Update(int(state*100),message)
+                ret = self.dialog.Update(int(state*100),message)
             else:
-                self.dialog.Update(int(state*100))
+                ret = self.dialog.Update(int(state*100))
+            if not ret[0]:
+                raise CancelError
             self.prevMessage = message
             self.prevState = state
             self.prevTime = time.time()
