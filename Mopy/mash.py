@@ -7,12 +7,27 @@ class ErrorLogger:
     """Class can be used for a writer to write to multiple streams. Duplicated
     in both possible startup files so log can be created without external
     dependacies"""
-    pass
+
+    def __init__(self, outStream):
+        self.outStream = outStream
+
+    def write(self, message):
+        for s in self.outStream:
+            s.write(message)
+
+
+# Setup log file ---------------------------------------------------------------
+f = file("WryeMash.log", "w+")
+sys.stdout = ErrorLogger([f, sys.__stdout__])
+sys.stderr = ErrorLogger([f, sys.__stderr__])
+f.write("Wrye Mash Log!\n")
 
 
 # Functions used in startup ----------------------------------------------------
 def CheckWx():
     """Checks wx is installed, and tries to alert the user"""
+    msg = ("You need to install wxPython."
+           + "See the Wrye Mash readme for more info!")
     try:
         import wx
     except ImportError:
@@ -21,23 +36,12 @@ def CheckWx():
             import tkMessageBox
             tk = Tkinter.Tk()
             tk.withdraw()  # hide the main window
-            tkMessageBox.showwarning("wxPython Not Found!",
-                "You need to install wxPython. See the Wrye Mash readme for more info")
+            tkMessageBox.showwarning("wxPython Not Found!", msg)
             tk.destroy()
             sys.exit(1)
         except ImportError:
-            print "You need to install wxPython. See the Wrye Mash readme for more info!"
+            print msg
             raise  # dump the info to sdterr
-
-
-def wxMessageBox(caption, message):
-    """Creates a messagebox with its own wx application"""
-    import wx
-    app = wx.App()
-    dlg = wx.MessageDialog(None, message, caption, wx.OK | wx.ICON_ERROR)
-    dlg.ShowModal()
-    dlg.Destroy()
-    app.Destroy()
 
 
 def ForceWxVersion():
@@ -52,7 +56,7 @@ def ForceWxVersion():
 CheckWx()
 ForceWxVersion()
 
-#required to be able to run this with py2exe
+# required to be able to run this with py2exe
 from wx.lib.pubsub import setupv1
 from wx.lib.pubsub import Publisher
 
