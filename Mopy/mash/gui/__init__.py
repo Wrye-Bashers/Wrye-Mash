@@ -15,7 +15,7 @@ wxListAligns = [wx.LIST_FORMAT_LEFT, wx.LIST_FORMAT_RIGHT, wx.LIST_FORMAT_CENTRE
 
 class LoggerWindow(wx.Frame):
     """
-    Alters the logger so that it doesn't write to stdout/stderr but to 
+    Alters the logger so that it doesn't write to stdout/stderr but to
     a dialog box
     """
     def __init__(self, parent, title):
@@ -23,7 +23,7 @@ class LoggerWindow(wx.Frame):
         panel = wx.Panel(self, wx.ID_ANY)
         self.txtLog = wx.TextCtrl(panel, wx.ID_ANY, size=(300,100),
                           style = wx.TE_MULTILINE|wx.TE_READONLY|wx.HSCROLL)
- 
+
         sizer = wx.BoxSizer(wx.VERTICAL)
         sizer.Add(self.txtLog, 1, wx.ALL|wx.EXPAND, 5)
         panel.SetSizer(sizer)
@@ -112,7 +112,7 @@ class ListDragDropMixin:
         idx = -1
         while True:
             idx = self.listCtrl.GetNextItem(idx, wx.LIST_NEXT_ALL)
-            if idx == -1: 
+            if idx == -1:
                 break
             elif self.listCtrl.GetItemText(idx) in selected:
                 self.listCtrl.Select(idx);
@@ -238,7 +238,7 @@ class List(wx.Panel):
         while True:
             itemDex = self.list.GetNextItem(itemDex,
                 wx.LIST_NEXT_ALL,wx.LIST_STATE_SELECTED)
-            if itemDex == -1: 
+            if itemDex == -1:
                 break
             else:
                 selected.append(self.items[itemDex])
@@ -248,7 +248,7 @@ class List(wx.Panel):
         itemDex = -1
         while True:
             itemDex = self.list.GetNextItem(itemDex, wx.LIST_NEXT_ALL)
-            if itemDex == -1: 
+            if itemDex == -1:
                 break
             elif self.items[itemDex] in items:
                 self.list.Select(itemDex);
@@ -257,7 +257,7 @@ class List(wx.Panel):
         itemDex = -1
         while True:
             itemDex = self.list.GetNextItem(itemDex, wx.LIST_NEXT_ALL)
-            if itemDex == -1: 
+            if itemDex == -1:
                 break
             else:
                 self.list.Select(itemDex);
@@ -277,14 +277,14 @@ class List(wx.Panel):
 
     def GetSortSettings(self,col,reverse):
         """Return parsed col, reverse arguments. Used by SortSettings.
-        col: sort variable. 
+        col: sort variable.
         Defaults to last sort. (self.sort)
         reverse: sort order
         1: Descending order
         0: Ascending order
         -1: Use current reverse settings for sort variable, unless
-            last sort was on same sort variable -- in which case, 
-            reverse the sort order. 
+            last sort was on same sort variable -- in which case,
+            reverse the sort order.
         -2: Use current reverse setting for sort variable.
         """
         #--Sort Column
