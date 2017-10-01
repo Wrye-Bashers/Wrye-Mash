@@ -1037,6 +1037,23 @@ class ModList(gui.List):
         if self.selectedFirst:
             self.items.sort(lambda a, b: cmp(b in loadFiles, a in loadFiles))
 
+    def ToggleModActivation(self, fileName):
+        """
+        This toggles if a mod is unloaded. It doesn't refresh the list
+        as multiple mods can be unloaded at once so it would possibly
+        impact perforamnce
+        """
+
+        if self.data.isLoaded(fileName):
+            self.data.unload(fileName)
+        else:
+            try:
+                self.data.load(fileName)
+            except mosh.MaxLoadedError:
+                gui.dialog.ErrorMessage(self,_("Unable to add mod %s because load list is full." )
+                    % (fileName,))
+                return
+
     # --Events ---------------------------------------------
     def OnDoubleClick(self, event):
         """Handle doubclick event."""
@@ -1072,20 +1089,7 @@ class ModList(gui.List):
             oldDTFiles = mosh.mwIniFile.getDoubleTimeFiles()
             oldFiles = mosh.mwIniFile.loadFiles[:]
             fileName = self.items[hitItem]
-            # --Unselect?
-            if self.data.isLoaded(fileName):
-                self.data.unload(fileName)
-                changedFiles = mosh.listSubtract(oldFiles,
-                    mosh.mwIniFile.loadFiles)
-            # --Select?
-            else:
-                try:
-                    self.data.load(fileName)
-                    changedFiles = mosh.listSubtract(mosh.mwIniFile.loadFiles,
-                        oldFiles)
-                except mosh.MaxLoadedError:
-                    gui.dialog.ErrorMessage(self,_("Unable to add mod %s because load list is full." ) % (fileName,))
-                    return
+            self.ToggleModActivation(fileName)
             newDTFiles = mosh.mwIniFile.getDoubleTimeFiles()
             # --Refresh changed files
             # self.Refresh(changedFiles + oldDTFiles + newDTFiles)
@@ -1104,9 +1108,10 @@ class ModList(gui.List):
 
     def OnKeyDown(self, event):
         fmap = {
-            wx.WXK_UP  : self.OnUpPress,
-            wx.WXK_DOWN: self.OnDownPress,
-            65         : self.OnAPress,
+            wx.WXK_SPACE :self.OnSpacePress,
+            wx.WXK_UP    :self.OnUpPress,
+            wx.WXK_DOWN  :self.OnDownPress,
+            65           :self.OnAPress,
         }
         kc = event.GetKeyCode()
         if kc in fmap:
@@ -1134,14 +1139,27 @@ class ModList(gui.List):
             lambda l: l.pop()
         )
 
+    def OnSpacePress(self, event):
+        for fileName in self.GetSelected():
+            self.ToggleModActivation(fileName)
+        self.Refresh()
+
     def moveSelected(self, event, relationFunc, timeFunc, getSelectedFunc):
         """Moves selected files up or down
 
         event -- the event that caused the need for movement
-        relationFunc -- this is the function that when given a index should return the index that the mod should be moved to.
-                        assuming that any index is valid. It is expected to be +-1 of the old index
-        timeFunc -- when given an unix timestamp it should return a new unix time stamp. It is expected to be +-1 of the old one
-        getSelectedFunc -- When passed in a sorted list of selected mods, should return the one to process and remove it from the list
+
+        relationFunc -- this is the function that when given a index should
+                        return the index that the mod should be moved to.
+                        assuming that any index is valid. It is expected to be
+                        +-1 of the old index
+
+        timeFunc -- when given an unix timestamp it should return a new unix
+                    time stamp. It is expected to be +-1 of the old one
+
+        getSelectedFunc -- When passed in a sorted list of selected mods,
+                           should return the one to process and remove it
+                           from the list
         """
 
         def alterModTimeIfReq(movingToIndex, movingToTime):
@@ -1160,7 +1178,7 @@ class ModList(gui.List):
                     alterModTimeIfReq(modInWayIndex, newTime)
                     mosh.modInfos[items[modInWayIndex]].setMTime(newTime)
 
-        if event.ControlDown() == False:
+        if not event.ControlDown():
             return
 
         if conf.settings['mash.mods.sort'] != 'Modified':
@@ -1168,7 +1186,7 @@ class ModList(gui.List):
             return
 
         selected = self.GetSelected()
-        if len(selected) == 0:
+        if not selected:
             return
 
         # shallow copy of the selected files that need processing
@@ -1176,7 +1194,7 @@ class ModList(gui.List):
         process.sort(key=lambda x: mosh.modInfos[x].mtime)
 
         items = self.GetItems()
-        while len(process):
+        while process:
             items.sort(key=lambda x: mosh.modInfos[x].mtime)
 
             selFileName = getSelectedFunc(
