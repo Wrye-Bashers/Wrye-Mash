@@ -15,7 +15,7 @@
 #  along with Wrye Bolt; if not, write to the Free Software Foundation,
 #  Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
-#  Wrye Bolt copyright (C) 2005, 2006, 2007, 2008, 2009 Wrye 
+#  Wrye Bolt copyright (C) 2005, 2006, 2007, 2008, 2009 Wrye
 #
 # =============================================================================
 
@@ -79,7 +79,7 @@ def compileTranslator(txtPath,pklPath):
     cPickle.dump(translator,open(tempPath,'w'))
     if os.path.exists(filePath): os.remove(filePath)
     os.rename(tempPath,filePath)
-    
+
 #--Do translator test and set
 currentLocale = locale.getlocale()
 if locale.getlocale() == (None,None):
@@ -103,7 +103,7 @@ if os.path.exists(languagePkl):
     def _(text,encode=True):
         if encode: text = reEscQuote.sub("'",text.encode('string_escape'))
         head,core,tail = reTrans.match(text).groups()
-        if core and core in _translator: 
+        if core and core in _translator:
             text = head+_translator[core]+tail
         if encode: text = text.decode('string_escape')
         return text
@@ -119,7 +119,7 @@ class BoltError(Exception):
         return self.message
 
 #------------------------------------------------------------------------------
-class AbstractError(BoltError): 
+class AbstractError(BoltError):
     """Coding Error: Abstract code section called."""
     def __init__(self,message=_('Abstract section called.')):
         BoltError.__init__(self,message)
@@ -137,7 +137,7 @@ class StateError(BoltError):
         BoltError.__init__(self,message)
 
 #------------------------------------------------------------------------------
-class UncodedError(BoltError): 
+class UncodedError(BoltError):
     """Coding Error: Call to section of code that hasn't been written."""
     def __init__(self,message=_('Section is not coded yet.')):
         BoltError.__init__(self,message)
@@ -179,7 +179,7 @@ class LString(object):
     def __cmp__(self, other):
         if isinstance(other,LString): return cmp(self._cs, other._cs)
         else: return cmp(self._cs, other.lower())
-    
+
 # Paths -----------------------------------------------------------------------
 #------------------------------------------------------------------------------
 _gpaths = {}
@@ -237,11 +237,11 @@ class Path(object):
     #--Instance stuff --------------------------------------------------
     #--Slots: _s is normalized path. All other slots are just pre-calced
     #  variations of it.
-    __slots__ = ('_s','_cs','_csroot','_sroot','_shead','_stail','_ext','_cext') 
-    
+    __slots__ = ('_s','_cs','_csroot','_sroot','_shead','_stail','_ext','_cext')
+
     def __init__(self, name):
         """Initialize."""
-        if isinstance(name,Path): 
+        if isinstance(name,Path):
             self.__setstate__(name._s)
         elif isinstance(name,unicode):
             self.__setstate__(name)
@@ -272,11 +272,11 @@ class Path(object):
     @property
     def s(self):
         "Path as string."
-        return self._s 
+        return self._s
     @property
     def cs(self):
         "Path as string in normalizd case."
-        return self._cs 
+        return self._cs
     @property
     def csroot(self):
         "Root as string."
@@ -307,7 +307,7 @@ class Path(object):
     def tail(self):
         "For alpha\beta.gamma, returns beta.gamma."
         return GPath(self._stail)
-    
+
     #--Root, ext
     @property
     def rootExt(self):
@@ -332,7 +332,7 @@ class Path(object):
     def backup(self):
         "Backup file path."
         return self+'.bak'
-    
+
     #--size, atim, ctime
     @property
     def size(self):
@@ -344,10 +344,10 @@ class Path(object):
     @property
     def ctime(self):
         return os.path.getctime(self._s)
-    
+
     #--Mtime
     def getmtime(self):
-        """Returns mtime for path. But if mtime is outside of epoch, then resets 
+        """Returns mtime for path. But if mtime is outside of epoch, then resets
         mtime to an in-epoch date and uses that."""
         mtime = int(os.path.getmtime(self._s))
         #--Y2038 bug? (os.path.getmtime() can't handle years over unix epoch)
@@ -391,14 +391,14 @@ class Path(object):
         """Like os.walk."""
         if relative:
             start = len(self._s)
-            return ((GPath(x[start:]),[GPath(u) for u in y],[Gpath(u) for u in z]) 
+            return ((GPath(x[start:]),[GPath(u) for u in y],[Gpath(u) for u in z])
                 for x,y,z in os.walk(topdown,onerror))
         else:
-            return ((GPath(x),[GPath(u) for u in y],[Gpath(u) for u in z]) 
+            return ((GPath(x),[GPath(u) for u in y],[Gpath(u) for u in z])
                 for x,y,z in os.walk(topdown,onerror))
 
     #--File system info
-    #--THESE REALLY OUGHT TO BE PROPERTIES. 
+    #--THESE REALLY OUGHT TO BE PROPERTIES.
     def exists(self):
         return os.path.exists(self._s)
     def isdir(self):
@@ -442,7 +442,7 @@ class Path(object):
         if destPath._cs == self._cs: return
         if destPath._shead and not os.path.exists(destPath._shead):
             os.makedirs(destPath._shead)
-        elif destPath.exists(): 
+        elif destPath.exists():
             os.remove(destPath._s)
         shutil.move(self._s,destPath._s)
     def touch(self):
@@ -454,21 +454,21 @@ class Path(object):
             self.untemp()
     def untemp(self,doBackup=False):
         """Replaces file with temp version, optionally making backup of file first."""
-        if self.exists(): 
+        if self.exists():
             if doBackup:
                 self.backup.remove()
                 shutil.move(self._s, self.backup._s)
             else:
                 os.remove(self._s)
         shutil.move(self.temp._s, self._s)
-    
+
     #--Hash/Compare
     def __hash__(self):
         return hash(self._cs)
     def __cmp__(self, other):
         if isinstance(other,Path): return cmp(self._cs, other._cs)
         else: return cmp(self._cs, Path.getCase(other))
-    
+
 # Util Constants --------------------------------------------------------------
 #--Unix new lines
 reUnixNewLine = re.compile(r'(?<!\r)\n')
@@ -517,7 +517,7 @@ class Flags(object):
         """Initialize. Attrs, if present, is mapping of attribute names to indices. See getAttrs()"""
         object.__setattr__(self,'_field',int(value) | 0L)
         object.__setattr__(self,'_names',names or {})
-    
+
     def __call__(self,newValue=None):
         """Retuns a clone of self, optionally with new value."""
         if newValue is not None:
@@ -547,13 +547,13 @@ class Flags(object):
     def __getitem__(self, index):
         """Get value by index. E.g., flags[3]"""
         return bool((self._field >> index) & 1)
-    
+
     def __setitem__(self,index,value):
         """Set value by index. E.g., flags[3] = True"""
         value = ((value or 0L) and 1L) << index
         mask = 1L << index
         self._field = ((self._field & ~mask) | value)
-    
+
     #--As class
     def __getattr__(self,name):
         """Get value by flag name. E.g. flags.isQuestItem"""
@@ -574,14 +574,14 @@ class Flags(object):
     #--Native operations
     def __eq__( self, other):
         """Logical equals."""
-        if isinstance(other,Flags): 
+        if isinstance(other,Flags):
             return self._field == other._field
         else:
             return self._field == other
 
     def __ne__( self, other):
         """Logical not equals."""
-        if isinstance(other,Flags): 
+        if isinstance(other,Flags):
             return self._field != other._field
         else:
             return self._field != other
@@ -648,10 +648,10 @@ class DataDict:
 
 #------------------------------------------------------------------------------
 class MainFunctions:
-    """Encapsulates a set of functions and/or object instances so that they can 
+    """Encapsulates a set of functions and/or object instances so that they can
     be called from the command line with normal command line syntax.
 
-    Functions are called with their arguments. Object instances are called 
+    Functions are called with their arguments. Object instances are called
     with their method and method arguments. E.g.:
     * bish bar arg1 arg2 arg3
     * bish foo.bar arg1 arg2 arg3"""
@@ -661,8 +661,8 @@ class MainFunctions:
         self.funcs = {}
 
     def add(self,func,key=None):
-        """Add a callable object. 
-        func - A function or class instance. 
+        """Add a callable object.
+        func - A function or class instance.
         key - Command line invocation for object (defaults to name of func).
         """
         key = key or func.__name__
@@ -705,7 +705,7 @@ class MainFunctions:
 #--Commands Singleton
 _mainFunctions = MainFunctions()
 def mainfunc(func):
-    """A function for adding funcs to _mainFunctions. 
+    """A function for adding funcs to _mainFunctions.
     Used as a function decorator ("@mainfunc")."""
     _mainFunctions.add(func)
     return func
@@ -726,16 +726,16 @@ class PickleDict:
         return self.path.exists() or self.backup.exists()
 
     def load(self):
-        """Loads vdata and data from file or backup file. 
-        
-        If file does not exist, or is corrupt, then reads from backup file. If 
-        backup file also does not exist or is corrupt, then no data is read. If 
+        """Loads vdata and data from file or backup file.
+
+        If file does not exist, or is corrupt, then reads from backup file. If
+        backup file also does not exist or is corrupt, then no data is read. If
         no data is read, then self.data is cleared.
 
-        If file exists and has a vdata header, then that will be recorded in 
+        If file exists and has a vdata header, then that will be recorded in
         self.vdata. Otherwise, self.vdata will be empty.
-        
-        Returns: 
+
+        Returns:
           0: No data read (files don't exist and/or are corrupt)
           1: Data read from file
           2: Data read from backup file
@@ -773,17 +773,17 @@ class PickleDict:
 
 #------------------------------------------------------------------------------
 class Settings(DataDict):
-    """Settings/configuration dictionary with persistent storage. 
-    
-    Default setting for configurations are either set in bulk (by the 
-    loadDefaults function) or are set as needed in the code (e.g., various 
-    auto-continue settings for bash. Only settings that have been changed from 
+    """Settings/configuration dictionary with persistent storage.
+
+    Default setting for configurations are either set in bulk (by the
+    loadDefaults function) or are set as needed in the code (e.g., various
+    auto-continue settings for bash. Only settings that have been changed from
     the default values are saved in persistent storage.
 
-    Directly setting a value in the dictionary will mark it as changed (and thus 
-    to be archived). However, an indirect change (e.g., to a value that is a 
+    Directly setting a value in the dictionary will mark it as changed (and thus
+    to be archived). However, an indirect change (e.g., to a value that is a
     list) must be manually marked as changed by using the setChanged method."""
-    
+
     def __init__(self,dictFile):
         """Initialize. Read settings from dictFile."""
         self.dictFile = dictFile
@@ -809,7 +809,7 @@ class Settings(DataDict):
     def save(self):
         """Save to pickle file. Only key/values marked as changed are saved."""
         dictFile = self.dictFile
-        if not dictFile or dictFile.readOnly: return 
+        if not dictFile or dictFile.readOnly: return
         dictFile.load()
         dictFile.vdata = self.vdata.copy()
         for key in self.deleted:
@@ -888,7 +888,7 @@ class TableColumn:
         """Dictionary emulation."""
         tableData = self.table.data
         column = self.column
-        return [(key,tableData[key][column]) for key in tableData.keys() 
+        return [(key,tableData[key][column]) for key in tableData.keys()
             if (column in tableData[key])]
     def has_key(self,key):
         """Dictionary emulation."""
@@ -916,14 +916,14 @@ class TableColumn:
 
 #------------------------------------------------------------------------------
 class Table(DataDict):
-    """Simple data table of rows and columns, saved in a pickle file. It is 
-    currently used by modInfos to represent properties associated with modfiles, 
-    where each modfile is a row, and each property (e.g. modified date or 
+    """Simple data table of rows and columns, saved in a pickle file. It is
+    currently used by modInfos to represent properties associated with modfiles,
+    where each modfile is a row, and each property (e.g. modified date or
     'mtime') is a column.
-    
-    The "table" is actually a dictionary of dictionaries. E.g. 
+
+    The "table" is actually a dictionary of dictionaries. E.g.
         propValue = table['fileName']['propName']
-    Rows are the first index ('fileName') and columns are the second index 
+    Rows are the first index ('fileName') and columns are the second index
     ('propName')."""
 
     def __init__(self,dictFile):
@@ -1050,7 +1050,7 @@ class TankData:
         return self.tankParams.setdefault(self.tankKey+'.'+key,value)
 
     def updateParam(self,key,default=None):
-        """Get a param, but also mark it as changed. 
+        """Get a param, but also mark it as changed.
         Used for deep params like lists and dictionaries."""
         return self.tankParams.getChanged(self.tankKey+'.'+key,default)
 
@@ -1058,7 +1058,7 @@ class TankData:
         """Set a GUI parameter."""
         self.tankParams[self.tankKey+'.'+key] = value
 
-    #--Collection 
+    #--Collection
     def setChanged(self,hasChanged=True):
         """Mark as having changed."""
         pass
@@ -1082,7 +1082,7 @@ class TankData:
         if item == None: return columns[:]
         raise AbstractError
 
-    def getName(self,item): 
+    def getName(self,item):
         """Returns a string name of item for use in dialogs, etc."""
         return item
 
@@ -1131,7 +1131,7 @@ def delist(header,items,on=False):
     stack = inspect.stack()
     file,line,function = stack[1][1:4]
     print '%s %4d %s: %s' % (GPath(file).tail.s,line,function,str(header))
-    if items == None: 
+    if items == None:
         print '> None'
     else:
         for indexItem in enumerate(items): print '>%2d: %s' % indexItem
@@ -1208,12 +1208,12 @@ def winNewLines(inString):
 # Log/Progress ----------------------------------------------------------------
 #------------------------------------------------------------------------------
 class Log:
-    """Log Callable. This is the abstract/null version. Useful version should 
+    """Log Callable. This is the abstract/null version. Useful version should
     override write functions.
-    
-    Log is divided into sections with headers. Header text is assigned (through 
-    setHeader), but isn't written until a message is written under it. I.e., 
-    if no message are written under a given header, then the header itself is 
+
+    Log is divided into sections with headers. Header text is assigned (through
+    setHeader), but isn't written until a message is written under it. I.e.,
+    if no message are written under a given header, then the header itself is
     never written."""
 
     def __init__(self):
@@ -1335,8 +1335,8 @@ class ProgressFile(Progress):
 
 # WryeText --------------------------------------------------------------------
 class WryeText:
-    """This class provides a function for converting wtxt text files to html 
-    files. 
+    """This class provides a function for converting wtxt text files to html
+    files.
 
     Headings:
     = XXXX >> H1 "XXX"
@@ -1346,7 +1346,7 @@ class WryeText:
     Notes:
     * These must start at first character of line.
     * The XXX text is compressed to form an anchor. E.g == Foo Bar gets anchored as" FooBar".
-    * If the line has trailing ='s, they are discarded. This is useful for making 
+    * If the line has trailing ='s, they are discarded. This is useful for making
       text version of level 1 and 2 headings more readable.
 
     Bullet Lists:
@@ -1357,7 +1357,7 @@ class WryeText:
     * These must start at first character of line.
     * Recognized bullet characters are: - ! ? . + * o The dot (.) produces an invisible
       bullet, and the * produces a bullet character.
-      
+
     Styles:
       __Text__
       ~~Italic~~
@@ -1370,7 +1370,7 @@ class WryeText:
      [[file|text]] produces <a href=file>text</a>
 
     Contents
-    {{CONTENTS=NN}} Where NN is the desired depth of contents (1 for single level, 
+    {{CONTENTS=NN}} Where NN is the desired depth of contents (1 for single level,
     2 for two levels, etc.).
     """
 
@@ -1459,7 +1459,7 @@ class WryeText:
             address = text = match.group(1).strip()
             if '|' in text:
                 (address,text) = [chunk.strip() for chunk in text.split('|',1)]
-                if address == '#': address += reWd.sub('',text) 
+                if address == '#': address += reWd.sub('',text)
             if not reFullLink.search(address):
                 address = address+'.html'
             return '<a href="%s">%s</a>' % (address,text)
@@ -1508,7 +1508,7 @@ class WryeText:
             elif maAnchorHeaders:
                 anchorHeaders = maAnchorHeaders.group(1) != '0'
                 continue
-            #--CSS 
+            #--CSS
             elif maCss:
                 #--Directory spec is not allowed, so use tail.
                 cssName = GPath(maCss.group(1).strip()).tail
