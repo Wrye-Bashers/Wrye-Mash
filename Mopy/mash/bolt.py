@@ -32,6 +32,7 @@ import sys
 import time
 from types import *
 from binascii import crc32
+import compat
 
 # Localization ----------------------------------------------------------------
 reTrans = re.compile(r'^([ :=\.]*)(.+?)([ :=\.]*$)')
@@ -847,10 +848,10 @@ class PickleDict:
                 ins = None
                 try:
                     ins = path.open('rb')
-                    header = cPickle.load(ins)
+                    header = compat.uncpickle(ins)
                     if header == 'VDATA':
-                        self.vdata.update(cPickle.load(ins))
-                        self.data.update(cPickle.load(ins))
+                        self.vdata.update(compat.uncpickle(ins))
+                        self.data.update(compat.uncpickle(ins))
                     else:
                         self.data.update(header)
                     ins.close()
