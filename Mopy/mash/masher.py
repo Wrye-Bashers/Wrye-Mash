@@ -3063,9 +3063,15 @@ class MashApp(wx.App):
 
     def OnInit(self):
         """wxWindows: Initialization handler."""
+
+        InitSettings()
         # --Check/Set mwDir
         if not self.SetMWDir():
             return False
+        # from here we are sure that the mwDir is correct
+        bosh.initDirs()
+        InitLinks()
+        InitImages()
         # --Init Data
         self.InitData()
         self.InitVersion()
@@ -3088,7 +3094,8 @@ class MashApp(wx.App):
         # -# D.C.-G. for SettingsWindow
         if conf.settings['mash.settings.show']:
             globals.settingsWindow = SettingsWindow()
-            globals.settingsWindow.SetSettings(conf.settings, Inst=mosh.dirs["installers"].s)
+            globals.settingsWindow.SetSettings(conf.settings,
+                Inst=mosh.dirs["installers"].s)
             globals.settingsWindow.Show()
         # -#
         return True
@@ -7140,6 +7147,9 @@ def InitSettings():
     mosh.initSettings()
     conf.settings = mosh.settings
     conf.settings.loadDefaults(conf.settingDefaults)
+
+
+def InitDirs():
     mosh.initDirs()
 
 
