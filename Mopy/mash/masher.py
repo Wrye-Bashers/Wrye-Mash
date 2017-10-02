@@ -5910,8 +5910,6 @@ class Mod_Import_Scripts(Link):
 
 # ------------------------------------------------------------------------------
 class Mod_Tes3cmd_Clean(Link):
-    """Import dialog from text file to mod."""
-
     def AppendToMenu(self, menu, window, data):
         Link.AppendToMenu(self, menu, window, data)
         menuItem = wx.MenuItem(menu, self.id, _('Clean Selected'))
@@ -5921,9 +5919,7 @@ class Mod_Tes3cmd_Clean(Link):
             menuItem.Enable(False)
 
     def Execute(self, event):
-        """Handle menu selection."""
-
-        form = tes3cmd.gui.cleaner(self.window, self.data)
+        form = tes3cmd.gui.Cleaner(self.window, self.data)
         form.Show()
         form.Start(self.window.Refresh)
 
