@@ -54,6 +54,8 @@ from gui.helpbrowser import HelpBrowser
 from mlox.loader import importMlox
 mlox = importMlox()
 
+import tes3cmd
+
 bosh = mosh # --Cheap compatibility for imported code.
 
 # --Python
@@ -5218,6 +5220,42 @@ class Mods_IniTweaks(Link):
         gui.dialog.InfoMessage(self.window, _('%s applied.') % (os.path.split(mitPath)[1],), _('INI Tweaks'))
 
 
+#------------------------------------------------------------------------------
+class Mods_Tes3cmd_Fixit():
+    def AppendToMenu(self, menu, window, data):
+        self.window = window
+
+        menuItem = menu.Append(wx.ID_ANY, _('Fixit'))
+        menuId = menuItem.GetId()
+
+        wx.EVT_MENU(window, menuId, self.Execute)
+
+        if not tes3cmd.getLocation():
+            menuItem.Enable(False)
+
+    def Execute(self, event):
+        log = gui.LoggerWindow(self.window, 'Tes3cmd Log')
+        log.Show()
+
+        out, err = tes3cmd.fixit()
+
+        if err:
+            log.writeLine('Errors')
+            log.writeLine('------')
+            log.write(err)
+            log.writeLine('------')
+            log.write('\n\n\n')
+
+        if out:
+            log.writeLine('Output')
+            log.writeLine('------')
+            log.write(out)
+            log.writeLine('------')
+            log.write('\n\n\n')
+
+        self.window.Refresh()
+
+
 # ------------------------------------------------------------------------------
 class MloxLogger(wx.Frame, mlox.logger):
     """
@@ -5841,6 +5879,45 @@ class Mod_Import_Scripts(Link):
             gui.dialog.LogMessage(self.window, '', report, fileName)
         else:
             gui.dialog.InfoMessage(self.window, _("No scripts changed."))
+
+
+# ------------------------------------------------------------------------------
+class Mod_Tes3cmd_Clean(Link):
+    """Import dialog from text file to mod."""
+
+    def AppendToMenu(self, menu, window, data):
+        Link.AppendToMenu(self, menu, window, data)
+        menuItem = wx.MenuItem(menu, self.id, _('Clean'))
+        menu.AppendItem(menuItem)
+
+        if not tes3cmd.getLocation():
+            menuItem.Enable(False)
+
+    def Execute(self, event):
+        """Handle menu selection."""
+        modDir = mosh.modInfos.dir
+        bd = os.path.join(modDir, 'tes3cmdbackups')
+        try:
+            os.makedirs(bd)
+        except os.error:
+            pass
+
+        log = gui.LoggerWindow(self.window, 'Tes3cmd Log')
+        log.Show()
+
+        out, err = tes3cmd.clean(self.data, replace=True, backupDir=bd)
+
+        if err:
+            log.writeLine('Errors')
+            log.writeLine('------')
+            log.write(err)
+
+        if out:
+            log.writeLine('Output')
+            log.writeLine('------')
+            log.write(out)
+
+        self.window.Refresh()
 
 
 # ------------------------------------------------------------------------------
@@ -7201,10 +7278,14 @@ def InitModLinks():
         loadMenu = MenuLink(_("Load"))
         loadMenu.links.append(Mods_LoadList())
         ModList.mainMenu.append(loadMenu)
-    if True:  # --Load
-        loadMenu = MenuLink(_("Mlox"))
-        loadMenu.links.append(Mods_Mlox())
-        ModList.mainMenu.append(loadMenu)
+    if True:  # --Mlox
+        mlox = MenuLink(_("Mlox"))
+        mlox.links.append(Mods_Mlox())
+        ModList.mainMenu.append(mlox)
+    if True:  # --tes3cmd
+        tes3cmd = MenuLink(_("Tes3cmd"))
+        tes3cmd.links.append(Mods_Tes3cmd_Fixit())
+        ModList.mainMenu.append(tes3cmd)
     if True:  # --Sort by
         sortMenu = MenuLink(_("Sort by"))
         sortMenu.links.append(Mods_EsmsFirst())
@@ -7272,6 +7353,10 @@ def InitModLinks():
         ModList.itemMenu.append(importMenu)
     # --------------------------------------------
     ModList.itemMenu.append(SeparatorLink())
+    if True:  # --Tes3cmd
+        tes3cmd = MenuLink(_("Tes3Cmd"))
+        tes3cmd.links.append(Mod_Tes3cmd_Clean())
+        ModList.itemMenu.append(tes3cmd)
     ModList.itemMenu.append(Mod_ShowReadme())
     ModList.itemMenu.append(Mod_CopyToEsmp())
     ModList.itemMenu.append(Mod_RenumberRefs())

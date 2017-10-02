@@ -118,7 +118,7 @@ class Target:
 
 
 # includes for py2exe
-includes = ["wx", "encodings"]
+includes = ["wx", "encodings", "encodings.utf_8"]
 excludes = ["Tkconstants", "Tkinter", "tcl"]
 
 opts = {'py2exe': {
