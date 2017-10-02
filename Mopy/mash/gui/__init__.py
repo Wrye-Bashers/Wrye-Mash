@@ -242,6 +242,7 @@ class List(wx.Panel):
         event.Skip()
 
 
+# ------------------------------------------------------------------------------
 class NotebookPanel(wx.Panel):
     """Parent class for notebook panels."""
 
