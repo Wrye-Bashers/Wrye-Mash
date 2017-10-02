@@ -4009,15 +4009,17 @@ class Installer(object):
         # --Force update?
         if fullRefresh:
             pending |= set(new_sizeCrcDate)
-        changed = bool(pending) or (
-        len(new_sizeCrcDate) != len(old_sizeCrcDate))
+        changed = bool(pending) or (len(new_sizeCrcDate) != len(old_sizeCrcDate))
         # --Update crcs?
         if pending:
             progress(0, _("%s: Calculating CRCs...\n") % rootName)
             progress.setFull(1 + len(pending))
+            try:
+                us = unicode(rpFile.s, sys.getfilesystemencoding())
+            except TypeError:
+                us = rpFile.s
             for index, rpFile in enumerate(sorted(pending)):
-                string = (_("%s: Calculating CRCs...\n%s") % (
-                rootName, unicode(rpFile.s, sys.getfilesystemencoding())))
+                string = (_("%s: Calculating CRCs...\n%s") % (rootName, us))
                 progress(index, string)
                 apFile = apRoot.join(norm_ghost.get(rpFile, rpFile))
                 crc = apFile.crc
