@@ -1,10 +1,37 @@
+import os
+
 import wx
 
-import tes3cmd
-import tes3cmdgui
+from .. import tes3cmd
+from . import tes3cmdgui
 
 
-class cleanop(tes3cmdgui.cleanop):
+class OutputParserMixin:
+    """
+    Thi is a mixin to allow unit testing, as we cannot initiate Cleaner
+    without a lot of faf with wx
+    """
+
+    def ParseOutput(self, output):
+        """ Parses the output for a single mod """
+        stats = ''
+        cleaned = ''
+        inStats = False
+
+        for line in output.split('\n'):
+            if inStats and line.strip():
+                stats += line.strip() + '\n'
+            elif line.strip().startswith('Cleaned'):
+                cleaned += line.strip() + '\n'
+            elif line.strip().startswith('Cleaning Stats for'):
+                inStats = True
+            elif line.strip().endswith('was not modified'):
+                stats += line + '\n'
+
+        return stats, cleaned
+
+
+class CleanOp(tes3cmdgui.cleanop):
     def __init__(self, parent):
         tes3cmdgui.cleanop.__init__(self, parent)
 
@@ -30,12 +57,12 @@ class DoneEvent(wx.PyEvent):
         self.SetEventType(EVT_DONE_ID)
 
 
-# Implementing cleaner
-class cleaner(tes3cmdgui.cleaner):
+class Cleaner(tes3cmdgui.cleaner, OutputParserMixin):
     """ GUI interface for the clean function """
 
     def __init__(self, parent, files):
         tes3cmdgui.cleaner.__init__(self, parent)
+
         self.files = files
         self.totalFiles = len(files)
 
@@ -76,35 +103,19 @@ class cleaner(tes3cmdgui.cleaner):
         for f in self.worker.files:
             self.output[f] = {'stats': stats,
                 'cleaned'            : cleaned,
+                'output'             : out,
                 'error'              : err}
             self.mCleanedMods.Append(f)
 
         if not self.mCleanedMods.GetSelections():
             self.mCleanedMods.Select(0)
+            self.Select(self.worker.files[0])
 
         ratio = (self.totalFiles - len(self.files)) / float(self.totalFiles)
         self.mProgress.SetValue(ratio * 100)
 
         self.mCurrentFile.SetLabel('')
         self.StartNext()
-
-    def ParseOutput(self, output):
-        """ Parses the output for a single mod """
-        stats = ''
-        cleaned = ''
-        inStats = False
-
-        for line in output.split('\n'):
-            if inStats and line.strip():
-                stats += line.strip() + '\n'
-            elif line.strip().startswith('Cleaned'):
-                cleaned += line.strip() + '\n'
-            elif line.strip().startswith('Cleaning Stats for'):
-                inStats = True
-            elif line.strip().endswith('was not modified'):
-                stats += line + '\n'
-
-        return stats, cleaned
 
     def OnSkip(self, event):
         self.worker.stop()
@@ -116,10 +127,28 @@ class cleaner(tes3cmdgui.cleaner):
         self.worker.stop()
         self.worker.join()
 
-    def OnSelect(self, event):
-        """ ListBox select, selecting a mod to view the stats of """
-        item = self.output[event.GetString()]
-
+    def Select(self, name):
+        item = self.output[name]
         self.mStats.SetLabel(item['stats'])
         self.mLog.SetValue(item['cleaned'])
         self.mErrors.SetValue(item['error'])
+
+    def OnSelect(self, event):
+        """ ListBox select, selecting a mod to view the stats of """
+        self.Select(event.GetString())
+
+    def OnSaveLog(self, event):
+        dlg = wx.FileDialog(self, 'Save log', os.getcwd(),
+            'tes3cmd.log', '*.log',
+            wx.SAVE | wx.OVERWRITE_PROMPT)
+        if dlg.ShowModal() != wx.ID_OK:
+            return
+        f = open(os.path.join(dlg.GetDirectory(), dlg.GetFilename()), 'w')
+        for o in self.output.values():
+            if o['error']:
+                f.write(o['error'])
+                f.write('\n')
+            if o['output']:
+                f.write(o['output'])
+                f.write('\n')
+        f.close()
