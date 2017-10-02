@@ -3540,10 +3540,17 @@ class File_Redate(Link):
         """Handle menu selection."""
         # --Get current start time.
         fileInfos = self.window.data
+        # --Work out start time
+        selInfos = [fileInfos[fileName] for fileName in self.data]
+        selInfos.sort(key=lambda a: a.mtime)
+        if len(selInfos):
+            startTime = selInfos[0].mtime
+        else:
+            startTime = time.time()
         # --Ask user for revised time.
         dialog = wx.TextEntryDialog(self.window,
             _('Redate selected mods starting at...'),
-            _('Redate Mods'), formatDate(int(time.time())))
+            _('Redate Mods'), formatDate(int(startTime)))
         result = dialog.ShowModal()
         newTimeStr = dialog.GetValue()
         dialog.Destroy()
@@ -3556,12 +3563,9 @@ class File_Redate(Link):
             gui.dialog.ErrorMessage(self.window,_('Unrecognized date: ') + newTimeStr)
             return
         except OverflowError:
-            gui.dialog.ErrorMessage(self,
-                _('Mash cannot handle dates greater than January 19, 2038.)'))
+            gui.dialog.ErrorMessage(self, _('Mash cannot handle dates greater than January 19, 2038.)'))
             return
         # --Do it
-        selInfos = [fileInfos[fileName] for fileName in self.data]
-        selInfos.sort(key=lambda a: a.mtime)
         for fileInfo in selInfos:
             fileInfo.setMTime(newTime)
             newTime += 60
