@@ -5,7 +5,7 @@ import imp
 
 
 def findMlox(start):
-    """ 
+    """
     Attempts to find mlox in the give path. It avoids serching Data Files
     """
     for root, dirnames, filenames in os.walk(start):
@@ -54,5 +54,5 @@ def importMlox():
         saveMloxCfg(mloxPath)
         return mlox
     else:
-        import mlox.fakemlox
-        return mlox.fakemlox
+        from . import fakemlox
+        return fakemlox
