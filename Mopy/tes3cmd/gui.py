@@ -1,6 +1,6 @@
 import wx
 
-from . import tes3cmd
+import tes3cmd
 import tes3cmdgui
 
 
@@ -15,7 +15,7 @@ class cleanop(tes3cmdgui.cleanop):
         pass
 
 
-# the thread that manages the tes3cmd process uses wx events
+# the thread that manages the threaded process uses wx events
 # to post messsages to the main thread
 EVT_DONE_ID = wx.NewId()
 
@@ -63,7 +63,8 @@ class cleaner(tes3cmdgui.cleaner):
         filename = self.files.pop()
         self.mCurrentFile.SetLabel(filename)
 
-        self.worker = tes3cmd(callback=lambda: wx.PostEvent(self, DoneEvent()))
+        self.worker = tes3cmd.Threaded(
+            callback=lambda: wx.PostEvent(self, DoneEvent()))
         self.worker.clean([filename], replace=True)
 
     def OnDone(self, event):
