@@ -1,3 +1,5 @@
+import pickle
+
 import wx
 from wx.lib.mixins.listctrl import ListCtrlAutoWidthMixin
 
@@ -40,6 +42,101 @@ class InterfaceError(exception.MashError):
     pass
 
 
+# ------------------------------------------------------------------------------
+class ListDragDropMixin:
+    """
+    This allows the simple dragging and dropping in lists, although this doesn't
+    allow dragging between lists
+
+    Due to the design of other parts of the program this doesn't acutally
+    move the item in the list and leaves it up to the implementation of
+    OnDrop to do that work
+    """
+
+    def __init__(self, listCtrl):
+        listCtrl.Bind(wx.EVT_LIST_BEGIN_DRAG, self._DoStartDrag)
+        self.listCtrl = listCtrl
+
+        dt = ListDrop(self._DdInsert)
+        self.listCtrl.SetDropTarget(dt)
+
+    def OnDrop(self, name, fromIndex, toIndex):
+        """
+        The event for an item being dropped, should be overridden
+
+        name - The name of the item (its text)
+        fromIndex - The index that the item has come from
+        toIndex - The index that the item should be inserted
+        """
+        pass
+
+    def _DoStartDrag(self, e):
+        # Create the data object: Just use plain text.
+        listId = self.listCtrl.GetId()
+        idx = e.GetIndex()
+        text = self.listCtrl.GetItem(idx).GetText()
+        data = wx.CustomDataObject('Text_Idx_Listid')
+        data.SetData(pickle.dumps((text, idx, listId)))
+
+        ds = wx.DropSource(self.listCtrl)
+        ds.SetData(data)
+        ds.DoDragDrop(True)
+
+    def _DdInsert(self, x, y, fromId, text, fromIdx):
+        """
+        Insert text at given x, y coordinates --- used with drag-and-drop.
+        """
+        if fromId != self.listCtrl.GetId():
+            return
+
+        # Find insertion point.
+        toIdx, flags = self.listCtrl.HitTest((x, y))
+
+        if toIdx == wx.NOT_FOUND:
+            if flags & wx.LIST_HITTEST_NOWHERE:
+                toIdx = self.listCtrl.GetItemCount()
+            else:
+                return
+
+        # Get bounding rect for the item being dropped onto and if the user is
+        # dropping into the lower half of the rect, we want to insert _after_ this item.
+        rect = self.listCtrl.GetItemRect(toIdx)
+        if y > rect.y + rect.height / 2:
+            toIdx += 1
+
+        self.OnDrop(text, fromIdx, toIdx)
+
+
+class ListDrop(wx.PyDropTarget):
+    """ Drop target for simple lists. """
+
+    def __init__(self, setFn):
+        """ Arguments:
+         - setFn: Function to call on drop.
+        """
+        wx.PyDropTarget.__init__(self)
+
+        self.setFn = setFn
+
+        # specify the type of data we will accept
+        self.data = wx.CustomDataObject('Text_Idx_Listid')
+        self.SetDataObject(self.data)
+
+    # Called when OnDrop returns True.  We need to get the data and
+    # do something with it.
+    def OnData(self, x, y, d):
+        # copy the data from the drag source to our data object
+        if self.GetData():
+            text, idx, listId = pickle.loads(self.data.GetData())
+            self.setFn(x, y, listId, text, idx)
+
+        # what is returned signals the source what to do
+        # with the original data (move, copy, etc.)  In this
+        # case we just return the suggested value given to us.
+        return d
+
+
+# ------------------------------------------------------------------------------
 class ListCtrl(wx.ListCtrl, ListCtrlAutoWidthMixin):
     def __init__(self, parent, ID, pos=wx.DefaultPosition,
         size=wx.DefaultSize, style=0):
