@@ -3,10 +3,11 @@ import os
 import wx
 import wx.html
 
-import conf
-from balt import spacer, vSizer, leftSash
-from mosh import _
-import wtexparser
+from ..balt import spacer, vSizer, leftSash
+from ..mosh import _
+
+from .. import wtexparser
+from .. import conf
 
 
 class TocHtmlWindow(wx.TreeCtrl):
@@ -32,7 +33,7 @@ class TocHtmlWindow(wx.TreeCtrl):
 
     def AddSelListener(self, f):
         """
-        This, when given a funcction will call that function with the name of
+        This, when given a funcction will call that function with the name of 
         the newly selected item when the selection changes
         """
 

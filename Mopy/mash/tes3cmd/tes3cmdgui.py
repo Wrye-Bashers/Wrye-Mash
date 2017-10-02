@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*- 
 
 ###########################################################################
 ## Python code generated with wxFormBuilder (version May  2 2011)
@@ -93,7 +93,7 @@ class cleanop(wx.Dialog):
 class cleaner(wx.Frame):
     def __init__(self, parent):
         wx.Frame.__init__(self, parent, id=wx.ID_ANY, title=u"tes3cmd Cleaner",
-            pos=wx.DefaultPosition, size=wx.Size(500, 300),
+            pos=wx.DefaultPosition, size=wx.Size(532, 346),
             style=wx.CAPTION | wx.CLOSE_BOX | wx.FRAME_FLOAT_ON_PARENT | wx.SYSTEM_MENU | wx.TAB_TRAVERSAL)
 
         self.SetSizeHintsSz(wx.DefaultSize, wx.DefaultSize)
@@ -102,7 +102,7 @@ class cleaner(wx.Frame):
 
         self.m_panel4 = wx.Panel(self, wx.ID_ANY, wx.DefaultPosition,
             wx.DefaultSize, 0)
-        fgSizer6 = wx.FlexGridSizer(2, 1, 0, 0)
+        fgSizer6 = wx.FlexGridSizer(3, 1, 0, 0)
         fgSizer6.AddGrowableCol(0)
         fgSizer6.AddGrowableRow(1)
         fgSizer6.SetFlexibleDirection(wx.BOTH)
@@ -211,6 +211,14 @@ class cleaner(wx.Frame):
 
         fgSizer6.Add(bSizer7, 1, wx.EXPAND, 5)
 
+        bSizer71 = wx.BoxSizer(wx.VERTICAL)
+
+        self.m_button5 = wx.Button(self.m_panel4, wx.ID_ANY, u"Save Log",
+            wx.DefaultPosition, wx.DefaultSize, 0)
+        bSizer71.Add(self.m_button5, 0, wx.ALIGN_RIGHT | wx.ALL, 5)
+
+        fgSizer6.Add(bSizer71, 1, wx.EXPAND, 5)
+
         self.m_panel4.SetSizer(fgSizer6)
         self.m_panel4.Layout()
         fgSizer6.Fit(self.m_panel4)
@@ -225,6 +233,7 @@ class cleaner(wx.Frame):
         self.mSkip.Bind(wx.EVT_BUTTON, self.OnSkip)
         self.mStop.Bind(wx.EVT_BUTTON, self.OnStop)
         self.mCleanedMods.Bind(wx.EVT_LISTBOX, self.OnSelect)
+        self.m_button5.Bind(wx.EVT_BUTTON, self.OnSaveLog)
 
     def __del__(self):
         pass
@@ -237,4 +246,7 @@ class cleaner(wx.Frame):
         event.Skip()
 
     def OnSelect(self, event):
+        event.Skip()
+
+    def OnSaveLog(self, event):
         event.Skip()

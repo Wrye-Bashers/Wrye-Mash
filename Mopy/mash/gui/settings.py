@@ -16,7 +16,7 @@
 #
 import wx
 
-from mosh import _, dirs, GPath
+from ..mosh import _, dirs, GPath
 
 dataMap = {"Inst": "installers", "Mw": "Morrowind"}
 

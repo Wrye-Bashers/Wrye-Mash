@@ -1,19 +1,18 @@
 import wx
 from wx.lib.mixins.listctrl import ListCtrlAutoWidthMixin
 
-import globals
-import exception
+from .. import globals
+from .. import exception
 
-import balt
-import mosh
-from mosh import _
+from .. import balt
+from .. import mosh
+from ..mosh import _
 
 # constant
 wxListAligns = [wx.LIST_FORMAT_LEFT, wx.LIST_FORMAT_RIGHT,
     wx.LIST_FORMAT_CENTRE]
 
 
-# Added with Added tes3cmd integration
 class LoggerWindow(wx.Frame):
     """
     Alters the logger so that it doesn't write to stdout/stderr but to
@@ -104,7 +103,8 @@ class List(wx.Panel):
             self.sortDirty = 0
             (col, reverse) = (None, -1)
         # --Items to select afterwards. (Defaults to current selection.)
-        if selected == 'SAME': selected = set(self.GetSelected())
+        if selected == 'SAME':
+            selected = set(self.GetSelected())
         # --Reget items
         self.GetItems()
         self.SortItems(col, reverse)
@@ -125,7 +125,8 @@ class List(wx.Panel):
     def GetSelected(self):
         """Return list of items selected (hilighted) in the interface."""
         # --No items?
-        if not 'items' in self.__dict__: return []
+        if not 'items' in self.__dict__:
+            return []
         selected = []
         itemDex = -1
         while True:
@@ -200,7 +201,8 @@ class List(wx.Panel):
     # --Event Handlers -------------------------------------
     # --Column Menu
     def DoColumnMenu(self, event):
-        if not self.mainMenu: return
+        if not self.mainMenu:
+            return
         # --Build Menu
         column = event.GetColumn()
         menu = wx.Menu()
@@ -221,7 +223,8 @@ class List(wx.Panel):
     # --Item Menu
     def DoItemMenu(self, event):
         selected = self.GetSelected()
-        if not selected: return
+        if not selected:
+            return
         # --Build Menu
         menu = wx.Menu()
         for link in self.itemMenu:

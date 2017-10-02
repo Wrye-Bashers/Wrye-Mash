@@ -1,12 +1,12 @@
 import wx
 
-import conf
-import globals
+from .. import conf
+from .. import globals
 
-import gui
+# import gui
 
-from mosh import _
-import mosh
+from ..mosh import _
+from .. import mosh
 
 
 class ProgressDialog(mosh.Progress):
@@ -59,7 +59,8 @@ def ContinueQuery(parent, message, continueKey, title=_('Warning')):
     """Shows a modal continue query if value of continueKey is false. Returns True to continue.
     Also provides checkbox "Don't show this in future." to set continueKey to true."""
     # --ContinueKey set?
-    if conf.settings.get(continueKey): return wx.ID_OK
+    if conf.settings.get(continueKey):
+        return wx.ID_OK
     # --Generate/show dialog
     dialog = wx.Dialog(parent, -1, title, size=(350, 200),
         style=wx.DEFAULT_DIALOG_STYLE | wx.RESIZE_BORDER)
@@ -91,8 +92,7 @@ def LogMessage(parent, message, logText, title='', style=0, asDialog=True):
             style=wx.DEFAULT_DIALOG_STYLE | wx.RESIZE_BORDER)
     else:
         window = wx.Frame(parent, -1, title, pos=pos, size=(200, 300),
-            style=(
-            wx.RESIZE_BORDER | wx.CAPTION | wx.SYSTEM_MENU | wx.CLOSE_BOX | wx.CLIP_CHILDREN))
+            style=(wx.RESIZE_BORDER | wx.CAPTION | wx.SYSTEM_MENU | wx.CLOSE_BOX | wx.CLIP_CHILDREN))
         window.SetIcons(globals.images['mash.icons2'].GetIconBundle())
     window.SetSizeHints(200, 200)
     sizer = wx.BoxSizer(wx.VERTICAL)
@@ -138,7 +138,7 @@ def ErrorMessage(parent, message, title=_('Error'),
 
 
 def Message(parent, message, title='', style=wx.OK):
-    """Shows a modal MessageDialog.
+    """Shows a modal MessageDialog. 
     Use ErrorMessage, WarningMessage or InfoMessage."""
     dialog = wx.MessageDialog(parent, message, title, style)
     result = dialog.ShowModal()

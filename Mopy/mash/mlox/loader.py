@@ -5,8 +5,8 @@ import imp
 
 
 def findMlox(start):
-    """
-    Attempts to find mlox in the give path. It avoids searching Data Files
+    """ 
+    Attempts to find mlox in the give path. It avoids serching Data Files
     """
     for root, dirnames, filenames in os.walk(start):
         try:

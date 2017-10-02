@@ -2,10 +2,9 @@ import os
 import subprocess
 import threading
 import time
+import Queue as queue
 
 from .. import conf
-
-import Queue as queue
 
 
 class HelperMixin:
