@@ -1,5 +1,23 @@
-# -*- coding: cp1252 -*-
+# GPL License and Copyright Notice ============================================
+#  This file is part of Wrye Mash.
 #
+#  Wrye Mash is free software; you can redistribute it and/or
+#  modify it under the terms of the GNU General Public License
+#  as published by the Free Software Foundation; either version 2
+#  of the License, or (at your option) any later version.
+#
+#  Wrye Bolt is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with Wrye Mash; if not, write to the Free Software Foundation,
+#  Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+#
+#  Wrye Mash copyright (C) 2005, 2006, 2007, 2008, 2009 Wrye
+#
+# =============================================================================
 # Modified by D.C.-G. < 16:35 2010-06-11 >
 #
 # Modifications for UtilsPanel extension.
@@ -8,9 +26,8 @@
 #
 # mush is imported several times : first as global module, then in functions as local module.
 # Is it realy necessary ?
-#
-# ------------------------------------------------------------------------------
-#
+# =============================================================================
+
 # Localization ----------------------------------------------------------------
 # --Not totally clear on this, but it seems to safest to put locale first...
 import locale;
