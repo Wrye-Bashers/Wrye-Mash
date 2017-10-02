@@ -2462,25 +2462,23 @@ class ScreensPanel(gui.NotebookPanel):
         self.SetStatusCount()
 
 
-# -# D.C.-G.
-# -# MashNotebook modified for utils panel.
+# ------------------------------------------------------------------------------
 class MashNotebook(wx.Notebook):
     def __init__(self, parent, id):
+        """:pageIndex: indicates which page is selected by default when
+        you start Wrye Mash."""
         wx.Notebook.__init__(self, parent, id)
-        #-#
+        # -- D.C.-G
         self.AddPage(gui.utils.UtilsPanel(self),_("Utilities"))
-        #-#
+        # --#
         self.AddPage(InstallersPanel(self),_("Installers"))
         self.AddPage(ModPanel(self),_("Mods"))
         self.AddPage(SavePanel(self),_("Saves"))
         self.AddPage(ScreensPanel(self),_("Screenshots"))
-        #--Selection
+        # --Selection
         pageIndex = conf.settings['mash.page']
-        # -# Canged for Utilities page
-        # if settings['bash.installers.fastStart'] and pageIndex == 0:
         if conf.settings['bash.installers.fastStart'] and pageIndex == 1:
-            # -#
-            pageIndex = 1
+            pageIndex = 2
         self.SetSelection(pageIndex)
         # --Events
         self.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.OnShowPage)
