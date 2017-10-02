@@ -4629,6 +4629,10 @@ class InstallersData(bolt.TankData, DataDict):
         self.lastKey = GPath('==Last==')
         self.renamedSizeDate = (0, 0)
 
+    def addMarker(self, name):
+        path = GPath(name)
+        self.data[path] = InstallerMarker(path)
+
     def setChanged(self, hasChanged=True):
         """Mark as having changed."""
         self.hasChanged = hasChanged
@@ -4883,9 +4887,12 @@ class InstallersData(bolt.TankData, DataDict):
         changed = False
         pending = set()
         projects = set()
-        # --Current archives
+        #--Current archives
         newData = {}
-        newData[self.lastKey] = self.data[self.lastKey]
+        for i in self.data.keys():
+            if isinstance(self.data[i], InstallerMarker):
+                newData[i] = self.data[i]
+        # newData[self.lastKey] = self.data[self.lastKey]
         for archive in dirs['installers'].list():
             apath = dirs['installers'].join(archive)
             isdir = apath.isdir()
