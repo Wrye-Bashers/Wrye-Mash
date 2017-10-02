@@ -4016,8 +4016,9 @@ class Installer(object):
             progress(0, _("%s: Calculating CRCs...\n") % rootName)
             progress.setFull(1 + len(pending))
             for index, rpFile in enumerate(sorted(pending)):
-                progress(index,
-                    _("%s: Calculating CRCs...\n%s") % (rootName, rpFile.s))
+                string = (_("%s: Calculating CRCs...\n%s") % (
+                rootName, unicode(rpFile.s, sys.getfilesystemencoding())))
+                progress(index, string)
                 apFile = apRoot.join(norm_ghost.get(rpFile, rpFile))
                 crc = apFile.crc
                 size = apFile.size
