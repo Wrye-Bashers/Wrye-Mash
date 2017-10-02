@@ -4611,7 +4611,7 @@ class Installer_Move(InstallerLink):
         if not newPos:
             return
         newPos = newPos.strip()
-        if not re.match('-?\d+', newPos):
+        if not re.match('^-?\d+$', newPos):
             balt.showError(self.gTank, _("Position must be an integer."))
             return
         newPos = int(newPos)
