@@ -55,6 +55,7 @@ from mlox.loader import importMlox
 mlox = importMlox()
 
 import tes3cmd
+import tes3cmd.gui
 
 bosh = mosh # --Cheap compatibility for imported code.
 
@@ -5887,7 +5888,7 @@ class Mod_Tes3cmd_Clean(Link):
 
     def AppendToMenu(self, menu, window, data):
         Link.AppendToMenu(self, menu, window, data)
-        menuItem = wx.MenuItem(menu, self.id, _('Clean'))
+        menuItem = wx.MenuItem(menu, self.id, _('Clean Selected'))
         menu.AppendItem(menuItem)
 
         if not tes3cmd.getLocation():
@@ -5895,29 +5896,10 @@ class Mod_Tes3cmd_Clean(Link):
 
     def Execute(self, event):
         """Handle menu selection."""
-        modDir = mosh.modInfos.dir
-        bd = os.path.join(modDir, 'tes3cmdbackups')
-        try:
-            os.makedirs(bd)
-        except os.error:
-            pass
 
-        log = gui.LoggerWindow(self.window, 'Tes3cmd Log')
-        log.Show()
-
-        out, err = tes3cmd.clean(self.data, replace=True, backupDir=bd)
-
-        if err:
-            log.writeLine('Errors')
-            log.writeLine('------')
-            log.write(err)
-
-        if out:
-            log.writeLine('Output')
-            log.writeLine('------')
-            log.write(out)
-
-        self.window.Refresh()
+        form = tes3cmd.gui.cleaner(self.window, self.data)
+        form.Show()
+        form.Start(self.window.Refresh)
 
 
 # ------------------------------------------------------------------------------
