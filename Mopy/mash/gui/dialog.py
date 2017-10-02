@@ -22,11 +22,9 @@ import wx
 
 from .. import conf
 from .. import globals
-
-from . import InterfaceError
-
 from ..mosh import _
 from .. import mosh
+from .. import exception
 
 
 class ProgressDialog(mosh.Progress):
@@ -43,7 +41,7 @@ class ProgressDialog(mosh.Progress):
         if self.dialog:
             self.dialog.Update(int(progress * 100), message)
         else:
-            raise InterfaceError, _('Dialog already destroyed.')
+            raise exception.InterfaceError, _('Dialog already destroyed.')
 
     def Destroy(self):
         if self.dialog:

@@ -62,9 +62,9 @@ import string
 import struct
 import sys
 import stat
-
+import exception
 import bolt
-from bolt import BoltError, LString, GPath, Flags, DataDict, SubProgress
+from bolt import LString, GPath, Flags, DataDict, SubProgress
 
 import compat
 import mush
@@ -161,124 +161,6 @@ else:
         return text
 
 
-# Exceptions ------------------------------------------------------------------
-class MoshError(Exception):
-    """Generic Error"""
-
-    def __init__(self, message):
-        self.message = message
-
-    def __str__(self):
-        return self.message
-
-
-# Coding Errors ---------------------------------------------------------------
-class AbstractError(MoshError):
-    """Coding Error: Abstract code section called."""
-
-    def __init__(self, message=_('Abstract section called.')):
-        MoshError.__init__(self, message)
-
-
-class ArgumentError(MoshError):
-    """Coding Error: Argument out of allowed range of values."""
-    pass
-
-
-class StateError(MoshError):
-    """Error: Object is corrupted."""
-    pass
-
-
-class UncodedError(MoshError):
-    """Coding Error: Call to section of code that hasn't been written."""
-
-    def __init__(self, message=_('Section is not coded yet.')):
-        MoshError.__init__(self, message)
-
-
-# TES3 File Errors ------------------------------------------------------------
-class Tes3Error(MoshError):
-    """TES3 Error: File is corrupted."""
-
-    def __init__(self, inName, message):
-        MoshError.__init__(self, message)
-        self.inName = inName
-
-    def __str__(self):
-        if self.inName:
-            return self.inName + ': ' + self.message
-        else:
-            return _('Unknown File: ') + self.message
-
-
-class Tes3ReadError(Tes3Error):
-    """TES3 Error: Attempt to read outside of buffer."""
-
-    def __init__(self, inName, recType, tryPos, maxPos):
-        self.recType = recType
-        self.tryPos = tryPos
-        self.maxPos = maxPos
-        if tryPos < 0:
-            message = (
-            _('%s: Attempted to read before (%d) beginning of file/buffer.')
-            % (recType, tryPos))
-        else:
-            message = (
-            _('%s: Attempted to read past (%d) end (%d) of file/buffer.') %
-            (recType, tryPos, maxPos))
-        Tes3Error.__init__(self, inName, message)
-
-
-class Tes3RefError(Tes3Error):
-    """TES3 Error: Reference is corrupted."""
-
-    def __init__(self, inName, cellId, objId, iObj, iMod, masterName=''):
-        self.cellId = cellId
-        self.iMod = iMod
-        self.iObj = iObj
-        self.objId = objId
-        self.masterName = masterName
-        message = (_('%s: Bad Ref: %s: objId: %s iObj: %d') %
-                   (inName, cellId, objId, iObj))
-        if iMod:
-            message += ' iMod: %d [%s]' % (iMod, masterName)
-        Tes3Error.__init__(self, inName, message)
-
-
-class Tes3SizeError(Tes3Error):
-    """TES3 Error: Record/subrecord has wrong size."""
-
-    def __init__(self, inName, recName, readSize, maxSize, exactSize=True):
-        self.recName = recName
-        self.readSize = readSize
-        self.maxSize = maxSize
-        self.exactSize = exactSize
-        if exactSize:
-            messageForm = _('%s: Expected size == %d, but got: %d ')
-        else:
-            messageForm = _('%s: Expected size <= %d, but got: %d ')
-        Tes3Error.__init__(self, inName,
-            messageForm % (recName, readSize, maxSize))
-
-
-class Tes3UnknownSubRecord(Tes3Error):
-    """TES3 Error: Unknown subrecord."""
-
-    def __init__(self, inName, subName, recName):
-        Tes3Error.__init__(self, inName,
-            _('Extraneous subrecord (%s) in %s record.')
-            % (subName, recName))
-
-
-# Usage Errors ----------------------------------------------------------------
-class MaxLoadedError(MoshError):
-    """Usage Error: Attempt to add a mod to load list when load list is full."""
-
-    def __init__(self, message=_('Load list is full.')):
-        MoshError.__init__(self, message)
-
-
 # Data Dictionaries -----------------------------------------------------------
 # ------------------------------------------------------------------------------
 class Settings:
@@ -326,7 +208,7 @@ class Settings:
     def setChanged(self, key):
         """Marks given key as having been changed. Use if value is a dictionary, list or other object."""
         if key not in self.data:
-            raise ArgumentError("No settings data for " + key)
+            raise exception.ArgumentError("No settings data for " + key)
         if key not in self.changed:
             self.changed.append(key)
 
@@ -752,7 +634,7 @@ class Progress:
 
     def setBaseScale(self, base=0.0, scale=1.0):
         if scale == 0:
-            raise ArgumentError(_('Scale must not equal zero!'))
+            raise exception.ArgumentError(_('Scale must not equal zero!'))
         self.base = base
         self.scale = scale
 
@@ -812,7 +694,7 @@ class Tes3Reader:
         else:
             newPos = offset
         if newPos < 0 or newPos > self.size:
-            raise Tes3ReadError(self.inName, recType, newPos, self.size)
+            raise exception.ModReadError(self.inName, recType, newPos, self.size)
         self.ins.seek(offset, whence)
 
     def tell(self):
@@ -832,14 +714,14 @@ class Tes3Reader:
         """Read from file."""
         endPos = self.ins.tell() + size
         if endPos > self.size:
-            raise Tes3SizeError(self.inName, recType, endPos, self.size)
+            raise exception.ModSizeError(self.inName, recType, endPos, self.size)
         return self.ins.read(size)
 
     def unpack(self, format, size, recType='-----'):
         """Read file and unpack according to struct format."""
         endPos = self.ins.tell() + size
         if endPos > self.size:
-            raise Tes3ReadError(self.inName, recType, endPos, self.size)
+            raise exception.ModReadError(self.inName, recType, endPos, self.size)
         return struct.unpack(format, self.ins.read(size))
 
     def unpackRecHeader(self):
@@ -851,12 +733,12 @@ class Tes3Reader:
         (name, size) = self.unpack('4si', 8, recType + '.SUB_HEAD')
         # --Match expected name?
         if expName and expName != name:
-            raise Tes3Error(self.inName,
+            raise exception.FileError(self.inName,
                 _('%s: Expected %s subrecord, but found %s instead.')
                 % (recType, expName, name))
         # --Match expected size?
         if expSize and expSize != size:
-            raise Tes3SizeError(self.inName, recType + '.' + name, size,
+            raise exception.ModSizeError(self.inName, recType + '.' + name, size,
                 expSize, True)
         return (name, size)
 
@@ -953,13 +835,13 @@ class SubRecord:
 
     def dumpData(self, out):
         """Dumps state into out. Called by getSize()."""
-        raise AbstractError
+        raise exception.AbstractError
 
     def dump(self, out):
         if self.changed:
-            raise StateError(_('Data changed: ') + self.name)
+            raise exception.StateError(_('Data changed: ') + self.name)
         if not self.data:
-            raise StateError(_('Data undefined: ') + self.name)
+            raise exception.StateError(_('Data undefined: ') + self.name)
         out.write(struct.pack('4si', self.name, len(self.data)))
         out.write(self.data)
 
@@ -1000,7 +882,7 @@ class Record:
 
     def loadData(self, ins):
         """Loads data from input stream. Called by load()."""
-        raise AbstractError
+        raise exception.AbstractError
 
     def setChanged(self, value=True):
         """Sets changed attribute to value. [Default = True.]"""
@@ -1013,7 +895,7 @@ class Record:
 
     def getSize(self):
         if self.changed:
-            raise AbstractError
+            raise exception.AbstractError
         return self.size
 
     def getSize(self):
@@ -1031,14 +913,14 @@ class Record:
 
     def dumpData(self, out):
         """Dumps state into data. Called by getSize()."""
-        raise AbstractError
+        raise exception.AbstractError
 
     def dump(self, out):
         """Dumps record header and data into output file stream."""
         if self.changed:
-            raise StateError(_('Data changed: ') + self.name)
+            raise exception.StateError(_('Data changed: ') + self.name)
         if not self.data:
-            raise StateError(_('Data undefined: ') + self.name)
+            raise exception.StateError(_('Data undefined: ') + self.name)
         out.write(struct.pack('4s3i', self.name, self.size, self.delFlag,
             self.recFlag))
         out.write(self.data)
@@ -1109,7 +991,7 @@ class ListRecord(Record):
         """Initialize."""
         # --Record type.
         if name not in ('LEVC', 'LEVI'):
-            raise ArgumentError(_('Type must be either LEVC or LEVI.'))
+            raise exception.ArgumentError(_('Type must be either LEVC or LEVI.'))
         # --Data
         self.id = None
         self.calcFromAllLevels = False
@@ -1160,10 +1042,10 @@ class ListRecord(Record):
                 self.isDeleted = True
             # --Else
             else:
-                raise Tes3UnknownSubRecord(self.inName, name, self.name)
+                raise exception.Tes3UnknownSubRecord(self.inName, name, self.name)
         # --No id?
         if not self.id:
-            raise Tes3Error(self.inName,
+            raise exception.FileError(self.inName,
                 _('No id for %s record.') % (self.name,))
         # --Bad count?
         if self.count != len(self.entries):
@@ -1257,7 +1139,7 @@ class Book(Record):
                 self.isDeleted = True
             # --Bad record?
             else:
-                raise Tes3Error(self.inName,
+                raise exception.FileError(self.inName,
                     _('Extraneous subrecord (%s) in %s record.')
                     % (name, self.name))
 
@@ -1381,7 +1263,7 @@ class Cell(Record):
                 # --New Record?
                 else:
                     if size != 4:
-                        raise Tes3SizeError(self.inName, 'CELL.FRMR', size, 4, True)
+                        raise exception.ModSizeError(self.inName, 'CELL.FRMR', size, 4, True)
                     rawData = ins.read(4, 'CELL.FRMR')
                     iMod = struct.unpack('3xB', rawData)[0]
                     iObj = struct.unpack('i', rawData[:3] + '\x00')[0]
@@ -1429,13 +1311,13 @@ class Cell(Record):
             # --Map Note?
             elif name == 'NAM0':
                 if subGroup >= 20:
-                    raise Tes3Error(self.ins,
+                    raise exception.FileError(self.ins,
                         self.getId() + _(': Second NAM0 subrecord.'))
                 subGroup = 20
                 if size != 4:
-                    raise Tes3SizeError(self.inName, 'CELL.NAM0', size, 4, True)
+                    raise exception.ModSizeError(self.inName, 'CELL.NAM0', size, 4, True)
                 if size != 4:
-                    raise Tes3SizeError(self.inName, 'CELL.NAM0', size, 4, True)
+                    raise exception.ModSizeError(self.inName, 'CELL.NAM0', size, 4, True)
                 nam0 = ins.unpack('i', 4, 'CELL.NAM0')[0]
                 bytesRead += 8 + size
             # --Start subrecord?
@@ -1603,7 +1485,7 @@ class Dial(Record):
         elif size == 4:
             (self.type, self.unknown1) = ins.unpack('B3s', size, 'DIAL.DATA')
         else:
-            raise Tes3SizeError(self.inName, 'DIAL.DATA', size, 4, False)
+            raise exception.ModSizeError(self.inName, 'DIAL.DATA', size, 4, False)
         bytesRead += 8 + size
         # --Dele?
         if size == 4:
@@ -1611,7 +1493,7 @@ class Dial(Record):
             self.dele = ins.read(size, 'DIAL.DELE')
             bytesRead += 8 + size
         if bytesRead != self.size:
-            raise Tes3Error(self.inName,
+            raise exception.FileError(self.inName,
                 _('DIAL %d %s: Unexpected subrecords') % (self.type, self.id))
 
     def sortInfos(self):
@@ -1620,7 +1502,7 @@ class Dial(Record):
         infosById = {}
         for info in self.infos:
             if info.id == None:
-                raise Tes3Error(self.inName, _('Dialog %s: info with missing id.') % (self.id,))
+                raise exception.FileError(self.inName, _('Dialog %s: info with missing id.') % (self.id,))
             infosById[info.id] = info
         # --Heads
         heads = []
@@ -1802,7 +1684,7 @@ class Glob(Record):
                 self.isDeleted = True
             # --Bad record?
             else:
-                raise Tes3UnknownSubRecord(self.inName, name, self.name)
+                raise exception.Tes3UnknownSubRecord(self.inName, name, self.name)
 
     def dumpData(self, out):
         """Dumps state into out. Called by getSize()."""
@@ -1940,7 +1822,7 @@ class Info(Record):
                 self.isDeleted = True
             # --Bad record?
             else:
-                raise Tes3UnknownSubRecord(self.inName, name, self.name)
+                raise exception.Tes3UnknownSubRecord(self.inName, name, self.name)
 
     def dumpData(self, out):
         """Dumps state into out. Called by getSize()."""
@@ -2185,10 +2067,10 @@ class Scpt(Record):
             elif name in srNameSet:
                 setattr(self, name.lower(), SubRecord(name, size, ins))
             else:
-                raise Tes3Error(self.inName, _('Unknown SCPT record: ') + name)
+                raise exception.FileError(self.inName, _('Unknown SCPT record: ') + name)
             bytesRead += 8 + size
         if bytesRead != self.size:
-            raise Tes3Error(self.inName,
+            raise exception.FileError(self.inName,
                 _('SCPT %d %s: Unexpected subrecords') % (self.type, self.id))
 
     def getRef(self):
@@ -2197,7 +2079,7 @@ class Scpt(Record):
         if not rnam or rnam.data == chr(255) * 4:
             return None
         if rnam.size != 4:
-            raise Tes3Error(self.inName, _('SCPT.RNAM'), rnam.size, 4, True)
+            raise exception.FileError(self.inName, _('SCPT.RNAM'), rnam.size, 4, True)
         iMod = struct.unpack('3xB', rnam.data)[0]
         iObj = struct.unpack('i', rnam.data[:3] + '\x00')[0]
         return (iMod, iObj)
@@ -2271,7 +2153,7 @@ class Tes3_Hedr(SubRecord):
 
     def getSize(self):
         if not self.data and not self.changed:
-            raise StateError(_('Data undefined: ') + self.name)
+            raise exception.StateError(_('Data undefined: ') + self.name)
         if not self.changed:
             return self.size
         self.description = winNewLines(self.description)
@@ -2305,7 +2187,7 @@ class Tes3_Gmdt(SubRecord):
 
     def getSize(self):
         if not self.data:
-            raise StateError(_('Data undefined: ') + self.name)
+            raise exception.StateError(_('Data undefined: ') + self.name)
         if not self.changed:
             return self.size
         self.data = struct.pack('3f12s64s4s32s',
@@ -2345,7 +2227,7 @@ class Tes3(Record):
         while bytesRead < self.size:
             (name, size) = ins.unpackSubHeader('TES3')
             if size > MAX_SUB_SIZE:
-                raise Tes3SizeError(self.inName, name, size, -MAX_SUB_SIZE, True)
+                raise exception.ModSizeError(self.inName, name, size, -MAX_SUB_SIZE, True)
             # --Masters
             if name == 'MAST':
                 # --FileName
@@ -2538,7 +2420,7 @@ class MWIniFile:
             line = ins.readline()
             if not line:
                 ins.close()
-                raise Tes3Error('Morrowind.ini',
+                raise exception.FileError('Morrowind.ini',
                     _('Morrowind.ini: [GameFiles] section not found.'))
             maLoadFiles = reLoadFiles.match(line)
             if maLoadFiles:
@@ -2576,7 +2458,7 @@ class MWIniFile:
     def save(self):
         """Write data to morrowind.ini file."""
         if self.hasChanged():
-            raise StateError(_('Morrowind.ini has changed'))
+            raise exception.StateError(_('Morrowind.ini has changed'))
         out = file(self.path, 'wt')
         for line in self.preLoadLines:
             out.write(line)
@@ -2683,7 +2565,7 @@ class MWIniFile:
         """Add modFile to load list."""
         if modFile not in self.loadFiles:
             if self.isMaxLoaded():
-                raise MaxLoadedError
+                raise exception.MaxLoadedError
             self.loadFiles.append(modFile)
             if doSave:
                 self.sortLoadFiles()
@@ -2837,12 +2719,12 @@ class FileInfo:
             ins = Tes3Reader(self.name, file(path, 'rb'))
             (name, size, delFlag, recFlag) = ins.unpackRecHeader()
             if name != 'TES3':
-                raise Tes3Error(self.name, _('Expected TES3, but got ') + name)
+                raise exception.FileError(self.name, _('Expected TES3, but got ') + name)
             self.tes3 = Tes3(name, size, delFlag, recFlag, ins, True)
         except struct.error, rex:
             ins.close()
-            raise Tes3Error(self.name, 'Struct.error: ' + `rex`)
-        except Tes3Error, error:
+            raise exception.FileError(self.name, 'Struct.error: ' + `rex`)
+        except exception.FileError, error:
             ins.close()
             error.inName = self.name
             raise
@@ -3069,7 +2951,7 @@ class FileInfos:
             fileInfo = self.factory(self.dir, fileName)
             fileInfo.getHeader()
             self.data[fileName] = fileInfo
-        except Tes3Error, error:
+        except exception.FileError, error:
             self.corrupted[fileName] = error.message
             if fileName in self.data:
                 del self.data[fileName]
@@ -3098,7 +2980,7 @@ class FileInfos:
                 try:
                     fileInfo.getHeader()
                 # --Bad header?
-                except Tes3Error, error:
+                except exception.FileError, error:
                     self.corrupted[fileName] = error.message
                     continue
                 # --Good header?
@@ -3113,7 +2995,7 @@ class FileInfos:
                     fileInfo.getHeader()
                     data[fileName] = fileInfo
                 # --Bad header?
-                except Tes3Error, error:
+                except exception.FileError, error:
                     self.corrupted[fileName] = error.message
                     del self.data[fileName]
                     continue
@@ -3135,7 +3017,7 @@ class FileInfos:
     # --Right File Type? [ABSTRACT]
     def rightFileType(self, fileName):
         """Bool: filetype (extension) is correct for subclass. [ABSTRACT]"""
-        raise AbstractError
+        raise exception.AbstractError
 
     # --Rename
     def rename(self, oldName, newName):
@@ -3667,12 +3549,12 @@ class SaveInfo(FileInfo):
             ins = Tes3Reader(self.name, file(path, 'rb'))
             (name, size, delFlag, recFlag) = ins.unpackRecHeader()
             if name != 'TES3':
-                raise Tes3Error(self.name, _('Expected TES3, but got ') + name)
+                raise exception.FileError(self.name, _('Expected TES3, but got ') + name)
             self.tes3 = Tes3(name, size, delFlag, recFlag, ins, True)
         except struct.error, rex:
             ins.close()
-            raise Tes3Error(self.name, 'Struct.error: ' + `rex`)
-        except Tes3Error, error:
+            raise exception.FileError(self.name, 'Struct.error: ' + `rex`)
+        except exception.FileError, error:
             ins.close()
             error.inName = self.name
             raise
@@ -3733,27 +3615,27 @@ class ResPack:
 
     def getOrder(self):
         """Returns load order number or None if not loaded."""
-        raise AbstractError
+        raise exception.AbstractError
 
     def rename(self, newName):
         """Renames respack."""
-        raise AbstractError
+        raise exception.AbstractError
 
     def duplicate(self, newName):
         """Duplicates self with newName."""
-        raise AbstractError
+        raise exception.AbstractError
 
     def select(self):
         """Selects package."""
-        raise AbstractError
+        raise exception.AbstractError
 
     def unselect(self):
         """Unselects package."""
-        raise AbstractError
+        raise exception.AbstractError
 
     def isSelected(self):
         """Returns True if is currently selected."""
-        raise AbstractError
+        raise exception.AbstractError
 
 
 # ------------------------------------------------------------------------------
@@ -3779,7 +3661,7 @@ class ResPacks:
 
     def refresh(self):
         """Refreshes BSA and resource replacers."""
-        raise UncodedError
+        raise exception.UncodedError
 
 
 # ------------------------------------------------------------------------------
@@ -4263,7 +4145,7 @@ class Installer(object):
 
     def refreshSource(self, archive, progress=None, fullRefresh=False):
         """Refreshes fileSizeCrcs, size, date and modified from source archive/directory."""
-        raise AbstractError
+        raise exception.AbstractError
 
     def refreshBasic(self, archive, progress=None, fullRefresh=False):
         """Extract file/size/crc info from archive."""
@@ -4374,7 +4256,7 @@ class Installer(object):
 
     def install(self, archive, destFiles, data_sizeCrcDate, progress=None):
         """Install specified files to Oblivion\Data directory."""
-        raise AbstractError
+        raise exception.AbstractError
 
 
 # ------------------------------------------------------------------------------
@@ -4395,10 +4277,6 @@ class InstallerMarker(Installer):
     def install(self, name, destFiles, data_sizeCrcDate, progress=None):
         """Install specified files to Oblivion\Data directory."""
         pass
-
-
-# ------------------------------------------------------------------------------
-class InstallerArchiveError(bolt.BoltError): pass
 
 
 # ------------------------------------------------------------------------------
@@ -4437,7 +4315,7 @@ class InstallerArchive(Installer):
                     file = size = crc = isdir = 0
         result = ins.close()
         if result:
-            raise InstallerArchiveError(
+            raise exception.InstallerArchiveError(
                 'Unable to read archive %s (exit:%s).' % (archive.s, result))
 
     def unpackToTemp(self, archive, fileNames, progress=None):
@@ -4445,7 +4323,7 @@ class InstallerArchive(Installer):
         from archive to self.tempDir.
         fileNames: File names (not paths)."""
         if not fileNames:
-            raise ArgumentError(_("No files to extract for %s.") % archive.s)
+            raise exception.ArgumentError(_("No files to extract for %s.") % archive.s)
         progress = progress or bolt.Progress()
         progress.state, progress.full = 0, len(fileNames)
         # --Dump file list
@@ -4467,7 +4345,7 @@ class InstallerArchive(Installer):
                 progress.plus()
         result = ins.close()
         if result:
-            raise StateError(_("Extraction failed."))
+            raise exception.StateError(_("Extraction failed."))
         # ensure that no file is read only
         for thedir, subdirs, files in os.walk(self.tempDir.s):
             for f in files:
@@ -4810,7 +4688,7 @@ class InstallersData(bolt.TankData, DataDict):
                 elif column == 'Size':
                     value = formatInteger(value / 1024) + ' KB'
                 else:
-                    raise ArgumentError(column)
+                    raise exception.ArgumentError(column)
                 labels.append(value)
         return labels
 
@@ -4843,11 +4721,11 @@ class InstallersData(bolt.TankData, DataDict):
 
     def getColumn(self, item, column):
         """Returns item data as a dictionary."""
-        raise UncodedError
+        raise exception.UncodedError
 
     def setColumn(self, item, column, value):
         """Sets item values from a dictionary."""
-        raise UncodedError
+        raise exception.UncodedError
 
     # --Dict Functions -----------------------------------------------------------
     def __delitem__(self, item):
@@ -4957,7 +4835,7 @@ class InstallersData(bolt.TankData, DataDict):
                 try:
                     installer.refreshBasic(apath,
                         SubProgress(progress, index, index + 1))
-                except InstallerArchiveError:
+                except exception.InstallerArchiveError:
                     installer.type = -1
         self.data = newData
         return changed
@@ -5448,7 +5326,7 @@ class FileRep:
         """Save data to file.
         outPath -- Path of the output file to write to. Defaults to original file path."""
         if (not self.canSave):
-            raise StateError(_("Insufficient data to write file."))
+            raise exception.StateError(_("Insufficient data to write file."))
         if not outPath:
             fileInfo = self.fileInfo
             outPath = os.path.join(fileInfo.dir, fileInfo.name)
@@ -5539,13 +5417,13 @@ class FileRefs(FileRep):
     def refresh(self):
         """Load data if file has changed since last load."""
         if self.isDamaged:
-            raise StateError(
+            raise exception.StateError(
                 self.fileInfo.name + _(': Attempted to access damaged file.'))
         if not self.isLoaded:
             try:
                 self.load()
                 self.isLoaded = True
-            except Tes3ReadError, error:
+            except exception.ModReadError, error:
                 self.isDamaged = True
                 if not error.inName:
                     error.inName = self.fileInfo.name
@@ -5650,7 +5528,7 @@ class FileRefs(FileRep):
         """Save data to file.
         outPath -- Path of the output file to write to. Defaults to original file path."""
         if (not self.canSave or self.skipObjRecords):
-            raise StateError(_("Insufficient data to write file."))
+            raise exception.StateError(_("Insufficient data to write file."))
         if not outPath:
             fileInfo = self.fileInfo
             outPath = os.path.join(fileInfo.dir, fileInfo.name)
@@ -5682,7 +5560,7 @@ class FileRefs(FileRep):
     def getFirstObjectIndex(self):
         """Returns first object index number. Assumes that references are in linear order."""
         if not self.fileInfo.isEsp():
-            raise StateError(_('FileRefs.renumberObjects is for esps only.'))
+            raise exception.StateError(_('FileRefs.renumberObjects is for esps only.'))
         for cell in self.cells:
             objects = cell.getObjects()
             for object in objects.list():
@@ -5694,9 +5572,9 @@ class FileRefs(FileRep):
         """Offsets all local object index numbers by specified amount. FOR ESPS ONLY!
         Returns number of objects changed."""
         if not self.fileInfo.isEsp():
-            raise StateError(_('FileRefs.renumberObjects is for esps only.'))
+            raise exception.StateError(_('FileRefs.renumberObjects is for esps only.'))
         if first <= 0:
-            raise ArgumentError(_('First index should be a positive integer'))
+            raise exception.ArgumentError(_('First index should be a positive integer'))
         log = self.log
         next = int(first)
         for cell in self.cells:
@@ -6082,7 +5960,7 @@ class WorldRefs:
                 # --Modifies a master reference?
                 if iMMod:
                     if iMMod >= len(masterMap):
-                        raise Tes3RefError(masterName, cellId, objId, iObj,
+                        raise exception.Tes3RefError(masterName, cellId, objId, iObj,
                             iMMod,
                             _('NO SUCH MASTER'))
                     altKey = (masterMap[iMMod], iObj)
@@ -6091,7 +5969,7 @@ class WorldRefs:
                     if altKey in refAlts:
                         oldIdKey = refAlts[altKey]
                     if oldIdKey not in refIds:
-                        raise Tes3RefError(masterName, cellId, objId, iObj,
+                        raise exception.Tes3RefError(masterName, cellId, objId, iObj,
                             iMMod,
                             masterInfo.masterNames[iMMod - 1])
                     del refIds[oldIdKey]
@@ -6121,7 +5999,7 @@ class WorldRefs:
         # --Map'em
         for mmName in masterInfo.masterNames:
             if mmName not in self.masterNames:
-                raise MoshError(
+                raise exception.BoltError(
                     _("Misordered esm: %s should load before %s") % (
                     mmName, masterInfo.name))
             masterMap.append(self.masterNames.index(mmName) + 1)
@@ -6134,7 +6012,7 @@ class WorldRefs:
         # --Make sure fileRefs for a save file!
         if not fileRefs.fileInfo.isEss():
             fileName = fileRefs.fileInfo.fileName
-            raise ArgumentError(_(
+            raise exception.ArgumentError(_(
                 'Cannot remove debris cells from a non-save game!') + fileName)
         log = self.log
         cntDebrisCells = 0
@@ -6156,7 +6034,7 @@ class WorldRefs:
         # --Make sure fileRefs for a save file!
         if not fileRefs.fileInfo.isEss():
             fileName = fileRefs.fileInfo.fileName
-            raise ArgumentError(
+            raise exception.ArgumentError(
                 _('Cannot remove save debris from a non-save game!') + fileName)
         goodRecords = []
         debrisIds = self.debrisIds
@@ -6194,7 +6072,7 @@ class WorldRefs:
         same leveled list."""
         if not fileRefs.fileInfo.isEss():
             fileName = fileRefs.fileInfo.fileName
-            raise ArgumentError(_(
+            raise exception.ArgumentError(_(
                 'Cannot remove overriding lists from a non-save game!') + fileName)
         listTypes = set(('LEVC', 'LEVI'))
         levListMasters = self.levListMasters
@@ -6412,7 +6290,7 @@ class FileDials(FileRep):
         """Save data to file.
         outPath -- Path of the output file to write to. Defaults to original file path."""
         if (not self.canSave):
-            raise StateError(_("Insufficient data to write file."))
+            raise exception.StateError(_("Insufficient data to write file."))
         FileRep.save(self, outPath)
 
     def loadText(self, textFileName):
@@ -6820,7 +6698,7 @@ class FileScripts(FileRep):
         """Save data to file.
         outPath -- Path of the output file to write to. Defaults to original file path."""
         if (not self.canSave):
-            raise StateError(_("Insufficient data to write file."))
+            raise exception.StateError(_("Insufficient data to write file."))
         FileRep.save(self, outPath)
 
     def loadText(self, textFileName):
@@ -6900,13 +6778,13 @@ class CharSetImporter:
                 v00, v30 = [int(stat) for stat in maStats.groups()]
                 curStats.append((v00, v30))
             else:
-                raise MoshError(_(
+                raise exception.BoltError(_(
                     'Bad line in CharSet class file.') + line.strip() + ' >> ' + stripped)
         inn.close()
         # --Post Parse
         for className, stats in self.classStats.items():
             if len(stats) != 35:
-                raise MoshError(_('Bad number of stats for class ') + className)
+                raise exception.BoltError(_('Bad number of stats for class ') + className)
             stats = self.classStats[className] = dict(zip(statNames, stats))
             # --Health
             str00, str30 = stats['Strength']
@@ -7100,7 +6978,7 @@ class ScheduleGenerator:
                         caption = "Find sub-import file %s:" % (newPath,)
                         newPath = pickScheduleFile(caption, newPath)
                     if not (newPath and os.path.exists(newPath)):
-                        raise StateError(
+                        raise exception.StateError(
                             "Unable to import schedule file: " + line.strip())
                     if newPath.lower() in [dir.lower() for dir in imported]:
                         log(_('  [%s already imported.]') % (newPath,))
@@ -7154,7 +7032,7 @@ class ScheduleGenerator:
                         chunk = chunk.strip()
                         maSleep = reSleep.match(chunk)
                         if not maSleep or maSleep.group(1) == '=':
-                            raise MoshError(
+                            raise exception.BoltError(
                                 _('Bad sleep condition state for %s in %s: %s')
                                 % (section, town, line))
                         condition, state = maSleep.group(2), sleepStates[
@@ -7179,7 +7057,7 @@ class ScheduleGenerator:
                     # --Cell
                     maCell = reCell.match(rem)
                     if not maCell:
-                        raise MoshError(
+                        raise exception.BoltError(
                             _('Pos cell not defined for %s %s %d') % (
                             town, npc, cycle))
                     cell = maCell.group(1)
@@ -7289,7 +7167,7 @@ class ScheduleGenerator:
     def getResetScript(self):
         """Return SC_[Project]_ResetGS script."""
         if not self.project:
-            raise StateError(_('No project has been defined!'))
+            raise exception.StateError(_('No project has been defined!'))
         text = self.tsReset0.substitute(project=self.project)
         for town in sorted(self.schedule.keys()):
             text += self.tsReset1.substitute(town=town)
@@ -7299,7 +7177,7 @@ class ScheduleGenerator:
     def getResetStatesScript(self):
         """Return SC_[Project]_ResetStatesGS script."""
         if not self.project:
-            raise StateError(_('No project has been defined!'))
+            raise exception.StateError(_('No project has been defined!'))
         text = "begin SC_%s_ResetStatesGS\n" % (self.project,)
         text += ';--Sets state variables for %s project to zero.\n' % (
         self.project,)

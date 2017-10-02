@@ -30,8 +30,7 @@
 # --Localization
 # ..Handled by mosh, so import that.
 import mosh
-from mosh import _, AbstractError, ArgumentError, StateError, UncodedError, \
-    formatInteger, formatDate
+from mosh import _, formatInteger, formatDate
 import cStringIO
 import os
 import re
@@ -42,6 +41,7 @@ import sys
 import textwrap
 import time
 from types import *
+import exception
 
 import bolt
 from bolt import LString,GPath, SubProgress
@@ -333,43 +333,43 @@ class ListEditorData:
 
     def getItemList(self):
         """Returns item list in correct order."""
-        raise mosh.AbstractError
+        raise exception.AbstractError
         return []
 
     def add(self):
         """Peforms add operation. Return new item on success."""
-        raise mosh.AbstractError
+        raise exception.AbstractError
         return None
 
     def edit(self, item=None):
         """Edits specified item. Return true on success."""
-        raise mosh.AbstractError
+        raise exception.AbstractError
         return False
 
     def rename(self, oldItem, newItem):
         """Renames oldItem to newItem. Return true on success."""
-        raise mosh.AbstractError
+        raise exception.AbstractError
         return False
 
     def remove(self, item):
         """Removes item. Return true on success."""
-        raise mosh.AbstractError
+        raise exception.AbstractError
         return False
 
     # --Checklist
     def getChecks(self):
         """Returns checked state of items as array of True/False values matching Item list."""
-        raise mosh.AbstractError
+        raise exception.AbstractError
         return []
 
     def check(self, item):
         """Checks items. Return true on success."""
-        raise mosh.AbstractError
+        raise exception.AbstractError
         return False
 
     def uncheck(self, item):
         """Unchecks item. Return true on success."""
-        raise mosh.AbstractError
+        raise exception.AbstractError
         return False
 
 
@@ -451,7 +451,7 @@ class ListEditorDialog(wx.Dialog):
 
     def DoEdit(self, event):
         """Edits the selected item."""
-        raise mosh.UncodedError
+        raise exception.UncodedError
 
     def DoRename(self, event):
         """Renames selected item."""
@@ -696,7 +696,7 @@ class MasterList(gui.List):
             self.items.sort(lambda a, b: cmp(data[a].author.lower(),
                 data[b].author.lower()))
         else:
-            raise exception.MashError, _('Unrecognized sort key: ') + col
+            raise exception.BoltError, _('Unrecognized sort key: ') + col
         # --Ascending
         if reverse:
             self.items.reverse()
@@ -889,7 +889,7 @@ class MasterList(gui.List):
             else:
                 masterName = masterInfo.name
                 if masterName not in self.newMasters:
-                    raise mosh.MoshError, _("Missing master: ") + masterName
+                    raise exception.BoltError, _("Missing master: ") + masterName
                 newMod = self.newMasters.index(masterName) + 1
                 if newMod != oldMod:
                     modMap[oldMod] = newMod
@@ -1052,7 +1052,7 @@ class ModList(gui.List, gui.ListDragDropMixin):
         elif col == 'Version':
             self.items.sort(key=lambda a: data[a].tes3.hedr.version)
         else:
-            raise exception.MashError, _('Unrecognized sort key: ')+col
+            raise exception.BoltError, _('Unrecognized sort key: ')+col
         # --Ascending
         if reverse:
             self.items.reverse()
@@ -1077,7 +1077,7 @@ class ModList(gui.List, gui.ListDragDropMixin):
         else:
             try:
                 self.data.load(fileName)
-            except mosh.MaxLoadedError:
+            except exception.MaxLoadedError:
                 gui.dialog.ErrorMessage(self,_("Unable to add mod %s because load list is full." )
                     % (fileName,))
                 return
@@ -1539,7 +1539,7 @@ class ModDetails(wx.Window):
         try:
             mosh.modInfos.refreshFile(fileName)
             self.SetFile(fileName)
-        except mosh.Tes3Error:
+        except exception.FileError:
             gui.dialog.ErrorMessage(self,_('File corrupted on save!'))
             self.SetFile(None)
         globals.modList.Refresh()
@@ -1690,7 +1690,7 @@ class SaveList(gui.List):
                 data[a].tes3.gmdt.curCell.lower(),
                 data[b].tes3.gmdt.curCell.lower()))
         else:
-            raise exception.MashError, _('Unrecognized sort key: ') + col
+            raise exception.BoltError, _('Unrecognized sort key: ') + col
         # --Ascending
         if reverse:
             self.items.reverse()
@@ -1944,7 +1944,7 @@ class SaveDetails(wx.Window):
         try:
             mosh.saveInfos.refreshFile(saveInfo.name)
             self.SetFile(self.saveInfo.name)
-        except mosh.Tes3Error:
+        except exception.FileError:
             gui.dialog.ErrorMessage(self,_('File corrupted on save!'))
             self.SetFile(None)
         self.SetFile(self.saveInfo.name)
@@ -2464,7 +2464,7 @@ class ScreensList(gui.List):
         elif col == 'Modified':
             self.items.sort(key=lambda a: data[a][1])
         else:
-            raise BashError(_('Unrecognized sort key: ') + col)
+            raise exception.BoltError(_('Unrecognized sort key: ') + col)
         # --Ascending
         if reverse:
             self.items.reverse()
@@ -2956,7 +2956,7 @@ class DocBrowser(wx.Frame):
         try:
             docPath = self.data.get(self.modName, '')
             if not docPath:
-                raise mosh.Error(_('Filename not defined.'))
+                raise exception.BoltError(_('Filename not defined.'))
             self.plainText.SaveFile(docPath)
             self.plainText.DiscardEdits()
             if self.docIsWtxt:
@@ -3292,7 +3292,7 @@ class MashApp(wx.App):
 #
 #    def Execute(self, event):
 #        """Event: link execution."""
-#        raise mosh.AbstractError
+#        raise exception.AbstractError
 #
 ##------------------------------------------------------------------------------
 # class SeparatorLink(Link):
@@ -3718,7 +3718,7 @@ class File_RevertToSnapshot(Link):
         fileInfo.setMTime()
         try:
             self.window.data.refreshFile(fileName)
-        except mosh.Tes3Error:
+        except exception.FileError:
             gui.dialog.ErrorMessage(self, _('Snapshot file is corrupt!'))
             self.window.details.SetFile(None)
         wx.EndBusyCursor()
@@ -3804,7 +3804,7 @@ class File_RevertToBackup:
             fileInfo.setMTime()
             try:
                 self.window.data.refreshFile(fileName)
-            except mosh.Tes3Error:
+            except exception.FileError:
                 gui.dialog.ErrorMessage(self, _('Old file is corrupt!'))
             wx.EndBusyCursor()
         dialog.Destroy()
@@ -4187,7 +4187,7 @@ class File_RepairRefs(Link):
             worldRefs = mosh.WorldRefs(log=log, progress=progress)
             try:
                 worldRefs.addMasters(fileInfo.masterNames)
-            except mosh.Tes3RefError, error:
+            except exception.Tes3RefError, error:
                 progress = progress.Destroy()
                 message = ((
                                _(
@@ -4975,7 +4975,7 @@ class InstallerProject_SyncPack(InstallerLink):
         menuItem.Enable(self.projectExists())
 
     def Execute(self, event):
-        raise UncodedError
+        raise exception.UncodedError
 
 
 # ------------------------------------------------------------------------------
@@ -4989,7 +4989,7 @@ class InstallerProject_Pack(InstallerLink):
         menuItem.Enable(self.projectExists())
 
     def Execute(self, event):
-        raise UncodedError
+        raise exception.UncodedError
 
 
 # Mods Links ------------------------------------------------------------------
@@ -5079,7 +5079,7 @@ class Mods_LoadList:
         for loadFile in mosh.modInfos.data:
             try:
                 mosh.modInfos.load(loadFile, False)
-            except mosh.MaxLoadedError:
+            except exception.MaxLoadedError:
                 gui.dialog.ErrorMessage(self.window, _("Unable to add mod %s because load list is full.") % (loadFile,))
                 break
         mosh.mwIniFile.safeSave()
@@ -5092,7 +5092,7 @@ class Mods_LoadList:
         for loadFile in self.data[item]:
             try:
                 mosh.modInfos.load(loadFile, False)
-            except mosh.MaxLoadedError:
+            except exception.MaxLoadedError:
                 gui.dialog.ErrorMessage(self.window,
                     _("Unable to add mod %s because load list is full.")
                     % (loadFile,))
@@ -6594,7 +6594,7 @@ class Save_Remove_DebrisCells(Link):
             worldRefs = mosh.WorldRefs(log=log, progress=progress)
             try:
                 worldRefs.addMasters(fileInfo.masterNames)
-            except mosh.Tes3RefError, error:
+            except exception.Tes3RefError, error:
                 progress = progress.Destroy()
                 message = ((
                                _(
@@ -6654,7 +6654,7 @@ class Save_RepairAll(Link):
             worldRefs = mosh.WorldRefs(log=log, progress=progress)
             try:
                 worldRefs.addMasters(fileInfo.masterNames)
-            except mosh.Tes3RefError, error:
+            except exception.Tes3RefError, error:
                 progress = progress.Destroy()
                 message = ((
                                _(
@@ -6794,7 +6794,7 @@ class Save_UpdateWorldMap(Link):
             worldRefs = mosh.WorldRefs(progress=progress)
             try:
                 worldRefs.addMasters(fileInfo.masterNames)
-            except mosh.Tes3RefError, error:
+            except exception.Tes3RefError, error:
                 progress = progress.Destroy()
                 message = ((
                                _(

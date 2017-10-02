@@ -58,10 +58,6 @@ class LoggerWindow(wx.Frame):
         self.txtLog.WriteText(message + '\n')
 
 
-class InterfaceError(exception.MashError):
-    pass
-
-
 # ------------------------------------------------------------------------------
 class ListDragDropMixin:
     """
@@ -222,7 +218,7 @@ class List(wx.Panel):
 
     def PopulateItem(self, itemDex, mode=0, selected=set()):
         """Populate ListCtrl for specified item. [ABSTRACT]"""
-        raise mosh.AbstractError
+        raise exception.AbstractError
 
     def GetItems(self):
         """Set and return self.items."""
