@@ -2187,19 +2187,18 @@ class InstallersPanel(SashTankPanel):
 
         def dumpFiles(files, default='', header='', isPath=False):
             if files:
-                buff = cStringIO.StringIO()
                 if isPath:
                     files = [x.s for x in files]
                 else:
                     files = list(files)
                 sortKeys = dict((x, sortKey(x)) for x in files)
                 files.sort(key=lambda x: sortKeys[x])
+
+                buff = ''
                 if header:
-                    buff.write(header + '\n')
-                for file in files:
-                    buff.write(file)
-                    buff.write('\n')
-                return unicode(buff.getvalue(), sys.getfilesystemencoding())
+                    buff = header + '\n'
+                buff += '\n'.join(files)
+                return buff
             elif header:
                 return header + '\n'
             else:
