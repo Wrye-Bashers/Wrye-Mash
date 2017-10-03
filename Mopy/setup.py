@@ -131,9 +131,9 @@ class Target:
     def __init__(self, **kw):
         self.__dict__.update(kw)
         # for the versioninfo resources
-        self.version = '84.0.0.1'
+        self.version = '0.87'
         self.company_name = "Wrye & D.C.-G."
-        self.copyright = "Wrye 2009 (see 'Wrye Mash.txt' for full credits) & D.C.-G. 2009/2010"
+        self.copyright = "Wrye 2009 (see 'Wrye Mash.txt' for full credits)"
         self.name = "WryeMash"
 
 
