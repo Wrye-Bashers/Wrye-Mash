@@ -503,8 +503,7 @@ class ListEditorDialog(wx.Dialog):
         self.Destroy()
 
 
-# ------------------------------------------------------------------------------
-# ------------------------------------------------------------------------------
+#------------------------------------------------------------------------------
 class MasterList(gui.List):
     mainMenu = []
     itemMenu = []
@@ -534,7 +533,8 @@ class MasterList(gui.List):
         self.mainMenu = MasterList.mainMenu
         self.itemMenu = MasterList.itemMenu
         # --Parent init
-        gui.List.__init__(self, parent, -1, ctrlStyle=(wx.LC_REPORT | wx.LC_SINGLE_SEL | wx.LC_EDIT_LABELS))
+        gui.List.__init__(self, parent, -1,
+            ctrlStyle=(wx.LC_REPORT | wx.LC_SINGLE_SEL | wx.LC_EDIT_LABELS))
         wx.EVT_LIST_END_LABEL_EDIT(self, self.listId, self.OnLabelEdited)
         # --Image List
         checkboxesIL = self.checkboxes.GetImageList()
@@ -551,7 +551,8 @@ class MasterList(gui.List):
             masterInfo.setName(newName)
             if newName not in self.newMasters:
                 self.newMasters.append(newName)
-            if (oldName in self.newMasters) and (not self.getMasterInfos(oldName)):
+            if (oldName in self.newMasters) and (
+            not self.getMasterInfos(oldName)):
                 self.newMasters.remove(oldName)
             if newName not in self.allMasters:
                 self.allMasters.append(newName)
@@ -562,7 +563,7 @@ class MasterList(gui.List):
         elif newName == '':
             event.Veto()
         else:
-            gui.dialog.ErrorMessage(self, _('File "%s" does not exist.') % (newName,))
+            gui.dialog.ErrorMessage(self, _(u'File {!s} does not exist.'.format(newName)))
             event.Veto()
 
     # --NewItemNum
@@ -607,7 +608,8 @@ class MasterList(gui.List):
             return status
         newIndex = self.newMasters.index(masterName)
         mwIniLoadOrder = mosh.mwIniFile.loadOrder
-        if (not self.edited) and (newIndex != self.oldMasters.index(masterName)):
+        if (not self.edited) and (
+            newIndex != self.oldMasters.index(masterName)):
             return 20
         elif status > 0 or self.fileIsMod:
             return status
@@ -677,10 +679,10 @@ class MasterList(gui.List):
             pass  # --Done by default
         elif col == 'Rating':
             self.items.sort(
-                key=lambda a: mosh.modInfos.table.getItem(a, 'rating', ''))
+                key=lambda a: mosh.modInfos.table.getItem(a, 'rating', u''))
         elif col == 'Group':
             self.items.sort(
-                key=lambda a: mosh.modInfos.table.getItem(a, 'group', ''))
+                key=lambda a: mosh.modInfos.table.getItem(a, 'group', u''))
         elif col == 'Modified':
             self.items.sort(key=lambda a: data[a].mtime)
         elif col == 'Load Order':
@@ -696,7 +698,7 @@ class MasterList(gui.List):
             self.items.sort(lambda a, b: cmp(data[a].author.lower(),
                 data[b].author.lower()))
         else:
-            raise exception.BoltError, _('Unrecognized sort key: ') + col
+            raise exception.BoltError, _(u'Unrecognized sort key: ') + col
         # --Ascending
         if reverse:
             self.items.reverse()
@@ -730,13 +732,15 @@ class MasterList(gui.List):
             return True
         # --Already at max masters?
         elif len(self.newMasters) == 255:
-            gui.dialog.ErrorMessage(self, _('Unable to select %s because file already has maximum number of masters.') % (masterName,))
+            message = _(u'Unable to select {!s} because file already has maximum number of masters.'.format(masterName,))
+            gui.dialog.ErrorMessage(self, message)
             return False
         # --New master?
         elif not masterInfos:
             modInfo = mosh.modInfos.get(masterName, None)
             if not modInfo:
-                gui.dialog.ErrorMessage(self, _('Unable to add %s because file doesn\'t exist.') % (masterName,))
+                message = _(u"Unable to add {!s} because file doesn't exist.".format(masterName))
+                gui.dialog.ErrorMessage(self, message)
                 return False
             itemId = self.newId()
             masterInfo = mosh.MasterInfo(masterName, modInfo.size)
@@ -795,7 +799,8 @@ class MasterList(gui.List):
             # --Missing Master?
             if not masterInfo.modInfo:
                 masterName = masterInfo.name
-                newName = conf.settings['mash.mods.renames'].get(masterName, None)
+                newName = conf.settings['mash.mods.renames'].get(masterName,
+                    None)
                 # --Rename?
                 if newName and mosh.modInfos.has_key(newName):
                     masterInfo.setName(newName)
@@ -807,7 +812,8 @@ class MasterList(gui.List):
                 else:
                     # self.unload(masterName)
                     masterInfo.isLoaded = False
-                if masterName in self.newMasters: self.newMasters.remove(masterName)
+                if masterName in self.newMasters:
+                    self.newMasters.remove(masterName)
             # --Fix size
             if masterInfo.modInfo:
                 masterInfo.size = masterInfo.modInfo.size
@@ -847,8 +853,8 @@ class MasterList(gui.List):
     def OnLeftDown(self, event):
         # --Not edited yet?
         if not self.edited:
-            message = (_("Edit/update the masters list? Note that the update process will automatically fix some problems. Be sure to review the changes before saving."))
-            if gui.dialog.ContinueQuery(self, message, 'mash.masters.update', _('Update Masters')) != wx.ID_OK:
+            message = _(u"Edit/update the masters list? Note that the update process will automatically fix some problems. Be sure to review the changes before saving.")
+            if gui.dialog.ContinueQuery(self, message, 'mash.masters.update', _(u'Update Masters')) != wx.ID_OK:
                 return
             self.InitEdit()
             return
@@ -889,7 +895,7 @@ class MasterList(gui.List):
             else:
                 masterName = masterInfo.name
                 if masterName not in self.newMasters:
-                    raise exception.BoltError, _("Missing master: ") + masterName
+                    raise exception.BoltError, _(u"Missing master: ") + masterName
                 newMod = self.newMasters.index(masterName) + 1
                 if newMod != oldMod:
                     modMap[oldMod] = newMod
