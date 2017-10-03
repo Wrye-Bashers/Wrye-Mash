@@ -535,7 +535,7 @@ def askOk(parent, message, title=u''):
     return askStyled(parent, message, title, wx.OK | wx.CANCEL)
 
 
-def askYes(parent, message, title='', default=True):
+def askYes(parent, message, title=u'', default=True):
     """Shows a modal warning message."""
     style = wx.YES_NO | wx.ICON_EXCLAMATION | ((wx.NO_DEFAULT, wx.YES_DEFAULT)[default])
     return askStyled(parent, message, title, style)
