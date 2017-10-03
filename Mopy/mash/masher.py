@@ -985,13 +985,13 @@ class ModList(gui.List, gui.ListDragDropMixin):
             if col == 'File':
                 value = fileName
             elif col == 'Rating':
-                value = mosh.modInfos.table.getItem(fileName, 'rating', '')
+                value = mosh.modInfos.table.getItem(fileName, 'rating', u'')
             elif col == 'Group':
-                value = mosh.modInfos.table.getItem(fileName, 'group', '')
+                value = mosh.modInfos.table.getItem(fileName, 'group', u'')
             elif col == 'Modified':
                 value = formatDate(fileInfo.mtime)
             elif col == 'Size':
-                value = formatInteger(fileInfo.size / 1024) + ' KB'
+                value = formatInteger(fileInfo.size / 1024) + u' KB'
             elif col == 'Author' and fileInfo.tes3:
                 value = fileInfo.tes3.hedr.author
             else:
@@ -1043,10 +1043,10 @@ class ModList(gui.List, gui.ListDragDropMixin):
                 data[b].tes3.hedr.author.lower()))
         elif col == 'Rating':
             self.items.sort(
-                key=lambda a: mosh.modInfos.table.getItem(a, 'rating', ''))
+                key=lambda a: mosh.modInfos.table.getItem(a, 'rating', u''))
         elif col == 'Group':
             self.items.sort(
-                key=lambda a: mosh.modInfos.table.getItem(a, 'group', ''))
+                key=lambda a: mosh.modInfos.table.getItem(a, 'group', u''))
         elif col == 'Load Order':
             self.items = mosh.modInfos.getLoadOrder(self.items, False)
         elif col == 'Modified':
@@ -1058,7 +1058,7 @@ class ModList(gui.List, gui.ListDragDropMixin):
         elif col == 'Version':
             self.items.sort(key=lambda a: data[a].tes3.hedr.version)
         else:
-            raise exception.BoltError, _('Unrecognized sort key: ')+col
+            raise exception.BoltError, _(u'Unrecognized sort key: ') + col
         # --Ascending
         if reverse:
             self.items.reverse()
@@ -1084,8 +1084,9 @@ class ModList(gui.List, gui.ListDragDropMixin):
             try:
                 self.data.load(fileName)
             except exception.MaxLoadedError:
-                gui.dialog.ErrorMessage(self,_("Unable to add mod %s because load list is full." )
-                    % (fileName,))
+                gui.dialog.ErrorMessage(self, _(
+                    u"Unable to add mod {!s} because load list is full.".format(
+                        fileName)))
                 return
 
     # --Events ---------------------------------------------
@@ -1142,10 +1143,10 @@ class ModList(gui.List, gui.ListDragDropMixin):
 
     def OnKeyDown(self, event):
         fmap = {
-            wx.WXK_SPACE :self.OnSpacePress,
-            wx.WXK_UP    :self.OnUpPress,
-            wx.WXK_DOWN  :self.OnDownPress,
-            65           :self.OnAPress,
+            wx.WXK_SPACE: self.OnSpacePress,
+            wx.WXK_UP   : self.OnUpPress,
+            wx.WXK_DOWN : self.OnDownPress,
+            65          : self.OnAPress,
         }
         kc = event.GetKeyCode()
         if kc in fmap:
@@ -1177,17 +1178,17 @@ class ModList(gui.List, gui.ListDragDropMixin):
     def OnDrop(self, names, toIdx):
         """ Support for dragging and dropping list items """
         if conf.settings['mash.mods.sort'] != 'Modified':
-            err = 'Must be sorted by Modified to enable ctrl based sorting.'
+            err = u'Must be sorted by Modified to enable ctrl based sorting.'
             gui.dialog.ErrorMessage(self.GetParent(), err)
             return
 
         # get a list of sorted items for the given file type only
         items = [x for x in self.GetItems()]
         items.sort(key=lambda x: mosh.modInfos[x].mtime)
-        esm = [x for x in items if x.lower().endswith('esm')]
-        esp = [x for x in items if x.lower().endswith('esp')]
+        esm = [x for x in items if x.lower().endswith(u'esm')]
+        esp = [x for x in items if x.lower().endswith(u'esp')]
 
-        for fileType, items in {'esm': esm, 'esp': esp}.iteritems():
+        for fileType, items in {u'esm': esm, u'esp': esp}.iteritems():
 
             currentNames = [x for x in names if x in items]
 
@@ -1246,7 +1247,8 @@ class ModList(gui.List, gui.ListDragDropMixin):
             return
 
         if conf.settings['mash.mods.sort'] != 'Modified':
-            gui.dialog.ErrorMessage(self.GetParent(), 'Must be sorted by Modified to enable ctrl based sorting')
+            gui.dialog.ErrorMessage(self.GetParent(),
+                u'Must be sorted by Modified to enable ctrl based sorting')
             return
 
         selected = self.GetSelected()
@@ -1254,9 +1256,9 @@ class ModList(gui.List, gui.ListDragDropMixin):
             return
 
         self.moveSelectedFilter(selected, moveMod,
-            lambda x: x.lower().endswith('esp'))
+            lambda x: x.lower().endswith(u'esp'))
         self.moveSelectedFilter(selected, moveMod,
-            lambda x: x.lower().endswith('esm'))
+            lambda x: x.lower().endswith(u'esm'))
 
         self.Refresh()
 
