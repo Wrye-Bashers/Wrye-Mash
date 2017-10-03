@@ -89,33 +89,26 @@ class Colors:
     Provides dictionary syntax access (colors[key]) and predefined colours."""
 
     def __init__(self):
-        self.data = {}
-        self.database = None
+        self._colors = {}
 
     def __setitem__(self, key, value):
         """Add a color to the database."""
-        # --Add to pending?
-        if not self.database:
-            self.data[key] = value
-        # --Else add it to the database
-        elif isinstance(value, str):
-            self.data[key] = self.database.Find(value)
+        if not isinstance(value, str):
+            self._colors[key] = wx.Colour(*value)
         else:
-            self.data[key] = wx.Colour(*value)
+            self._colors[key] = value
 
     def __getitem__(self, key):
         """Dictionary syntax: color = colours[key]."""
-        if not self.database:
-            self.database = wx.TheColourDatabase
-            for key, value in self.data.items():
-                if isinstance(value, str):
-                    self.data[key] = self.database.Find(value)
-                else:
-                    self.data[key] = wx.Colour(*value)
-        if key in self.data:
-            return self.data[key]
-        else:
-            return self.database.Find(key)
+        if key in self._colors:
+            key = self._colors[key]
+            if not isinstance(key, str):
+                return key
+        return wx.TheColourDatabase.Find(key)
+
+    def __iter__(self):
+        for key in self._colors:
+            yield key
 
 
 # --Singleton
