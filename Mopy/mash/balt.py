@@ -815,33 +815,34 @@ class ListEditor(wx.Dialog):
             captionText = None
         # --List Box
         if type == 'checklist':
-            self.list = wx.CheckListBox(self, -1, choices=self.items,
+            self.list = wx.CheckListBox(self, wx.ID_ANY, choices=self.items,
                 style=wx.LB_SINGLE)
             for index, checked in enumerate(self.data.getChecks()):
                 self.list.Check(index, checked)
             self.Bind(wx.EVT_CHECKLISTBOX, self.DoCheck, self.list)
         else:
-            self.list = wx.ListBox(self, -1, choices=self.items,
+            self.list = wx.ListBox(self, wx.ID_ANY, choices=self.items,
                 style=wx.LB_SINGLE)
         self.list.SetSizeHints(125, 150)
         self.list.Bind(wx.EVT_LISTBOX, self.OnSelect)
         # --Infobox
         if data.showInfo:
-            self.gInfoBox = wx.TextCtrl(self, -1, " ", size=(130, -1),
-                style=(self.data.infoReadOnly * wx.TE_READONLY) | wx.TE_MULTILINE | wx.SUNKEN_BORDER)
+            self.gInfoBox = wx.TextCtrl(self, wx.ID_ANY, u" ", size=(130, -1),
+                style=(
+                      self.data.infoReadOnly * wx.TE_READONLY) | wx.TE_MULTILINE | wx.SUNKEN_BORDER)
             if not self.data.infoReadOnly:
                 self.gInfoBox.Bind(wx.EVT_TEXT, self.OnInfoEdit)
         else:
             self.gInfoBox = None
         # --Buttons
         buttonSet = (
-            (data.showAction, _('Action'), self.DoAction),
-            (data.showAdd, _('Add'), self.DoAdd),
-            (data.showEdit, _('Edit'), self.DoEdit),
-            (data.showRename, _('Rename'), self.DoRename),
-            (data.showRemove, _('Remove'), self.DoRemove),
-            (data.showSave, _('Save'), self.DoSave),
-            (data.showCancel, _('Cancel'), self.DoCancel),
+            (data.showAction, _(u'Action'), self.DoAction),
+            (data.showAdd, _(u'Add'), self.DoAdd),
+            (data.showEdit, _(u'Edit'), self.DoEdit),
+            (data.showRename, _(u'Rename'), self.DoRename),
+            (data.showRemove, _(u'Remove'), self.DoRemove),
+            (data.showSave, _(u'Save'), self.DoSave),
+            (data.showCancel, _(u'Cancel'), self.DoCancel),
         )
         if sum(bool(x[0]) for x in buttonSet):
             buttons = vSizer()
@@ -916,11 +917,11 @@ class ListEditor(wx.Dialog):
         itemDex = selections[0]
         curName = self.list.GetString(itemDex)
         # --Dialog
-        newName = askText(self, _('Rename to:'), _('Rename'), curName)
+        newName = askText(self, _(u'Rename to:'), _(u'Rename'), curName)
         if not newName or newName == curName:
             return
         elif newName in self.items:
-            showError(self, _('Name must be unique.'))
+            showError(self, _(u'Name must be unique.'))
         elif self.data.rename(curName, newName):
             self.items[itemDex] = newName
             self.list.SetString(itemDex, newName)
@@ -940,7 +941,7 @@ class ListEditor(wx.Dialog):
         self.list.Delete(itemDex)
         if self.gInfoBox:
             self.gInfoBox.DiscardEdits()
-            self.gInfoBox.SetValue('')
+            self.gInfoBox.SetValue(u'')
 
     # --Show Info
     def OnSelect(self, event):
