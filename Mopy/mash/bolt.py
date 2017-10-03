@@ -1674,6 +1674,7 @@ def delist(header, items, on=False):
 
 def dictFromLines(lines, sep=None):
     """Generate a dictionary from a string with lines, stripping comments and skipping empty strings."""
+    reComment = re.compile('#.*')
     temp = [reComment.sub('', x).strip() for x in lines.split('\n')]
     if sep == None or type(sep) == type(''):
         temp = dict([x.split(sep, 1) for x in temp if x])
@@ -1707,6 +1708,7 @@ def invertDict(indict):
 
 def listFromLines(lines):
     """Generate a list from a string with lines, stripping comments and skipping empty strings."""
+    reComment = re.compile('#.*')
     temp = [reComment.sub('', x).strip() for x in lines.split('\n')]
     temp = [x for x in temp if x]
     return temp
