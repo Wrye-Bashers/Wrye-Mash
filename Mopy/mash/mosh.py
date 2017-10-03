@@ -946,7 +946,7 @@ class SubRecord:
         self.dumpData(out)
         # --Done
         self.data = out.getvalue()
-        data.close()
+        self.data.close()
         self.size = len(self.data)
         self.setChanged(False)
         return self.size
