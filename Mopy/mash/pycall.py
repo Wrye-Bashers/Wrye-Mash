@@ -44,7 +44,8 @@ class Callables:
     # --List
     def list(self):
         for key in self.callObjs.keys():
-            print ' ', key, sel
+            # print ' ', key, sel
+            print ' ', key, self
         raise "Undefined."
 
     # --Main
