@@ -2475,7 +2475,7 @@ class ScreensList(gui.List):
         elif col == 'Modified':
             self.items.sort(key=lambda a: data[a][1])
         else:
-            raise exception.BoltError(_('Unrecognized sort key: ') + col)
+            raise exception.BoltError(_(u'Unrecognized sort key: ') + col)
         # --Ascending
         if reverse:
             self.items.reverse()
