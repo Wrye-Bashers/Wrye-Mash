@@ -1593,7 +1593,7 @@ class Tank_Duplicate(Link):
 
     def AppendToMenu(self, menu, window, data):
         Link.AppendToMenu(self, menu, window, data)
-        menuItem = wx.MenuItem(menu, self.id, _('Duplicate...'))
+        menuItem = wx.MenuItem(menu, self.id, _(u'Duplicate...'))
         menu.AppendItem(menuItem)
         menuItem.Enable(len(self.selected) == 1)
 
@@ -1601,14 +1601,13 @@ class Tank_Duplicate(Link):
         srcDir = self.data.dir
         srcName = self.selected[0]
         (root, ext) = srcName.rootExt
-        (destDir, destName, wildcard) = (srcDir, root + ' Copy' + ext, '*' + ext)
-        destPath = askSave(self.gTank, _('Duplicate as:'), destDir, destName,
-            wildcard)
+        (destDir, destName, wildcard) = (srcDir, root + u' Copy' + ext, u'*' + ext)
+        destPath = askSave(self.gTank, _(u'Duplicate as:'), destDir, destName, wildcard)
         if not destPath:
             return
         destDir, destName = destPath.headTail
         if (destDir == srcDir) and (destName == srcName):
-            showError(self.window, _("Files cannot be duplicated to themselves!"))
+            showError(self.window, _(u"Files cannot be duplicated to themselves!"))
             return
         self.data.copy(srcName, destName, destDir)
         if destDir == srcDir:
