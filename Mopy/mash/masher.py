@@ -2550,12 +2550,12 @@ class MashNotebook(wx.Notebook):
         you start Wrye Mash."""
         wx.Notebook.__init__(self, parent, id)
         # -- D.C.-G
-        self.AddPage(gui.utils.UtilsPanel(self),_("Utilities"))
+        self.AddPage(gui.utils.UtilsPanel(self),_(u"Utilities"))
         # --#
-        self.AddPage(InstallersPanel(self),_("Installers"))
-        self.AddPage(ModPanel(self),_("Mods"))
-        self.AddPage(SavePanel(self),_("Saves"))
-        self.AddPage(ScreensPanel(self),_("Screenshots"))
+        self.AddPage(InstallersPanel(self),_(u"Installers"))
+        self.AddPage(ModPanel(self),_(u"Mods"))
+        self.AddPage(SavePanel(self),_(u"Saves"))
+        self.AddPage(ScreensPanel(self),_(u"Screenshots"))
         # --Selection
         pageIndex = conf.settings['mash.page']
         if conf.settings['bash.installers.fastStart'] and pageIndex == 1:
