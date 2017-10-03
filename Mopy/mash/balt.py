@@ -322,9 +322,8 @@ def button(parent, label=u'', pos=defPos, size=defSize, style=0, val=defVal,
     return gButton
 
 
-def toggleButton(parent, label='', pos=defPos, size=defSize, style=0,
-    val=defVal,
-    name='button', id=defId, onClick=None, tip=None):
+def toggleButton(parent, label=u'', pos=defPos, size=defSize, style=0,
+    val=defVal, name=u'button', id=defId, onClick=None, tip=None):
     """Creates a toggle button, binds toggle function, then returns bound button."""
     gButton = wx.ToggleButton(parent, id, label, pos, size, style, val, name)
     if onClick:
