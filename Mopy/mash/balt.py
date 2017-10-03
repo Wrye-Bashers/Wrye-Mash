@@ -1542,7 +1542,7 @@ class Tanks_Open(Link):
 
     def AppendToMenu(self, menu, window, data):
         Link.AppendToMenu(self, menu, window, data)
-        menuItem = wx.MenuItem(menu, self.id, _('Open...'))
+        menuItem = wx.MenuItem(menu, self.id, _(u'Open...'))
         menu.AppendItem(menuItem)
 
     def Execute(self, event):
