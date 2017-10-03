@@ -130,27 +130,78 @@ class Image:
 
     Allows image to be specified before wx.App is initialized."""
 
-    def __init__(self, file, type=wx.BITMAP_TYPE_ANY):
-        self.file = GPath(file)
-        self.type = type
+    typesDict = {
+        'png' : wx.BITMAP_TYPE_PNG,
+        'jpg' : wx.BITMAP_TYPE_JPEG,
+        'jpeg': wx.BITMAP_TYPE_JPEG,
+        'ico' : wx.BITMAP_TYPE_ICO,
+        'bmp' : wx.BITMAP_TYPE_BMP,
+        'tif' : wx.BITMAP_TYPE_TIF,
+    }
+
+    def __init__(self, filename, imageType=None, iconSize=16):
+        self.file = GPath(filename)
+        try:
+            self._img_type = imageType or self.typesDict[self.file.cext[1:]]
+        except KeyError:
+            deprint(u'Unknown image extension {!s}'.format(self.file.cext))
+            self._img_type = wx.BITMAP_TYPE_ANY
         self.bitmap = None
         self.icon = None
-        if not GPath(self.file).exists():
-            raise exception.ArgumentError(_("Missing resource file: %s.") % (self.file,))
+        self.iconSize = iconSize
+        # if not GPath(self.file).exists():
+        if not GPath(self.file.s.split(u';')[0]).exists():
+            raise exception.ArgumentError(
+                _(u'Missing resource file: {!s}.'.format(self.file)))
 
     def GetBitmap(self):
         if not self.bitmap:
-            self.bitmap = wx.Bitmap(self.file.s, self.type)
+            if self._img_type == wx.BITMAP_TYPE_ICO:
+                self.GetIcon()
+                w, h = self.icon.GetWidth(), self.icon.GetHeight()
+                self.bitmap = wx.EmptyBitmap(w, h)
+                self.bitmap.CopyFromIcon(self.icon)
+                # Hack - when user scales windows display icon may need scaling
+                if w != self.iconSize or h != self.iconSize:  # rescale !
+                    self.bitmap = wx.BitmapFromImage(
+                        wx.ImageFromBitmap(self.bitmap).Scale(
+                            self.iconSize, self.iconSize,
+                            wx.IMAGE_QUALITY_HIGH))
+            else:
+                self.bitmap = wx.Bitmap(self.file.s, self._img_type)
         return self.bitmap
 
     def GetIcon(self):
         if not self.icon:
-            self.icon = wx.EmptyIcon()
-            self.icon.CopyFromBitmap(self.GetBitmap())
+            if self._img_type == wx.BITMAP_TYPE_ICO:
+                self.icon = wx.Icon(self.file.s, wx.BITMAP_TYPE_ICO,
+                    self.iconSize, self.iconSize)
+                # we failed to get the icon? (when display resolution changes)
+                if not self.icon.GetWidth() or not self.icon.GetHeight():
+                    self.icon = wx.Icon(self.file.s, wx.BITMAP_TYPE_ICO)
+            else:
+                self.icon = wx.EmptyIcon()
+                self.icon.CopyFromBitmap(self.GetBitmap())
         return self.icon
 
+    @staticmethod
+    def GetImage(image_data, height, width):
+        """Hasty wrapper around wx.EmptyImage - absorb to GetBitmap."""
+        image = wx.EmptyImage(width, height)
+        image.SetData(image_data)
+        return image
 
-# ------------------------------------------------------------------------------
+    @staticmethod
+    def Load(srcPath, quality):
+        """Hasty wrapper around wx.Image - loads srcPath with specified
+        quality if a jpeg."""
+        bitmap = wx.Image(srcPath.s)
+        # This only has an effect on jpegs, so it's ok to do it on every kind
+        bitmap.SetOptionInt(wx.IMAGE_OPTION_QUALITY, quality)
+        return bitmap
+
+
+#------------------------------------------------------------------------------
 class ImageBundle:
     """Wrapper for bundle of images.
 
