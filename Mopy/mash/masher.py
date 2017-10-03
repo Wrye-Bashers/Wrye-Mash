@@ -2791,7 +2791,8 @@ class DocBrowser(wx.Frame):
         # --Window
         pos = conf.settings['mash.modDocs.pos']
         size = conf.settings['mash.modDocs.size']
-        wx.Frame.__init__(self, globals.mashFrame, -1, _('Doc Browser'), pos, size,
+        wx.Frame.__init__(self, globals.mashFrame, -1, _(u'Doc Browser'), pos,
+            size,
             style=wx.DEFAULT_FRAME_STYLE)
         self.SetBackgroundColour(wx.NullColour)
         self.SetSizeHints(250, 250)
@@ -2803,22 +2804,22 @@ class DocBrowser(wx.Frame):
         # --Application Icons
         self.SetIcons(globals.images['mash.icons2'].GetIconBundle())
         # --Set Doc
-        self.setButton = wx.Button(self, ID_SET, _("Set Doc..."))
+        self.setButton = wx.Button(self, ID_SET, _(u"Set Doc..."))
         wx.EVT_BUTTON(self.setButton, ID_SET, self.DoSet)
         # --Forget Doc
-        self.forgetButton = wx.Button(self, wx.ID_DELETE, _("Forget Doc..."))
+        self.forgetButton = wx.Button(self, wx.ID_DELETE, _(u"Forget Doc..."))
         wx.EVT_BUTTON(self.forgetButton, wx.ID_DELETE, self.DoForget)
         # --Rename Doc
-        self.renameButton = wx.Button(self, ID_RENAME, _("Rename Doc..."))
+        self.renameButton = wx.Button(self, ID_RENAME, _(u"Rename Doc..."))
         wx.EVT_BUTTON(self.renameButton, ID_RENAME, self.DoRename)
         # --Edit Doc
-        self.editButton = wx.ToggleButton(self, ID_EDIT, _("Edit Doc..."))
+        self.editButton = wx.ToggleButton(self, ID_EDIT, _(u"Edit Doc..."))
         wx.EVT_TOGGLEBUTTON(self.editButton, ID_EDIT, self.DoEdit)
         # --Html Back
-        self.prevButton = wx.Button(self, ID_BACK, "<<")
+        self.prevButton = wx.Button(self, ID_BACK, u"<<")
         wx.EVT_BUTTON(self.prevButton, ID_BACK, self.DoPrevPage)
         # --Html Forward
-        self.nextButton = wx.Button(self, ID_NEXT, ">>")
+        self.nextButton = wx.Button(self, ID_NEXT, u">>")
         wx.EVT_BUTTON(self.nextButton, ID_NEXT, self.DoNextPage)
         # --Doc Name
         self.docNameBox = wx.TextCtrl(self, -1, style=wx.TE_READONLY)
@@ -2860,11 +2861,11 @@ class DocBrowser(wx.Frame):
 
     def GetIsWtxt(self, docPath=None):
         """Determines whether specified path is a wtxt file."""
-        docPath = docPath or self.data.get(self.modName, '')
+        docPath = docPath or self.data.get(self.modName, u'')
         if not os.path.exists(docPath):
             return False
         textFile = file(docPath)
-        maText = re.match(r'^=.+=#\s*$', textFile.readline())
+        maText = re.match(ur'^=.+=#\s*$', textFile.readline())
         textFile.close()
         return (maText != None)
 
@@ -2916,11 +2917,10 @@ class DocBrowser(wx.Frame):
             (docsDir, fileName) = os.path.split(self.data[modName])
         else:
             docsDir = (conf.settings['mash.modDocs.dir'] or
-                os.path.join(conf.settings['mwDir'], 'Data Files'))
+                       os.path.join(conf.settings['mwDir'], u'Data Files'))
             fileName = ''
         # --Dialog
-        dialog = wx.FileDialog(self, _("Select doc for %s:") % (modName,),
-            docsDir, fileName, '*.*', wx.OPEN)
+        dialog = wx.FileDialog(self, _(u"Select doc for {!s}:").format(modName), docsDir, fileName, u'*.*', wx.OPEN)
         if dialog.ShowModal() != wx.ID_OK:
             dialog.Destroy()
             return None
@@ -2938,8 +2938,7 @@ class DocBrowser(wx.Frame):
         oldPath = self.data[modName]
         (workDir, fileName) = os.path.split(oldPath)
         # --Dialog
-        dialog = wx.FileDialog(self, _("Rename file to:"),
-            workDir, fileName, '*.*', wx.SAVE | wx.OVERWRITE_PROMPT)
+        dialog = wx.FileDialog(self, _(u"Rename file to:"), workDir, fileName, u'*.*', wx.SAVE | wx.OVERWRITE_PROMPT)
         if dialog.ShowModal() != wx.ID_OK:
             dialog.Destroy()
             return None
@@ -2952,7 +2951,8 @@ class DocBrowser(wx.Frame):
             os.remove(path)
         os.rename(oldPath, path)
         if self.docIsWtxt:
-            oldHtml, newHtml = (os.path.splitext(xxx)[0] + '.html' for xxx in (oldPath, path))
+            oldHtml, newHtml = (os.path.splitext(xxx)[0] + u'.html' for xxx in
+            (oldPath, path))
             if os.path.exists(newHtml):
                 os.remove(newHtml)
             if os.path.exists(oldHtml):
@@ -2969,16 +2969,16 @@ class DocBrowser(wx.Frame):
         try:
             docPath = self.data.get(self.modName, '')
             if not docPath:
-                raise exception.BoltError(_('Filename not defined.'))
+                raise exception.BoltError(_(u'Filename not defined.'))
             self.plainText.SaveFile(docPath)
             self.plainText.DiscardEdits()
             if self.docIsWtxt:
                 import wtxt
-                docsDir = os.path.join(mosh.modInfos.dir, 'Docs')
+                docsDir = os.path.join(mosh.modInfos.dir, u'Docs')
                 wtxt.genHtml(docPath, cssDir=docsDir)
         except:
             gui.dialog.ErrorMessage(self,
-                _("Failed to save changes to %s doc file!" % (self.modName,)))
+                _(u"Failed to save changes to %s doc file!" % (self.modName,)))
 
     def SetMod(self, modName):
         """Sets the mod to show docs for."""
@@ -2994,15 +2994,15 @@ class DocBrowser(wx.Frame):
             self.modNameList.SetSelection(index)
             self.setButton.Enable(True)
         else:
-            self.modNameBox.SetValue('')
+            self.modNameBox.SetValue(u'')
             self.modNameList.SetSelection(wx.NOT_FOUND)
             self.setButton.Enable(False)
         # --Doc Data
-        docPath = self.data.get(modName, '')
+        docPath = self.data.get(modName, u'')
         docExt = os.path.splitext(docPath)[1].lower()
         self.docNameBox.SetValue(os.path.basename(docPath))
-        self.forgetButton.Enable(docPath != '')
-        self.renameButton.Enable(docPath != '')
+        self.forgetButton.Enable(docPath != u'')
+        self.renameButton.Enable(docPath != u'')
         # --Edit defaults to false.
         self.editButton.SetValue(False)
         self.editButton.Enable(False)
@@ -3010,29 +3010,30 @@ class DocBrowser(wx.Frame):
         self.docIsWtxt = False
         # --View/edit doc.
         if not docPath:
-            self.plainText.SetValue('')
+            self.plainText.SetValue(u'')
             self.SetDocType('txt')
         elif not os.path.exists(docPath):
-            myTemplate = os.path.join(mosh.modInfos.dir, 'Docs',
-                _('My Readme Template.txt'))
-            mashTemplate = os.path.join(mosh.modInfos.dir, 'Docs',
-                _('Mash Readme Template.txt'))
+            myTemplate = os.path.join(mosh.modInfos.dir, u'Docs',
+                _(u'My Readme Template.txt'))
+            mashTemplate = os.path.join(mosh.modInfos.dir, u'Docs',
+                _(u'Mash Readme Template.txt'))
             if os.path.exists(myTemplate):
-                template = ''.join(open(myTemplate).readlines())
+                template = u''.join(open(myTemplate).readlines())
             elif os.path.exists(mashTemplate):
-                template = ''.join(open(mashTemplate).readlines())
+                template = u''.join(open(mashTemplate).readlines())
             else:
-                template = '= $modName ' + ('=' * (74 - len(modName))) + '#\n' + docPath
+                template = u'= $modName ' + (
+                u'=' * (74 - len(modName))) + u'#\n' + docPath
             defaultText = string.Template(template).substitute(modName=modName)
             self.plainText.SetValue(defaultText)
             self.SetDocType('txt')
-            if docExt in set(('.txt', '.etxt')):
+            if docExt in set((u'.txt', u'.etxt')):
                 self.editButton.Enable(True)
                 editing = self.docEdit.get(modName, True)
                 self.editButton.SetValue(editing)
                 self.plainText.SetEditable(editing)
-            self.docIsWtxt = (docExt == '.txt')
-        elif docExt in set(('.htm', '.html', '.mht')):
+            self.docIsWtxt = (docExt == u'.txt')
+        elif docExt in set((u'.htm', u'.html', u'.mht')):
             self.htmlText.Navigate(docPath)
             self.SetDocType('html')
         else:
@@ -3041,12 +3042,13 @@ class DocBrowser(wx.Frame):
             self.editButton.SetValue(editing)
             self.plainText.SetEditable(editing)
             self.docIsWtxt = self.GetIsWtxt(docPath)
-            htmlPath = self.docIsWtxt and (os.path.splitext(docPath)[0] + '.html')
+            htmlPath = self.docIsWtxt and (
+            os.path.splitext(docPath)[0] + u'.html')
             if htmlPath and (not os.path.exists(htmlPath) or
                 (os.path.getmtime(docPath) > os.path.getmtime(htmlPath))
             ):
                 import wtxt
-                docsDir = os.path.join(mosh.modInfos.dir, 'Docs')
+                docsDir = os.path.join(mosh.modInfos.dir, u'Docs')
                 wtxt.genHtml(docPath, cssDir=docsDir)
             if not editing and htmlPath and os.path.exists(htmlPath):
                 self.htmlText.Navigate(htmlPath)
