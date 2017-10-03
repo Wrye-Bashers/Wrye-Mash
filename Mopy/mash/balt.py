@@ -443,7 +443,7 @@ def askDirectory(parent, message=_('Choose a directory.'), defaultPath=''):
 
 
 # ------------------------------------------------------------------------------
-def askContinue(parent, message, continueKey, title=_('Warning')):
+def askContinue(parent, message, continueKey, title=_(u'Warning')):
     """Shows a modal continue query if value of continueKey is false. Returns True to continue.
     Also provides checkbox "Don't show this in future." to set continueKey to true."""
     # --ContinueKey set?
@@ -454,7 +454,7 @@ def askContinue(parent, message, continueKey, title=_('Warning')):
         style=wx.DEFAULT_DIALOG_STYLE | wx.RESIZE_BORDER)
     icon = wx.StaticBitmap(dialog, defId,
         wx.ArtProvider_GetBitmap(wx.ART_WARNING, wx.ART_MESSAGE_BOX, (32, 32)))
-    gCheckBox = checkBox(dialog, _("Don't show this in the future."))
+    gCheckBox = checkBox(dialog, _(u"Don't show this in the future."))
     # --Layout
     sizer = vSizer(
         (hSizer(
