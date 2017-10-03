@@ -589,7 +589,7 @@ def showLogClose(evt=None):
     window.Destroy()
 
 
-def showLog(parent, logText, title='', style=0, asDialog=True, fixedFont=False,
+def showLog(parent, logText, title=u'', style=0, asDialog=True, fixedFont=False,
     icons=None):
     """Display text in a log window"""
     # --Sizing
