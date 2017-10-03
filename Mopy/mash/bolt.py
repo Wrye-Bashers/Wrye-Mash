@@ -24,6 +24,7 @@
 import cPickle
 import codecs
 import copy
+import csv
 import datetime
 import locale
 import os
@@ -961,20 +962,35 @@ reUnixNewLine = re.compile(r'(?<!\r)\n')
 # Util Classes ----------------------------------------------------------------
 # ------------------------------------------------------------------------------
 class CsvReader:
-    """For reading csv files. Handles both command tab separated (excel) formats."""
+    """For reading csv files. Handles comma, semicolon and tab separated (excel) formats.
+       CSV files must be encoded in UTF-8"""
+
+    @staticmethod
+    def utf_8_encoder(unicode_csv_data):
+        for line in unicode_csv_data:
+            yield line.encode('utf8')
 
     def __init__(self, path):
-        import csv
-        self.ins = path.open('rb')
-        format = ('excel', 'excel-tab')['\t' in self.ins.readline()]
-        self.ins.seek(0)
-        self.reader = csv.reader(self.ins, format)
+        self.ins = path.open('rb', encoding='utf-8-sig')
+        format = ('excel', 'excel-tab')[u'\t' in self.ins.readline()]
+        if format == 'excel':
+            delimiter = (',', ';')[u';' in self.ins.readline()]
+            self.ins.seek(0)
+            self.reader = csv.reader(CsvReader.utf_8_encoder(self.ins), format,
+                delimiter=delimiter)
+        else:
+            self.ins.seek(0)
+            self.reader = csv.reader(CsvReader.utf_8_encoder(self.ins), format)
 
-    def __iter__(self):
+    def __enter__(self):
         return self
 
-    def next(self):
-        return self.reader.next()
+    def __exit__(self, exc_type, exc_value, exc_traceback):
+        self.ins.close()
+
+    def __iter__(self):
+        for iter in self.reader:
+            yield [unicode(x, 'utf8') for x in iter]
 
     def close(self):
         self.reader = None
