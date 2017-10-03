@@ -764,7 +764,7 @@ class ListEditorData:
     # --Info box
     def getInfo(self, item):
         """Returns string info on specified item."""
-        return ''
+        return u''
 
     def setInfo(self, item, text):
         """Sets string info on specified item."""
