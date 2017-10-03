@@ -333,8 +333,8 @@ def toggleButton(parent, label=u'', pos=defPos, size=defSize, style=0,
     return gButton
 
 
-def checkBox(parent, label='', pos=defPos, size=defSize, style=0, val=defVal,
-    name='checkBox', id=defId, onCheck=None, tip=None):
+def checkBox(parent, label=u'', pos=defPos, size=defSize, style=0, val=defVal,
+    name=u'checkBox', id=defId, onCheck=None, tip=None):
     """Creates a checkBox, binds check function, then returns bound button."""
     gCheckBox = wx.CheckBox(parent, id, label, pos, size, style, val, name)
     if onCheck:
