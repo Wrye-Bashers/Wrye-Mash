@@ -1431,9 +1431,9 @@ class Tank(wx.Panel):
         items = self.GetSelected()
         if not items:
             return
-        message = _(r'Delete these items? This operation cannot be undone.')
-        message += '\n* ' + '\n* '.join([self.data.getName(x) for x in items])
-        if not askYes(self, message, _('Delete Items')):
+        message = _(u'Delete these items? This operation cannot be undone.')
+        message += u'\n* ' + u'\n* '.join([self.data.getName(x) for x in items])
+        if not askYes(self, message, _(u'Delete Items')):
             return
         for item in items:
             del self.data[item]
