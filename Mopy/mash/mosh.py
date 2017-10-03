@@ -2856,7 +2856,7 @@ class FileInfo:
 
 
 # ------------------------------------------------------------------------------
-class FileInfos:
+class FileInfos(DataDict):
     def __init__(self, dir, factory=FileInfo):
         """Init with specified directory and specified factory type."""
         self.dir = dir
