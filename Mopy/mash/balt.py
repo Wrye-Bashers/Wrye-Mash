@@ -66,10 +66,11 @@ class IdList:
 
 
 # Constants -------------------------------------------------------------------
-defId = -1
+defId = wx.ID_ANY
 defVal = wx.DefaultValidator
 defPos = wx.DefaultPosition
 defSize = wx.DefaultSize
+defBitmap =  wx.NullBitmap
 
 wxListAligns = {
     'LEFT'  : wx.LIST_FORMAT_LEFT,
