@@ -562,7 +562,7 @@ def showWarning(parent, message, title=_(u'Warning')):
     return askStyled(parent, message, title, wx.OK | wx.ICON_EXCLAMATION)
 
 
-def showInfo(parent, message, title=_('Information')):
+def showInfo(parent, message, title=_(u'Information')):
     """Shows a modal information message."""
     return askStyled(parent, message, title, wx.OK | wx.ICON_INFORMATION)
 
