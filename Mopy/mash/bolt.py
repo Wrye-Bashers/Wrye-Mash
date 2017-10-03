@@ -734,7 +734,7 @@ class Path(object):
             os.chmod(path, stat.S_IWUSR | stat.S_IWOTH)
             func(path)
         else:
-            raise
+            raise Exception(u"Member readonly")
 
     def clearRO(self):
         """Clears RO flag on self"""
@@ -752,12 +752,12 @@ class Path(object):
                         try:
                             chmod(rootJoin(directory), flags)
                         except:
-                            pass
+                            raise Exception(u"Directory readonly")
                     for filename in files:
                         try:
                             chmod(rootJoin(filename), flags)
                         except:
-                            pass
+                            raise Exception(u"File readonly")
 
     def open(self, *args, **kwdargs):
         if self.shead and not os.path.exists(self.shead):
