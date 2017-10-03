@@ -494,8 +494,8 @@ def askOpen(parent, title=u'', defaultDir=u'', defaultFile=u'', wildcard=u'',
     return result
 
 
-def askOpenMulti(parent, title='', defaultDir='', defaultFile='', wildcard='',
-    style=wx.OPEN | wx.MULTIPLE):
+def askOpenMulti(parent, title=u'', defaultDir=u'', defaultFile=u'',
+    wildcard=u'', style=wx.OPEN | wx.MULTIPLE):
     """Show as save dialog and return selected path(s)."""
     return askOpen(parent, title, defaultDir, defaultFile, wildcard, style)
 
