@@ -311,8 +311,8 @@ def bitmapButton(parent, bitmap, pos=defPos, size=defSize, style=wx.BU_AUTODRAW,
     return gButton
 
 
-def button(parent, label='', pos=defPos, size=defSize, style=0, val=defVal,
-    name='button', id=defId, onClick=None, tip=None):
+def button(parent, label=u'', pos=defPos, size=defSize, style=0, val=defVal,
+    name=u'button', id=defId, onClick=None, tip=None):
     """Creates a button, binds click function, then returns bound button."""
     gButton = wx.Button(parent, id, label, pos, size, style, val, name)
     if onClick:
