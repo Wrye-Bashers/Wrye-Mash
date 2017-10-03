@@ -500,7 +500,7 @@ def askOpenMulti(parent, title=u'', defaultDir=u'', defaultFile=u'',
     return askOpen(parent, title, defaultDir, defaultFile, wildcard, style)
 
 
-def askSave(parent, title='', defaultDir='', defaultFile='', wildcard='',
+def askSave(parent, title=u'', defaultDir=u'', defaultFile=u'', wildcard=u'',
     style=wx.OVERWRITE_PROMPT):
     """Show as save dialog and return selected path(s)."""
     return askOpen(parent, title, defaultDir, defaultFile, wildcard,
