@@ -1566,7 +1566,7 @@ class ModPanel(gui.NotebookPanel):
 
     def SetStatusCount(self):
         """Sets mod count in last field."""
-        text = _("Mods: %d/%d") % (len(mosh.mwIniFile.loadFiles), len(mosh.modInfos.data))
+        text = _(u"Mods: {:d}/{:d}".format(len(mosh.mwIniFile.loadFiles), len(mosh.modInfos.data)))
         globals.statusBar.SetStatusText(text, 2)
 
     def OnSize(self, event):
