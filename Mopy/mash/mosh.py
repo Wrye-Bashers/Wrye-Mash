@@ -64,7 +64,7 @@ import sys
 import stat
 import exception
 import bolt
-from bolt import LString, GPath, Flags, DataDict, SubProgress
+from bolt import LString, GPath, Flags, DataDict, SubProgress, PickleDict
 
 import compat
 import mush
@@ -385,57 +385,6 @@ class Table:
         if oldRow in data:
             data[newRow] = data[oldRow].copy()
             self.hasChanged = True
-
-
-# ------------------------------------------------------------------------------
-class PickleDict(bolt.PickleDict):
-    """Dictionary saved in a pickle file. Supports older bash pickle file formats."""
-
-    def __init__(self, path, oldPath=None, readOnly=False):
-        """Initialize."""
-        bolt.PickleDict.__init__(self, path, readOnly)
-        self.oldPath = oldPath or GPath('')
-
-    def exists(self):
-        """See if pickle file exists."""
-        return (bolt.PickleDict.exists(self) or self.oldPath.exists())
-
-    def load(self):
-        """Loads vdata and data from file or backup file.
-
-        If file does not exist, or is corrupt, then reads from backup file. If
-        backup file also does not exist or is corrupt, then no data is read. If
-        no data is read, then self.data is cleared.
-
-        If file exists and has a vdata header, then that will be recorded in
-        self.vdata. Otherwise, self.vdata will be empty.
-
-        Returns:
-          0: No data read (files don't exist and/or are corrupt)
-          1: Data read from file
-          2: Data read from backup file
-        """
-        result = bolt.PickleDict.load(self)
-        if not result and self.oldPath.exists():
-            ins = None
-            try:
-                ins = self.oldPath.open('r')
-                self.data.update(compat.uncpickle(ins))
-                ins.close()
-                result = 1
-            except EOFError:
-                if ins:
-                    ins.close()
-        # --Done
-        return result
-
-    def save(self):
-        """Save to pickle file."""
-        saved = bolt.PickleDict.save(self)
-        if saved:
-            self.oldPath.remove()
-            self.oldPath.backup.remove()
-        return saved
 
 
 # Util Functions --------------------------------------------------------------
@@ -4523,7 +4472,7 @@ class InstallersData(bolt.TankData, DataDict):
             {'Order': 'RIGHT', 'Size': 'RIGHT', 'Files': 'RIGHT',
                 'Modified': 'RIGHT'})
         # --Persistent data
-        self.dictFile = PickleDict(self.bashDir.join('Installers.dat'))
+        self.dictFile = bolt.PickleDict(self.bashDir.join('Installers.dat'))
         self.data = {}
         self.data_sizeCrcDate = {}
         # --Volatile
