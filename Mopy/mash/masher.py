@@ -1295,10 +1295,10 @@ class ModDetails(wx.Window):
         self.SetSizer(sizer)
         # --File/Version Static Text
         sizer_h0 = wx.BoxSizer(wx.HORIZONTAL)
-        sizer_h0.Add(wx.StaticText(self, -1, _("Morrowind Mod File")), 0,
+        sizer_h0.Add(wx.StaticText(self, -1, _(u"Morrowind Mod File")), 0,
             wx.TOP, 4)
         sizer_h0.Add((0, 0), 1)  # --Spacer
-        self.version = wx.StaticText(self, -1, 'v0.0')
+        self.version = wx.StaticText(self, -1, u'v0.0')
         sizer_h0.Add(self.version, 0, wx.TOP | wx.RIGHT, 4)
         # self.readMe = wx.BitmapButton(self,ID_BROWSER,images['doc.on'].GetBitmap(),style=wx.NO_BORDER)
         # self.readMe.SetToolTip(wx.ToolTip(_("Show Doc Browser")))
@@ -1309,7 +1309,7 @@ class ModDetails(wx.Window):
         sizer.Add(sizer_h0, 0, wx.EXPAND)
         # --File Name
         id = self.fileId = wx.NewId()
-        self.file = wx.TextCtrl(self, id, "", size=(textWidth, -1))
+        self.file = wx.TextCtrl(self, id, u"", size=(textWidth, -1))
         self.file.SetMaxLength(200)
         sizer.Add(self.file)
         wx.EVT_KILL_FOCUS(self.file, self.OnEditFile)
@@ -1317,7 +1317,7 @@ class ModDetails(wx.Window):
         # --Author
         id = self.authorId = wx.NewId()
         # sizer.Add(wx.StaticText(self,-1,_("Author:")),0,wx.TOP,4)
-        self.author = wx.TextCtrl(self, id, "", size=(textWidth, -1))
+        self.author = wx.TextCtrl(self, id, u"", size=(textWidth, -1))
         self.author.SetMaxLength(32)
         sizer.Add(self.author)
         wx.EVT_KILL_FOCUS(self.author, self.OnEditAuthor)
@@ -1325,7 +1325,7 @@ class ModDetails(wx.Window):
         # --Modified
         id = self.modifiedId = wx.NewId()
         # sizer.Add(wx.StaticText(self,-1,_("Modified:")),0,wx.TOP,4)
-        self.modified = wx.TextCtrl(self, id, "", size=(textWidth, -1))
+        self.modified = wx.TextCtrl(self, id, u"", size=(textWidth, -1))
         self.modified.SetMaxLength(32)
         sizer.Add(self.modified)
         wx.EVT_KILL_FOCUS(self.modified, self.OnEditModified)
@@ -1338,7 +1338,7 @@ class ModDetails(wx.Window):
         # --
         id = self.descriptionId = wx.NewId()
         self.description = (
-            wx.TextCtrl(self, id, "", size=(textWidth, 150),
+            wx.TextCtrl(self, id, u"", size=(textWidth, 150),
                 style=wx.TE_MULTILINE))
         self.description.SetMaxLength(256)
         sizer.Add(self.description)
@@ -1372,11 +1372,11 @@ class ModDetails(wx.Window):
         # --Empty?
         if not fileName:
             modInfo = self.modInfo = None
-            self.fileStr = ''
-            self.authorStr = ''
-            self.modifiedStr = ''
-            self.descriptionStr = ''
-            self.versionStr = ''
+            self.fileStr = u''
+            self.authorStr = u''
+            self.modifiedStr = u''
+            self.descriptionStr = u''
+            self.versionStr = u''
         # --Valid fileName?
         else:
             modInfo = self.modInfo = mosh.modInfos[fileName]
@@ -1385,7 +1385,7 @@ class ModDetails(wx.Window):
             self.authorStr = modInfo.tes3.hedr.author
             self.modifiedStr = formatDate(modInfo.mtime)
             self.descriptionStr = modInfo.tes3.hedr.description
-            self.versionStr = 'v%0.1f' % (modInfo.tes3.hedr.version,)
+            self.versionStr = u'v%0.1f' % (modInfo.tes3.hedr.version,)
         # --Set fields
         self.file.SetValue(self.fileStr)
         self.author.SetValue(self.authorStr)
@@ -1430,11 +1430,11 @@ class ModDetails(wx.Window):
             return
         # --Extension Changed?
         if fileStr[-4:].lower() != self.fileStr[-4:].lower():
-            gui.dialog.ErrorMessage(self, _("Incorrect file extension: ") + fileStr[-3:])
+            gui.dialog.ErrorMessage(self, _(u"Incorrect file extension: ") + fileStr[-3:])
             self.file.SetValue(self.fileStr)
         # --Else file exists?
         elif os.path.exists(os.path.join(self.modInfo.dir, fileStr)):
-            gui.dialog.ErrorMessage(self, _("File %s already exists.") % (fileStr,))
+            gui.dialog.ErrorMessage(self, _(u"File %s already exists.") % (fileStr,))
             self.file.SetValue(self.fileStr)
         # --Okay?
         else:
@@ -1456,18 +1456,18 @@ class ModDetails(wx.Window):
         if modifiedStr == self.modifiedStr:
             return
         try:
-            newTimeTup = time.strptime(modifiedStr, '%c')
+            newTimeTup = time.strptime(modifiedStr, u'%c')
             time.mktime(newTimeTup)
         except ValueError:
-            gui.dialog.ErrorMessage(self,_('Unrecognized date: ')+modifiedStr)
+            gui.dialog.ErrorMessage(self,_(u'Unrecognized date: ')+modifiedStr)
             self.modified.SetValue(self.modifiedStr)
             return
         except OverflowError:
-            gui.dialog.ErrorMessage(self,_('Mash cannot handle files dates greater than January 19, 2038.)'))
+            gui.dialog.ErrorMessage(self,_(u'Mash cannot handle files dates greater than January 19, 2038.)'))
             self.modified.SetValue(self.modifiedStr)
             return
         # --Normalize format
-        modifiedStr = time.strftime('%c', newTimeTup)
+        modifiedStr = time.strftime(u'%c', newTimeTup)
         self.modifiedStr = modifiedStr
         self.modified.SetValue(modifiedStr)  # --Normalize format
         self.SetEdited()
@@ -1490,7 +1490,7 @@ class ModDetails(wx.Window):
         changeMasters = self.masters.edited
         # --Only change date?
         if changeDate and not (changeName or changeHedr):
-            newTimeTup = time.strptime(self.modifiedStr, '%c')
+            newTimeTup = time.strptime(self.modifiedStr, u'%c')
             newTimeInt = int(time.mktime(newTimeTup))
             modInfo.setMTime(newTimeInt)
             self.SetFile(self.modInfo.name)
@@ -1520,11 +1520,11 @@ class ModDetails(wx.Window):
             # --Create and use FileRefs
             progress = None
             try:
-                progress = gui.dialog.ProgressDialog(_('Saving'))
+                progress = gui.dialog.ProgressDialog(_(u'Saving'))
                 fileRefs = mosh.FileRefs(modInfo, progress=progress)
                 progress.setBaseScale(0.0, 0.67)
                 fileRefs.load()
-                progress(1.0, _('Remap Masters'))
+                progress(1.0, _(u'Remap Masters'))
                 fileRefs.remap(newMasters, modMap, objMaps)
                 progress.setBaseScale(0.67, 0.33)
                 fileRefs.safeSave()
@@ -1532,7 +1532,7 @@ class ModDetails(wx.Window):
                 progress = progress.Destroy()
         # --Change date?
         if (changeDate or changeHedr or changeMasters):
-            newTimeTup = time.strptime(self.modifiedStr, '%c')
+            newTimeTup = time.strptime(self.modifiedStr, u'%c')
             newTimeInt = int(time.mktime(newTimeTup))
             modInfo.setMTime(newTimeInt)
         # --Done
@@ -1540,7 +1540,7 @@ class ModDetails(wx.Window):
             mosh.modInfos.refreshFile(fileName)
             self.SetFile(fileName)
         except exception.FileError:
-            gui.dialog.ErrorMessage(self,_('File corrupted on save!'))
+            gui.dialog.ErrorMessage(self,_(u'File corrupted on save!'))
             self.SetFile(None)
         globals.modList.Refresh()
 
