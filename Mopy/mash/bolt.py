@@ -248,9 +248,12 @@ class LString(object):
     __slots__ = ('_s', '_cs')
 
     def __init__(self, s):
-        if isinstance(s, LString): s = s._s
-        self._s = s
-        self._cs = s.lower()
+        if isinstance(s, LString):
+            self._s = s._s
+            self._cs = s._cs
+        else:
+            self._s = s
+            self._cs = s.lower()
 
     def __getstate__(self):
         """Used by pickler. _cs is redundant,so don't include."""
@@ -268,7 +271,7 @@ class LString(object):
         return self._s
 
     def __repr__(self):
-        return "bolt.LString(" + repr(self._s) + ")"
+        return u'bolt.LString(' + repr(self._s) + u')'
 
     def __add__(self, other):
         return LString(self._s + other)
