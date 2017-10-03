@@ -508,7 +508,7 @@ def askSave(parent, title=u'', defaultDir=u'', defaultFile=u'', wildcard=u'',
 
 
 # ------------------------------------------------------------------------------
-def askText(parent, message, title='', default=''):
+def askText(parent, message, title=u'', default=u''):
     """Shows a text entry dialog and returns result or None if canceled."""
     dialog = wx.TextEntryDialog(parent, message, title, default)
     if dialog.ShowModal() != wx.ID_OK:
