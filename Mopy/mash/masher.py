@@ -2620,7 +2620,8 @@ class MashFrame(wx.Frame):
         # --Singleton
         globals.mashFrame = self
         # --Window
-        wx.Frame.__init__(self, parent, -1, 'Wrye Mash', pos, size, style)
+        wx.Frame.__init__(self, parent, wx.ID_ANY, u'Wrye Mash', pos, size,
+            style)
         minSize = conf.settings['mash.frameSize.min']
         self.SetSizeHints(minSize[0], minSize[1])
         self.SetTitle()
@@ -2634,7 +2635,7 @@ class MashFrame(wx.Frame):
         # --Sizer
         self.sizer = wx.BoxSizer(wx.VERTICAL)
         # --Notebook panel
-        self.notebook = notebook = MashNotebook(self, -1)
+        self.notebook = notebook = MashNotebook(self, wx.ID_ANY)
         # self.sizer.Add(wx.NotebookSizer(notebook),1,wx.GROW)
         self.sizer.Add(notebook, 1, wx.GROW)
         # --Layout
@@ -2648,10 +2649,10 @@ class MashFrame(wx.Frame):
     def SetTitle(self, title=None):
         """Set title. Set to default if no title supplied."""
         if not title:
-            title = "Wrye Mash %s" % (conf.settings['mash.readme'][1],)
+            title = u"Wrye Mash {!s}".format(conf.settings['mash.readme'][1])
             if 'mash.profile' in conf.settings:
-                title += ': ' + conf.settings['mash.profile']
-        wx.Frame.SetTitle(self, title)
+                title += u': ' + conf.settings['mash.profile']
+            wx.Frame.SetTitle(self, title)
 
     def SetStatusCount(self):
         """Sets the status bar count field. Actual work is done by current panel."""
@@ -2673,10 +2674,10 @@ class MashFrame(wx.Frame):
             popMods = 'ALL'
         # --Have any mtimes been reset?
         if mosh.modInfos.mtimesReset:
-            resetList = '\n* '.join(mosh.modInfos.mtimesReset)
+            resetList = u'\n* '.join(mosh.modInfos.mtimesReset)
             del mosh.modInfos.mtimesReset[:]
             gui.dialog.InfoMessage(self, _(
-                'Modified dates have been reset for some mod files.\n* ') + resetList)
+                u'Modified dates have been reset for some mod files.\n* ') + resetList)
             popMods = 'ALL'
         # --Check savegames directory...
         if mosh.saveInfos.refresh():
@@ -2693,36 +2694,37 @@ class MashFrame(wx.Frame):
         # --WARNINGS----------------------------------------
         # --Does morrowind.ini have any bad or missing files?
         if mosh.mwIniFile.loadFilesBad:
-            message = (_("Missing files have been removed from load list. (%s)")
-                       % (', '.join(mosh.mwIniFile.loadFilesBad),))
+            message = (_(u"Missing files have been removed from load list. (%s)")
+                       % (u', '.join(mosh.mwIniFile.loadFilesBad),))
             mosh.mwIniFile.safeSave()
             gui.dialog.WarningMessage(self, message)
         # --Was load list too long?
         if mosh.mwIniFile.loadFilesExtra:
-            message = (_("Load list has been truncated because it was too long. (%s)") % (', '.join(mosh.mwIniFile.loadFilesExtra),))
+            message = (
+            _(u"Load list has been truncated because it was too long. (%s)") % (
+            u', '.join(mosh.mwIniFile.loadFilesExtra),))
             mosh.mwIniFile.safeSave()
             gui.dialog.WarningMessage(self, message)
         # --Any new corrupted files?
-        message = ''
+        message = u''
         corruptMods = set(mosh.modInfos.corrupted.keys())
         if not corruptMods <= self.knownCorrupted:
-            message += _("The following mod files have corrupted headers: ")
-            message += ','.join(sorted(corruptMods)) + '.'
+            message += _(u"The following mod files have corrupted headers: ")
+            message += u','.join(sorted(corruptMods)) + u'.'
             self.knownCorrupted |= corruptMods
         corruptSaves = set(mosh.saveInfos.corrupted.keys())
         if not corruptSaves <= self.knownCorrupted:
             if message:
-                message += '\n'
-            message += _("The following save files have corrupted headers: ")
-            message += ','.join(sorted(corruptSaves)) + '.'
+                message += u'\n'
+            message += _(u"The following save files have corrupted headers: ")
+            message += u','.join(sorted(corruptSaves)) + u'.'
             self.knownCorrupted |= corruptSaves
         if message:
             gui.dialog.WarningMessage(self, message)
         # --Any Y2038 Resets?
         if mosh.y2038Resets:
-            message = (_(
-                "Mash cannot handle dates greater than January 19, 2038. Accordingly, the dates for the following files have been reset to an earlier date: ") +
-                       ', '.join(sorted(mosh.y2038Resets)) + '.')
+            message = _(u"Mash cannot handle dates greater than January 19, 2038. Accordingly, the dates for the following files have been reset to an earlier date: " +
+                       u', '.join(sorted(mosh.y2038Resets)) + u'.')
             del mosh.y2038Resets[:]
             gui.dialog.WarningMessage(self, message)
 
