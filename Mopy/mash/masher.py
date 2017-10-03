@@ -2520,7 +2520,7 @@ class ScreensPanel(gui.NotebookPanel):
 
     def SetStatusCount(self):
         """Sets status bar count field."""
-        text = _('Screens: %d') % (len(globals.screensList.data.data),)
+        text = _(u'Screens: {:d}'.format(len(globals.screensList.data.data)))
         globals.statusBar.SetStatusText(text, 2)
 
     def OnSashDrag(self, event):
