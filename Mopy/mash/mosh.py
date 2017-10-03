@@ -82,7 +82,7 @@ dirs = {}
 settings = None
 
 # --Default settings
-settingDefaults = {
+_moshSettingDefaults = {
     'mosh.modInfos.resetMTimes': 0,
     'mosh.modInfos.objectMaps' : r'Mash\ObjectMaps.pkl',
     'mosh.fileInfo.backupDir'  : r'Mash\Backups',
@@ -7337,7 +7337,7 @@ def initSettings(path='settings.pkl'):
         if newKey != key:
             settings[newKey] = settings[key]
             del settings[key]
-    settings.loadDefaults(settingDefaults)
+    settings.loadDefaults(_moshSettingDefaults)
 
 
 # Main ------------------------------------------------------------------------
