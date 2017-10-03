@@ -23,7 +23,7 @@ import wx
 from .. import conf
 from .. import globals
 
-# import gui
+from . import InterfaceError
 
 from ..mosh import _
 from .. import mosh
@@ -31,6 +31,7 @@ from .. import mosh
 
 class ProgressDialog(mosh.Progress):
     """Prints progress to file (stdout by default)."""
+    # TODO: Look at code to use bolt.class Progress
 
     def __init__(self, title=_('Progress'), message='', parent=None,
         style=wx.PD_APP_MODAL | wx.PD_ELAPSED_TIME, interval=0.1):
@@ -42,7 +43,7 @@ class ProgressDialog(mosh.Progress):
         if self.dialog:
             self.dialog.Update(int(progress * 100), message)
         else:
-            raise gui.InterfaceError, _('Dialog already destroyed.')
+            raise InterfaceError, _('Dialog already destroyed.')
 
     def Destroy(self):
         if self.dialog:
