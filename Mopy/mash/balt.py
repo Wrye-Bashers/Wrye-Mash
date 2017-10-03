@@ -215,21 +215,25 @@ def ensureDisplayed(frame, x=100, y=100):
         frame.MoveXY(topLeft.x + x, topLeft.y + y)
 
 
-def setCheckListItems(gList, names, values):
-    """Convenience method for setting a bunch of wxCheckListBox items. The main advantage
-    of this is that it doesn't clear the list unless it needs to. Which is good if you want
-    to preserve the scroll position of the list."""
+def setCheckListItems(checkListBox, names, values):
+    """Convenience method for setting a bunch of wxCheckListBox items. The
+    main advantage of this is that it doesn't clear the list unless it needs
+    to. Which is good if you want to preserve the scroll position of the list.
+    """
     if not names:
-        gList.Clear()
+        checkListBox.Clear()
     else:
         for index, (name, value) in enumerate(zip(names, values)):
-            if index >= gList.GetCount():
-                gList.Append(name)
+            if index >= checkListBox.GetCount():
+                checkListBox.Append(name)
             else:
-                gList.SetString(index, name)
-            gList.Check(index, value)
-        for index in range(gList.GetCount(), len(names), -1):
-            gList.Delete(index - 1)
+                if index == -1:
+                    deprint(u'index = -1, name = {!s}, value = {!s}'.format(name, value))
+                    continue
+                checkListBox.SetString(index, name)
+            checkListBox.Check(index, value)
+        for index in range(checkListBox.GetCount(), len(names), -1):
+            checkListBox.Delete(index - 1)
 
 
 # Elements --------------------------------------------------------------------
