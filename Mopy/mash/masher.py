@@ -2069,7 +2069,7 @@ class InstallersPanel(SashTankPanel):
         self.frameActivated = False
         self.fullRefresh = False
         # --Contents
-        self.gList = InstallersList(left,data,
+        self.gList = InstallersList(left, data,
             installercons, InstallersPanel.mainMenu, InstallersPanel.itemMenu,
             details=self, style=wx.LC_REPORT)
         self.gList.SetSizeHints(100, 100)
@@ -2082,14 +2082,14 @@ class InstallersPanel(SashTankPanel):
         self.gNotebook = wx.Notebook(right, style=wx.NB_MULTILINE)
         self.infoPages = []
         infoTitles = (
-            ('gGeneral', _("General")),
-            ('gMatched', _("Matched")),
-            ('gMissing', _("Missing")),
-            ('gMismatched', _("Mismatched")),
-            ('gConflicts', _("Conflicts")),
-            ('gUnderrides', _("Underridden")),
-            ('gDirty', _("Dirty")),
-            ('gSkipped', _("Skipped")),
+            ('gGeneral', _(u'General')),
+            ('gMatched', _(u'Matched')),
+            ('gMissing', _(u'Missing')),
+            ('gMismatched', _(u'Mismatched')),
+            ('gConflicts', _(u'Conflicts')),
+            ('gUnderrides', _(u'Underridden')),
+            ('gDirty', _(u'Dirty')),
+            ('gSkipped', _(u'Skipped')),
         )
         for name, title in infoTitles:
             gPage = wx.TextCtrl(self.gNotebook, -1,
@@ -2115,15 +2115,15 @@ class InstallersPanel(SashTankPanel):
             (self.gNotebook, 2, wx.GROW | wx.TOP, 0),
             (hSizer(
                 (vSizer(
-                    (staticText(right, _('Sub-Packages')),),
+                    (staticText(right, _(u'Sub-Packages')),),
                     (self.gSubList, 1, wx.GROW | wx.TOP, 4),
                 ), 1, wx.GROW),
                 (vSizer(
-                    (staticText(right, _('Esp/m Filter')),),
+                    (staticText(right, _(u'Esp/m Filter')),),
                     (self.gEspmList, 1, wx.GROW | wx.TOP, 4),
                 ), 1, wx.GROW | wx.LEFT, 2),
             ), 1, wx.GROW | wx.TOP, 4),
-            (staticText(right, _('Comments')), 0, wx.TOP, 4),
+            (staticText(right, _(u'Comments')), 0, wx.TOP, 4),
             (self.gComments, 1, wx.GROW | wx.TOP, 4),
         ))
         wx.LayoutAlgorithm().LayoutWindow(self, right)
@@ -2140,8 +2140,9 @@ class InstallersPanel(SashTankPanel):
         """Panel is shown. Update self.data."""
         if conf.settings.get('bash.installers.isFirstRun', True):
             conf.settings['bash.installers.isFirstRun'] = False
-            message = _("Do you want to enable Installers If you do, Bash will first need to initialize some data. If you have many mods installed, this can take on the order of five minutes.\n\nIf you prefer to not enable Installers at this time, you can always enable it later from the column header context menu.")
-            conf.settings['bash.installers.enabled'] = balt.askYes(self, fill(message, 80), self.data.title)
+            message = _(u'Do you want to enable Installers If you do, Bash will first need to initialize some data. If you have many mods installed, this can take on the order of five minutes.\n\nIf you prefer to not enable Installers at this time, you can always enable it later from the column header context menu.')
+            conf.settings['bash.installers.enabled'] = balt.askYes(self,
+                fill(message, 80), self.data.title)
         if not conf.settings['bash.installers.enabled']:
             return
         if self.refreshing:
@@ -2151,8 +2152,8 @@ class InstallersPanel(SashTankPanel):
                 data.refreshRenamedNeeded() or data.refreshInstallersNeeded())
         ):
             self.refreshing = True
-            progress = balt.Progress(_("Refreshing Installers..."),
-                '\n' + ' ' * 60)
+            progress = balt.Progress(_(u'Refreshing Installers...'),
+                u'\n' + u' ' * 60)
             try:
                 what = ('DIS', 'I')[self.refreshed]
                 # -#
@@ -2160,7 +2161,8 @@ class InstallersPanel(SashTankPanel):
                 if modified == True:
                     self.gList.RefreshUI()
                 if modified == "noDir":
-                    gui.dialog.WarningMessage(self,_("'%s' cannot be accessed.\nThis path is possibly on a remote drive, or mispelled, or unwritable."%mosh.dirs["installers"].s))
+                    mseeage = _(u'{!s} cannot be accessed.\nThis path is possibly on a remote drive, or mispelled, or unwritable.'.format(mosh.dirs["installers"].s))
+                    gui.dialog.WarningMessage(self, mseeage)
                 self.fullRefresh = False
                 self.frameActivated = False
                 self.refreshing = False
@@ -2182,7 +2184,7 @@ class InstallersPanel(SashTankPanel):
     def SetStatusCount(self):
         """Sets status bar count field."""
         active = len([x for x in self.data.itervalues() if x.isActive])
-        text = _('Packages: %d/%d') % (active, len(self.data.data))
+        text = _(u'Packages: {:d}/{:d}').format(active, len(self.data.data))
         globals.statusBar.SetStatusText(text, 2)
 
     # --Details view (if it exists)
@@ -2222,34 +2224,34 @@ class InstallersPanel(SashTankPanel):
                 if (index == currentIndex):
                     self.RefreshInfoPage(index, installer)
                 else:
-                    gPage.SetValue('')
+                    gPage.SetValue(u'')
             # --Sub-Packages
             self.gSubList.Clear()
             if len(installer.subNames) <= 2:
                 self.gSubList.Clear()
             else:
                 balt.setCheckListItems(self.gSubList,
-                    [x.replace('&', '&&') for x in installer.subNames[1:]],
+                    [x.replace(u'&', u'&&') for x in installer.subNames[1:]],
                     installer.subActives[1:])
             # --Espms
             if not installer.espms:
                 self.gEspmList.Clear()
             else:
                 names = self.espms = sorted(installer.espms)
-                names.sort(key=lambda x: x.cext != '.esm')
+                names.sort(key=lambda x: x.cext != u'.esm')
                 balt.setCheckListItems(self.gEspmList,
-                    [x.s.replace('&', '&&') for x in names],
+                    [x.s.replace(u'&', u'&&') for x in names],
                     [x not in installer.espmNots for x in names])
             # --Comments
             self.gComments.SetValue(installer.comments)
         else:
-            self.gPackage.SetValue('')
+            self.gPackage.SetValue(u'')
             for index, (gPage, state) in enumerate(self.infoPages):
                 self.infoPages[index][1] = True
-                gPage.SetValue('')
+                gPage.SetValue(u'')
             self.gSubList.Clear()
             self.gEspmList.Clear()
-            self.gComments.SetValue('')
+            self.gComments.SetValue(u'')
 
     def RefreshInfoPage(self, index, installer):
         """Refreshes notebook page."""
@@ -2259,15 +2261,15 @@ class InstallersPanel(SashTankPanel):
         else:
             self.infoPages[index][1] = True
         pageName = gPage.GetName()
-        sNone = _('[None]')
+        sNone = _(u'[None]')
 
         def sortKey(file):
-            dirFile = file.lower().rsplit('\\', 1)
+            dirFile = file.lower().rsplit(u'\\', 1)
             if len(dirFile) == 1:
-                dirFile.insert(0, '')
+                dirFile.insert(0, u'')
             return dirFile
 
-        def dumpFiles(files, default='', header='', isPath=False):
+        def dumpFiles(files, default=u'', header=u'', isPath=False):
             if files:
                 if isPath:
                     files = [x.s for x in files]
@@ -2276,51 +2278,48 @@ class InstallersPanel(SashTankPanel):
                 sortKeys = dict((x, sortKey(x)) for x in files)
                 files.sort(key=lambda x: sortKeys[x])
 
-                buff = ''
+                buff = u''
                 if header:
-                    buff = header + '\n'
-                buff += '\n'.join(files)
+                    buff = header + u'\n'
+                buff += u'\n'.join(files)
                 return buff
             elif header:
-                return header + '\n'
+                return header + u'\n'
             else:
-                return ''
+                return u''
 
         if pageName == 'gGeneral':
-            info = _("== Overview\n")
-            info += _("Type: ")
-            info += (_('Archive'), _('Project'))[
+            info = _(u'== Overview\n')
+            info += _(u'Type: ')
+            info += (_(u'Archive'), _(u'Project'))[
                 isinstance(installer, bosh.InstallerProject)]
-            info += '\n'
+            info += u'\n'
             if installer.type == 1:
-                info += _("Structure: Simple\n")
+                info += _(u'Structure: Simple\n')
             elif installer.type == 2:
                 if len(installer.subNames) == 2:
-                    info += _("Structure: Complex/Simple\n")
+                    info += _(u'Structure: Complex/Simple\n')
                 else:
-                    info += _("Structure: Complex\n")
+                    info += _(u'Structure: Complex\n')
             elif installer.type < 0:
-                info += _("Structure: Corrupt/Incomplete\n")
+                info += _(u'Structure: Corrupt/Incomplete\n')
             else:
-                info += _("Structure: Unrecognized\n")
+                info += _(u'Structure: Unrecognized\n')
             nConfigured = len(installer.data_sizeCrc)
             nMissing = len(installer.missingFiles)
             nMismatched = len(installer.mismatchedFiles)
-            info += _("Compressed: %s kb\n") % formatInteger(
-                installer.size / 1024)
-            info += _("Files: %s\n") % formatInteger(
-                len(installer.fileSizeCrcs))
-            info += _("Configured: %s (%s kb)\n") % (
-                formatInteger(nConfigured),
-                formatInteger(installer.unSize / 1024))
-            info += _("  Matched: %s\n") % formatInteger(
-                nConfigured - nMissing - nMismatched)
-            info += _("  Missing: %s\n") % formatInteger(nMissing)
-            info += _("  Conflicts: %s\n") % formatInteger(nMismatched)
-            info += '\n'
+            info += _(u'Compressed: {:d} kb\n'.format(installer.size / 1024))
+            info += _(u'Files: {:d}\n'.format(len(installer.fileSizeCrcs)))
+            info += _(u'"Configured: {:d} ({:d} kb)\n'.format(nConfigured,
+                installer.unSize / 1024))
+            info += _(u'  Matched: {:d}\n'.format(
+                nConfigured - nMissing - nMismatched))
+            info += _(u'  Missing: {:d}\n'.format(nMissing))
+            info += _(u'  Conflicts: {:d}\n'.format(nMismatched))
+            info += u'\n'
             # --Infoboxes
             gPage.SetValue(info + dumpFiles(installer.data_sizeCrc, sNone,
-                _("== Configured Files"), isPath=True))
+                _(u'== Configured Files'), isPath=True))
         elif pageName == 'gMatched':
             gPage.SetValue(dumpFiles(set(installer.data_sizeCrc)
                                      - installer.missingFiles - installer.mismatchedFiles,
@@ -2339,8 +2338,9 @@ class InstallersPanel(SashTankPanel):
         elif pageName == 'gSkipped':
             gPage.SetValue('\n'.join((
                 dumpFiles(installer.skipExtFiles, sNone,
-                    _('== Skipped (Extension)')),
-                dumpFiles(installer.skipDirFiles, sNone, _('== Skipped (Dir)')),
+                    _(u'== Skipped (Extension)')),
+                dumpFiles(installer.skipDirFiles, sNone,
+                    _(u'== Skipped (Dir)')),
             )) or sNone)
 
     # --Config
