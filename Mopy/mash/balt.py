@@ -541,7 +541,7 @@ def askYes(parent, message, title=u'', default=True):
     return askStyled(parent, message, title, style)
 
 
-def askWarning(parent, message, title=_('Warning')):
+def askWarning(parent, message, title=_(u'Warning')):
     """Shows a modal warning message."""
     return askStyled(parent, message, title,
         wx.OK | wx.CANCEL | wx.ICON_EXCLAMATION)
