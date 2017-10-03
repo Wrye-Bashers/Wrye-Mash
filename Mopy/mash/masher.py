@@ -1744,15 +1744,15 @@ class SaveDetails(wx.Window):
         self.SetSizer(sizer)
         # --File/Version Static Text
         sizer_h0 = wx.BoxSizer(wx.HORIZONTAL)
-        sizer_h0.Add(wx.StaticText(self, -1, _("Morrowind Save File")), 0,
+        sizer_h0.Add(wx.StaticText(self, -1, _(u"Morrowind Save File")), 0,
             wx.TOP, 4)
         sizer_h0.Add((0, 0), 1)  # --Spacer
-        self.version = wx.StaticText(self, -1, 'v0.0')
+        self.version = wx.StaticText(self, -1, u'v0.0')
         sizer_h0.Add(self.version, 0, wx.TOP | wx.RIGHT, 4)
         sizer.Add(sizer_h0, 0, wx.EXPAND)
         # --File Name
         id = self.fileId = wx.NewId()
-        self.file = wx.TextCtrl(self, id, "", size=(textWidth, -1))
+        self.file = wx.TextCtrl(self, id, u"", size=(textWidth, -1))
         self.file.SetMaxLength(256)
         sizer.Add(self.file)
         wx.EVT_KILL_FOCUS(self.file, self.OnEditFile)
@@ -1760,7 +1760,7 @@ class SaveDetails(wx.Window):
         # --Save Name
         id = self.saveNameId = wx.NewId()
         # sizer.Add(wx.StaticText(self,-1,_("Save Name:")),0,wx.TOP,4)
-        self.saveName = wx.TextCtrl(self, id, "", size=(textWidth, -1))
+        self.saveName = wx.TextCtrl(self, id, u"", size=(textWidth, -1))
         self.saveName.SetMaxLength(32)
         sizer.Add(self.saveName)
         wx.EVT_KILL_FOCUS(self.saveName, self.OnEditSaveName)
@@ -1775,14 +1775,14 @@ class SaveDetails(wx.Window):
         # sizer_h2.Add(self.readMe,0,wx.TOP,4)
         # sizer.Add(sizer_h2,0,wx.EXPAND)
         id = self.descriptionId = wx.NewId()
-        self.playerName = wx.TextCtrl(self, id, "", size=(textWidth, -1),
+        self.playerName = wx.TextCtrl(self, id, u"", size=(textWidth, -1),
             style=wx.TE_READONLY)
         self.playerName.SetBackgroundColour(readOnlyColour)
         sizer.Add(self.playerName)
         # --Cell
         id = self.curCellId = wx.NewId()
         # sizer.Add(wx.StaticText(self,-1,_("Cell:")),0,wx.TOP,4)
-        self.curCell = wx.TextCtrl(self, id, "", size=(textWidth, -1),
+        self.curCell = wx.TextCtrl(self, id, u"", size=(textWidth, -1),
             style=wx.TE_READONLY)
         self.curCell.SetBackgroundColour(readOnlyColour)
         sizer.Add(self.curCell)
@@ -1818,11 +1818,11 @@ class SaveDetails(wx.Window):
         # --Null fileName?
         if not fileName:
             saveInfo = self.saveInfo = None
-            self.fileStr = ''
-            self.saveNameStr = ''
-            self.playerNameStr = ''
-            self.curCellStr = ''
-            self.versionStr = ''
+            self.fileStr = u''
+            self.saveNameStr = u''
+            self.playerNameStr = u''
+            self.curCellStr = u''
+            self.versionStr = u''
             self.picData = None
         # --Valid fileName?
         else:
@@ -1832,7 +1832,7 @@ class SaveDetails(wx.Window):
             self.saveNameStr = saveInfo.tes3.hedr.description
             self.playerNameStr = saveInfo.tes3.gmdt.playerName
             self.curCellStr = saveInfo.tes3.gmdt.curCell
-            self.versionStr = 'v%0.1f' % (saveInfo.tes3.hedr.version,)
+            self.versionStr = u'v{:0.1f}'.format(saveInfo.tes3.hedr.version)
             self.picData = self.saveInfo.getScreenshot()
         # --Set Fields
         self.file.SetValue(self.fileStr)
@@ -1887,11 +1887,13 @@ class SaveDetails(wx.Window):
             return
         # --Extension Changed?
         if fileStr[-4:].lower() != self.fileStr[-4:].lower():
-            gui.dialog.ErrorMessage(self,"Incorrect file extension: "+fileStr[-3:])
+            gui.dialog.ErrorMessage(self,
+                u"Incorrect file extension: " + fileStr[-3:])
             self.file.SetValue(self.fileStr)
         # --Else file exists?
         elif os.path.exists(os.path.join(self.saveInfo.dir, fileStr)):
-            gui.dialog.ErrorMessage(self,"File %s already exists." % (fileStr,))
+            gui.dialog.ErrorMessage(self,
+                u"File {!s} already exists.".format(fileStr))
             self.file.SetValue(self.fileStr)
         # --Okay?
         else:
@@ -1920,7 +1922,8 @@ class SaveDetails(wx.Window):
         # --Change Name?
         if changeName:
             (oldName, newName) = (saveInfo.name, self.fileStr.strip())
-            globals.saveList.items[globals.saveList.items.index(oldName)] = newName
+            globals.saveList.items[
+                globals.saveList.items.index(oldName)] = newName
             mosh.saveInfos.rename(oldName, newName)
         # --Change hedr?
         if changeHedr:
@@ -1934,11 +1937,11 @@ class SaveDetails(wx.Window):
             # --Create and use FileRefs
             progress = None
             try:
-                progress = gui.dialog.ProgressDialog(_('Saving'))
+                progress = gui.dialog.ProgressDialog(_(u'Saving'))
                 fileRefs = mosh.FileRefs(saveInfo, progress=progress)
                 progress.setBaseScale(0.0, 0.67)
                 fileRefs.load()
-                progress(1.0, _('Remap Masters'))
+                progress(1.0, _(u'Remap Masters'))
                 fileRefs.remap(newMasters, modMap, objMaps)
                 progress.setBaseScale(0.67, 0.33)
                 fileRefs.safeSave()
@@ -1953,7 +1956,7 @@ class SaveDetails(wx.Window):
             mosh.saveInfos.refreshFile(saveInfo.name)
             self.SetFile(self.saveInfo.name)
         except exception.FileError:
-            gui.dialog.ErrorMessage(self,_('File corrupted on save!'))
+            gui.dialog.ErrorMessage(self, _(u'File corrupted on save!'))
             self.SetFile(None)
         self.SetFile(self.saveInfo.name)
         globals.saveList.Refresh(saveInfo.name)
