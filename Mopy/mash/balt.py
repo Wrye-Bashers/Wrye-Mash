@@ -478,7 +478,7 @@ def askContinue(parent, message, continueKey, title=_(u'Warning')):
 
 
 # ------------------------------------------------------------------------------
-def askOpen(parent, title='', defaultDir='', defaultFile='', wildcard='',
+def askOpen(parent, title=u'', defaultDir=u'', defaultFile=u'', wildcard=u'',
     style=wx.OPEN):
     """Show as file dialog and return selected path(s)."""
     defaultDir, defaultFile = [GPath(x).s for x in (defaultDir, defaultFile)]
