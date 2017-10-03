@@ -255,8 +255,8 @@ class ImageList:
 # Functions -------------------------------------------------------------------
 def fill(text, width=60):
     """Wraps paragraph to width characters."""
-    pars = [textwrap.fill(text, width) for text in text.split('\n')]
-    return '\n'.join(pars)
+    pars = [textwrap.fill(text, width) for text in text.split(u'\n')]
+    return u'\n'.join(pars)
 
 
 def ensureDisplayed(frame, x=100, y=100):
