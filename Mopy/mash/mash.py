@@ -64,17 +64,9 @@ def CheckWx():
             raise  # dump the info to sdterr
 
 
-def ForceWxVersion():
-    """Force wxversion for Python 2.4"""
-    if sys.version[:3] == '2.4':
-        import wxversion
-        wxversion.select("2.5.3.1")
-
-
 # Main ------------------------------------------------------------------------
 # This doesn't check if __name__ == '__main__' as it is used by Wrye Mash.pyc
 CheckWx()
-ForceWxVersion()
 
 # required to be able to run this with py2exe
 from wx.lib.pubsub import setupv1
