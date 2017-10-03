@@ -552,7 +552,7 @@ def showOk(parent, message, title=u''):
     return askStyled(parent, message, title, wx.OK)
 
 
-def showError(parent, message, title=_('Error')):
+def showError(parent, message, title=_(u'Error')):
     """Shows a modal error message."""
     return askStyled(parent, message, title, wx.OK | wx.ICON_HAND)
 
