@@ -33,6 +33,7 @@ import time
 from types import *
 from binascii import crc32
 import compat
+import chardet
 import exception
 
 # Localization ----------------------------------------------------------------
@@ -118,6 +119,121 @@ else:
     def _(text, encode=True):
         return text
 
+# Encoding/decoding-------------------------------------------------------------
+# --decode unicode strings
+#  This is only useful when reading fields from mods, as the encoding is not
+#  known.  For normal filesystem interaction, these functions are not needed
+encodingOrder = (
+    'ascii',  # Plain old ASCII (0-127)
+    'gbk',  # GBK (simplified Chinese + some)
+    'cp932',  # Japanese
+    'cp949',  # Korean
+    'cp1252',  # English (extended ASCII)
+    'utf8',
+    'cp500',
+    'UTF-16LE',
+)
+if os.name == u'nt':
+    encodingOrder += ('mbcs',)
+
+_encodingSwap = {
+    # The encoding detector reports back some encodings that
+    # are subsets of others.  Use the better encoding when
+    # given the option
+    # 'reported encoding':'actual encoding to use',
+    'GB2312'      : 'gbk',  # Simplified Chinese
+    'SHIFT_JIS'   : 'cp932',  # Japanese
+    'windows-1252': 'cp1252',
+    'windows-1251': 'cp1251',
+    'utf-8'       : 'utf8',
+}
+
+
+def _getbestencoding(bitstream):
+    """Tries to detect the encoding a bitstream was saved in.  Uses Mozilla's
+       detection library to find the best match (heuristics)"""
+    result = chardet.detect(bitstream)
+    encoding_, confidence = result['encoding'], result['confidence']
+    encoding_ = _encodingSwap.get(encoding_, encoding_)
+    ## Debug: uncomment the following to output stats on encoding detection
+    # print
+    # print '%s: %s (%s)' % (repr(bitstream),encoding,confidence)
+    return encoding_, confidence
+
+
+def decode(byte_str, encoding=None, avoidEncodings=()):
+    if isinstance(byte_str, unicode) or byte_str is None:
+        return byte_str
+    # Try the user specified encoding first
+    if encoding:
+        try:
+            return unicode(byte_str, encoding)
+        except UnicodeDecodeError:
+            pass
+    # Try to detect the encoding next
+    encoding, confidence = _getbestencoding(byte_str)
+    if encoding and confidence >= 0.55 and (
+                encoding not in avoidEncodings or confidence == 1.0):
+        try:
+            return unicode(byte_str, encoding)
+        except UnicodeDecodeError:
+            pass
+    # If even that fails, fall back to the old method, trial and error
+    for encoding in encodingOrder:
+        try:
+            return unicode(byte_str, encoding)
+        except UnicodeDecodeError:
+            pass
+    raise UnicodeDecodeError(u'Text could not be decoded using any method')
+
+
+def encode(text_str, encodings=encodingOrder, firstEncoding=None,
+    returnEncoding=False):
+    if isinstance(text_str, str) or text_str is None:
+        if returnEncoding:
+            return text_str, None
+        else:
+            return text_str
+    # Try user specified encoding
+    if firstEncoding:
+        try:
+            text_str = text_str.encode(firstEncoding)
+            if returnEncoding:
+                return text_str, firstEncoding
+            else:
+                return text_str
+        except UnicodeEncodeError:
+            pass
+    goodEncoding = None
+    # Try the list of encodings in order
+    for encoding in encodings:
+        try:
+            temp = text_str.encode(encoding)
+            detectedEncoding = _getbestencoding(temp)
+            if detectedEncoding[0] == encoding:
+                # This encoding also happens to be detected
+                # By the encoding detector as the same thing,
+                # which means use it!
+                if returnEncoding:
+                    return temp, encoding
+                else:
+                    return temp
+            # The encoding detector didn't detect it, but
+            # it works, so save it for later
+            if not goodEncoding:
+                goodEncoding = (temp, encoding)
+        except UnicodeEncodeError:
+            pass
+    # Non of the encodings also where detectable via the
+    # detector, so use the first one that encoded without error
+    if goodEncoding:
+        if returnEncoding:
+            return goodEncoding
+        else:
+            return goodEncoding[0]
+    raise UnicodeEncodeError(
+        u'Text could not be encoded using any of the following encodings: %s' % encodings)
+
 
 # LowStrings ------------------------------------------------------------------
 class LString(object):
@@ -164,24 +280,52 @@ class LString(object):
 # Paths -----------------------------------------------------------------------
 # ------------------------------------------------------------------------------
 _gpaths = {}
+# TODO: Why is there a Path here
 Path = None
 
 
 def GPath(name):
-    """Returns common path object for specified name/path."""
+    """Path factory and cache.
+    :rtype: Path
+    """
     if name is None:
         return None
-    elif not name:
-        norm = name
     elif isinstance(name, Path):
         norm = name._s
-    else:
+    elif not name:
+        norm = name  # empty string - bin this if ?
+    elif isinstance(name, unicode):
         norm = os.path.normpath(name)
+    else:
+        norm = os.path.normpath(decode(name))
     path = _gpaths.get(norm)
-    if path != None:
+    if path is not None:
         return path
     else:
         return _gpaths.setdefault(norm, Path(norm))
+
+
+def GPathPurge():
+    """Cleans out the _gpaths dictionary of any unused bolt.Path objects.
+       We cannot use a weakref.WeakValueDictionary in this case for 2 reasons:
+        1) bolt.Path, due to its class structure, cannot be made into weak
+           references
+        2) the objects would be deleted as soon as the last reference goes
+           out of scope (not the behavior we want).  We want the object to
+           stay alive as long as we will possibly be needing it, IE: as long
+           as we're still on the same tab.
+       So instead, we'll manually call our flushing function a few times:
+        1) When switching tabs
+        2) Prior to building a bashed patch
+        3) Prior to saving settings files
+    """
+    for key in _gpaths.keys():
+        # Using .keys() allows use to modify the dictionary while iterating
+        if sys.getrefcount(_gpaths[key]) == 2:
+            # 1 for the reference in the _gpaths dictionary,
+            # 1 for the temp reference passed to sys.getrefcount
+            # meanin the object is not reference anywhere else
+            del _gpaths[key]
 
 
 # ------------------------------------------------------------------------------
