@@ -567,15 +567,15 @@ def showInfo(parent, message, title=_(u'Information')):
     return askStyled(parent, message, title, wx.OK | wx.ICON_INFORMATION)
 
 
-def showList(parent, header, items, maxItems=0, title=''):
+def showList(parent, header, items, maxItems=0, title=u''):
     """Formats a list of items into a message for use in a Message."""
     numItems = len(items)
     if maxItems <= 0:
         maxItems = numItems
     message = string.Template(header).substitute(count=numItems)
-    message += '\n* ' + '\n* '.join(items[:min(numItems, maxItems)])
+    message += u'\n* ' + u'\n* '.join(items[:min(numItems, maxItems)])
     if numItems > maxItems:
-        message += _('\n(And %d others.)') % (numItems - maxItems,)
+        message += _(u'\n(And {:d} others.)'.format(numItems - maxItems))
     return askStyled(parent, message, title, wx.OK)
 
 
