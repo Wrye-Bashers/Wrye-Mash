@@ -638,7 +638,7 @@ def showLog(parent, logText, title=u'', style=0, asDialog=True, fixedFont=False,
 
 
 # ------------------------------------------------------------------------------
-def showWryeLog(parent, logText, title='', style=0, asDialog=True, icons=None):
+def showWryeLog(parent, logText, title=u'', style=0, asDialog=True, icons=None):
     """Convert logText from wtxt to html and display. Optionally, logText can be path to an html file."""
     import wx.lib.iewin
     # --Sizing
@@ -662,7 +662,7 @@ def showWryeLog(parent, logText, title='', style=0, asDialog=True, icons=None):
         logPath = _settings.get('balt.WryeLog.temp',
             bolt.Path.getcwd().join('WryeLogTemp.html'))
         cssDir = _settings.get('balt.WryeLog.cssDir', GPath(''))
-        ins = cStringIO.StringIO(logText + '\n{{CSS:wtxt_sand_small.css}}')
+        ins = cStringIO.StringIO(logText + u'\n{{CSS:wtxt_sand_small.css}}')
         out = logPath.open('w')
         bolt.WryeText.genHtml(ins, out, cssDir)
         out.close()
