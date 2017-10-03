@@ -92,7 +92,7 @@ if sys.prefix not in set(os.environ['PATH'].split(';')):
 try:
     import wx.lib.iewin
 except (ValueError, ImportError):
-    print 'Failed to import ie. Features may not be available and there may be lots of errrors!'
+    print u'Failed to import ie. Features may not be available and there may be lots of errrors!'
 
 
 # Gui Ids ---------------------------------------------------------------------
