@@ -301,8 +301,10 @@ def tooltip(text, wrap=50):
     return wx.ToolTip(text)
 
 
-def bitmapButton(parent, bitmap, pos=defPos, size=defSize, style=wx.BU_AUTODRAW,
-    val=defVal, name=u'button', id=defId, onClick=None, tip=None):
+# Wxpython Check for 4.0
+# validator=DefaultValidator: was val
+def bitmapButton(parent, id=defId, bitmap=defBitmap, pos=defPos, size=defSize,
+    style=wx.BU_AUTODRAW, val=defVal, name=u'button', onClick=None, tip=None):
     """Creates a button, binds click function, then returns bound button."""
     gButton = wx.BitmapButton(parent, id, bitmap, pos, size, style, val, name)
     if onClick:
