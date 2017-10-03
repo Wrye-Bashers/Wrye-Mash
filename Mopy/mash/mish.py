@@ -62,9 +62,9 @@ class Callables:
         self.callObjs[callKey] = callObj
 
     # --Help
-    def help(self, callKey):
+    def printHelp(self, callKey):
         """Print help for specified callKey."""
-        help(self.callObjs[callKey])
+        print help(self.callObjs[callKey])
 
     # --Main
     def main(self):
@@ -75,7 +75,7 @@ class Callables:
         callTail = (len(callParts) > 1 and callParts[1])
         # --Help request?
         if callKey == '-h':
-            help(self)
+            self.printHelp(self)
             return
         # --Not have key?
         if callKey not in callObjs:
