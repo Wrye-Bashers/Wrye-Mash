@@ -1559,7 +1559,7 @@ class Tank_Delete(Link):
 
     def AppendToMenu(self, menu, window, data):
         Link.AppendToMenu(self, menu, window, data)
-        menu.AppendItem(wx.MenuItem(menu, self.id, _('Delete')))
+        menu.AppendItem(wx.MenuItem(menu, self.id, _(u'Delete')))
 
     def Execute(self, event):
         try:
