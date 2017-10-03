@@ -29,10 +29,11 @@ from .. import mosh
 
 from ..balt import button, Links, leftSash, hSizer, vSizer
 from ..mosh import _
-# from ..types import *
+from types import StringTypes
 
 from .. import gui
 from . import dialog
+from ..bolt import BoltError
 
 
 class FakeColumnEvent:
@@ -183,7 +184,7 @@ class UtilsList(gui.List):
         elif col == 'Modified':
             self.items.sort(key=lambda a: data[a][1])
         else:
-            raise BashError(_('Unrecognized sort key: ') + col)
+            raise BoltError(_('Unrecognized sort key: ') + col)
         # --Ascending
         if reverse:
             self.items.reverse()
