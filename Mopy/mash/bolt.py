@@ -1846,16 +1846,21 @@ class Progress:
     """Progress Callable: Shows progress when called."""
 
     def __init__(self, full=1.0):
-        if (1.0 * full) == 0: raise exception.ArgumentError('Full must be non-zero!')
-        self.message = ''
-        self.full = full
+        if (1.0 * full) == 0:
+            raise exception.ArgumentError(u'Full must be non-zero!')
+        self.message = u''
+        self.full = 1.0 * full
         self.state = 0
         self.debug = False
 
+    def getParent(self):
+        return None
+
     def setFull(self, full):
         """Set's full and for convenience, returns self."""
-        if (1.0 * full) == 0: raise exception.ArgumentError('Full must be non-zero!')
-        self.full = full
+        if (1.0 * full) == 0:
+            raise exception.ArgumentError(u'Full must be non-zero!')
+        self.full = 1.0 * full
         return self
 
     def plus(self, increment=1):
@@ -1864,15 +1869,23 @@ class Progress:
 
     def __call__(self, state, message=''):
         """Update progress with current state. Progress is state/full."""
-        if (1.0 * self.full) == 0: raise exception.ArgumentError('Full must be non-zero!')
-        if message: self.message = message
-        if self.debug: deprint(
-            '%0.3f %s' % (1.0 * state / self.full, self.message))
-        self.doProgress(1.0 * state / self.full, self.message)
+        if (1.0 * self.full) == 0:
+            raise exception.ArgumentError(u'Full must be non-zero!')
+        if message:
+            self.message = message
+        if self.debug:
+            deprint(u'{0.3f} {!s}'.format(1.0 * state / self.full, self.message))
+        self._do_progress(1.0 * state / self.full, self.message)
         self.state = state
 
-    def doProgress(self, progress, message):
-        """Default doProgress does nothing."""
+    def _do_progress(self, state, message):
+        """Default _do_progress does nothing."""
+
+    # __enter__ and __exit__ for use with the 'with' statement
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_value, exc_traceback):
         pass
 
 
@@ -1889,18 +1902,20 @@ class SubProgress(Progress):
           Usually a number. But string '+1' sets it to baseFrom + 1
         full: Full meter by this progress' scale."""
         Progress.__init__(self, full)
-        if baseTo == '+1': baseTo = baseFrom + 1
-        if (baseFrom < 0 or baseFrom >= baseTo):
+        if baseTo == '+1':
+            baseTo = baseFrom + 1
+        if baseFrom < 0 or baseFrom >= baseTo:
             raise exception.ArgumentError(
-                'BaseFrom must be >= 0 and BaseTo must be > BaseFrom')
+                u'BaseFrom must be >= 0 and BaseTo must be > BaseFrom')
         self.parent = parent
         self.baseFrom = baseFrom
         self.scale = 1.0 * (baseTo - baseFrom)
         self.silent = silent
 
-    def __call__(self, state, message=''):
+    def __call__(self, state, message=u''):
         """Update progress with current state. Progress is state/full."""
-        if self.silent: message = ''
+        if self.silent:
+            message = u''
         self.parent(self.baseFrom + self.scale * state / self.full, message)
         self.state = state
 
@@ -1913,8 +1928,12 @@ class ProgressFile(Progress):
         Progress.__init__(self, full)
         self.out = out or sys.stdout
 
-    def doProgress(self, progress, message):
-        self.out.write('%0.2f %s\n' % (progress, message))
+    def _do_progress(self, progress, message):
+        msg = u'{:0.2f} {!s}\n'.format(progress, message)
+        try:
+            self.out.write(msg)
+        except UnicodeError:
+            self.out.write(msg.encode('mbcs'))
 
 
 # WryeText --------------------------------------------------------------------
