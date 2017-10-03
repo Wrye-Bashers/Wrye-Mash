@@ -1646,7 +1646,7 @@ class SaveList(gui.List):
             elif col == 'Modified':
                 value = formatDate(fileInfo.mtime)
             elif col == 'Size':
-                value = formatInteger(fileInfo.size / 1024) + ' KB'
+                value = formatInteger(fileInfo.size / 1024) + u' KB'
             elif col == 'Save Name' and fileInfo.tes3:
                 value = fileInfo.tes3.hedr.description
             elif col == 'Player' and fileInfo.tes3 and fileInfo.tes3.gmdt:
@@ -1698,7 +1698,7 @@ class SaveList(gui.List):
                 data[a].tes3.gmdt.curCell.lower(),
                 data[b].tes3.gmdt.curCell.lower()))
         else:
-            raise exception.BoltError, _('Unrecognized sort key: ') + col
+            raise exception.BoltError, _(u'Unrecognized sort key: ') + col
         # --Ascending
         if reverse:
             self.items.reverse()
@@ -1984,7 +1984,7 @@ class SavePanel(gui.NotebookPanel):
 
     def SetStatusCount(self):
         """Sets mod count in last field."""
-        text = _("Saves: %d") % (len(mosh.saveInfos.data))
+        text = _(u"Saves: {:d}".format(len(mosh.saveInfos.data)))
         globals.statusBar.SetStatusText(text, 2)
 
     def OnSize(self, event=None):
