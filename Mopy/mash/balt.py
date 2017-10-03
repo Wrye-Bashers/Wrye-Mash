@@ -344,8 +344,8 @@ def checkBox(parent, label=u'', pos=defPos, size=defSize, style=0, val=defVal,
     return gCheckBox
 
 
-def staticText(parent, label='', pos=defPos, size=defSize, style=0,
-    name="staticText", id=defId, ):
+def staticText(parent, label=u'', pos=defPos, size=defSize, style=0,
+    name=u"staticText", id=defId, ):
     """Static text element."""
     return wx.StaticText(parent, id, label, pos, size, style, name)
 
