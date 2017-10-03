@@ -2599,7 +2599,7 @@ class MashStatusBar(wx.StatusBar):
         if event:
             event.Skip()
 
-    def SetText(self, text="", timeout=5):
+    def SetText(self, text=u"", timeout=5):
         """Set's display text as specified. Empty string clears the field."""
         self.SetStatusText(text, 1)
         if timeout > 0:
@@ -2607,7 +2607,7 @@ class MashStatusBar(wx.StatusBar):
 
     def OnTimer(self, evt):
         """Clears display text as specified. Empty string clears the field."""
-        self.SetStatusText("", 1)
+        self.SetStatusText(u"", 1)
 
 
 # ------------------------------------------------------------------------------
