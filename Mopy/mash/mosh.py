@@ -7355,7 +7355,6 @@ class ScheduleGenerator:
         townCode = self.code.get(town, 0)
         townSchedule = self.schedule[town]
         npcs = sorted(townSchedule.keys())
-        townCode
         out = cStringIO.StringIO()
         cycleCode = ''
         if townCode:
