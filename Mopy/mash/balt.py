@@ -530,7 +530,7 @@ def askStyled(parent, message, title, style):
     return result in (wx.ID_OK, wx.ID_YES)
 
 
-def askOk(parent, message, title=''):
+def askOk(parent, message, title=u''):
     """Shows a modal error message."""
     return askStyled(parent, message, title, wx.OK | wx.CANCEL)
 
