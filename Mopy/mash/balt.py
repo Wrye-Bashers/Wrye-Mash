@@ -547,7 +547,7 @@ def askWarning(parent, message, title=_(u'Warning')):
         wx.OK | wx.CANCEL | wx.ICON_EXCLAMATION)
 
 
-def showOk(parent, message, title=''):
+def showOk(parent, message, title=u''):
     """Shows a modal error message."""
     return askStyled(parent, message, title, wx.OK)
 
