@@ -3199,17 +3199,17 @@ class MashApp(wx.App):
         """Dialog to select Morrowind installation directory. Called by OnInit()."""
         # --Try parent directory.
         parentDir = os.path.split(os.getcwd())[0]
-        if os.path.exists(os.path.join(parentDir, 'Morrowind.ini')):
+        if os.path.exists(os.path.join(parentDir, u'Morrowind.ini')):
             conf.settings['mwDir'] = parentDir
             mosh.dirs['app'] = GPath(parentDir)
             return True
         # --Already set?
-        if os.path.exists(os.path.join(conf.settings['mwDir'], 'Morrowind.ini')):
+        if os.path.exists(os.path.join(conf.settings['mwDir'], u'Morrowind.ini')):
             return True
         # --Ask user through dialog.
         while True:
             mwDirDialog = wx.DirDialog(None,
-                _("Select your Morrowind installation directory."))
+                _(u"Select your Morrowind installation directory."))
             result = mwDirDialog.ShowModal()
             mwDir = mwDirDialog.GetPath()
             mwDirDialog.Destroy()
@@ -3217,14 +3217,14 @@ class MashApp(wx.App):
             if result != wx.ID_OK:
                 return False
             # --Valid Morrowind install directory?
-            elif os.path.exists(os.path.join(mwDir, 'Morrowind.ini')):
+            elif os.path.exists(os.path.join(mwDir, u'Morrowind.ini')):
                 conf.settings['mwDir'] = mwDir
                 mosh.dirs['app'] = GPath(mwDir)
                 return True
             # --Retry?
-            retryDialog = wx.MessageDialog(None,
-                _(r'Can\'t find %s\Morrowind.ini! Try again?') % (mwDir,),
-                _('Morrowind Install Directory'),
+            retryDialog = wx.MessageDialog(None, _(
+                u"Can't find Morrowind.ini in {!s}! Try again?".format(mwDir)),
+                _(u'Morrowind Install Directory'),
                 wx.YES_NO | wx.ICON_EXCLAMATION)
             result = retryDialog.ShowModal()
             retryDialog.Destroy()
@@ -3237,9 +3237,9 @@ class MashApp(wx.App):
         mosh.dirs['app'] = GPath(mwDir)
         mosh.mwIniFile = mosh.MWIniFile(mwDir)
         mosh.mwIniFile.refresh()
-        mosh.modInfos = mosh.ModInfos(os.path.join(mwDir, 'Data Files'))
+        mosh.modInfos = mosh.ModInfos(os.path.join(mwDir, u'Data Files'))
         mosh.modInfos.refresh()
-        mosh.saveInfos = mosh.SaveInfos(os.path.join(mwDir, 'Saves'))
+        mosh.saveInfos = mosh.SaveInfos(os.path.join(mwDir, u'Saves'))
         mosh.saveInfos.refresh()
 
     def InitVersion(self):
@@ -3279,13 +3279,14 @@ class MashApp(wx.App):
         # --Current version
         conf.settings['mash.version'] = 71
         # --Version from readme
-        readme = GPath(conf.settings['mwDir']).join('Mopy', 'Wrye Mash.txt')
+        readme = GPath(conf.settings['mwDir']).join(u'Mopy', u'Wrye Mash.txt')
         if readme.exists() and readme.mtime != conf.settings['mash.readme'][0]:
-            reVersion = re.compile("^=== ([\.\d]+) \[")
+            reVersion = re.compile(ur"^=== ([\.\d]+) \[")
             for line in readme.open():
                 maVersion = reVersion.match(line)
                 if maVersion:
-                    conf.settings['mash.readme'] = (readme.mtime, maVersion.group(1))
+                    conf.settings['mash.readme'] = (
+                    readme.mtime, maVersion.group(1))
                     break
 
 
