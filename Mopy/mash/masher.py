@@ -6994,7 +6994,7 @@ class Screens_NextScreenShot(Link):
             return
         maPattern = rePattern.match(pattern)
         newBase, newNext = maPattern.groups()
-        settings = {LString('General'): {
+        screenShotsettings = {LString('General'): {
             LString('Screen Shot Base Name'): newBase,
             LString('Screen Shot Index')    : (newNext or next),
             LString('Screen Shot Enable')   : '1',
@@ -7004,7 +7004,7 @@ class Screens_NextScreenShot(Link):
             if not screensDir.isabs():
                 screensDir = bosh.dirs['app'].join(screensDir)
             screensDir.makedirs()
-        ini.saveSettings(settings)
+        ini.saveSettings(screenShotsettings)
         bosh.screensData.refresh()
         self.window.RefreshUI()
 
@@ -7246,6 +7246,7 @@ def InitSettings():
     """Initialize settings (configuration store). First, read from file, then
     load defaults (defaults will not overwrite items extracted from file)."""
     mosh.initSettings()
+    # TODO: Resolve conf.settings = mosh.settings from Yacoby move
     conf.settings = mosh.settings
     conf.settings.loadDefaults(conf.settingDefaults)
 
