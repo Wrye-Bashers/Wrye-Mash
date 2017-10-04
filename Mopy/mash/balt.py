@@ -18,14 +18,6 @@
 #  Wrye Mash copyright (C) 2005, 2006, 2007, 2008, 2009 Wrye
 #
 # =============================================================================
-
-# Imports ---------------------------------------------------------------------
-# --Localization
-# ..Handled by bolt, so import that.
-import bolt
-from bolt import _, GPath, deprint, delist
-
-# --Python
 import cStringIO
 import string
 import struct
@@ -33,8 +25,14 @@ import sys
 import textwrap
 import time
 import exception
+
 import wx
 from wx.lib.mixins.listctrl import ListCtrlAutoWidthMixin
+
+from localization import _, formatInteger, formatDate
+
+import bolt
+from bolt import GPath, deprint, delist
 
 
 # Basics ---------------------------------------------------------------------

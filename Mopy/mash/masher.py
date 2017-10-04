@@ -25,12 +25,6 @@
 # Modifing HelpBrowser in order to have the content list in a left panel.
 # TODO: add indexing, and research functions.
 # =============================================================================
-
-# Imports ---------------------------------------------------------------------
-# --Localization
-# ..Handled by mosh, so import that.
-import mosh
-from mosh import _, formatInteger, formatDate
 import cStringIO
 import os
 import re
@@ -41,40 +35,37 @@ import sys
 import textwrap
 import time
 from types import *
-import exception
-
-import bolt
-from bolt import LString,GPath, SubProgress
 
 import wx
 from wx.lib.mixins.listctrl import ListCtrlAutoWidthMixin
 from wx.lib.evtmgr import eventManager
 import wx.html
 
+from localization import _, formatInteger, formatDate
+
+import mosh
+import exception
+import bolt
+from bolt import LString,GPath, SubProgress
 import balt
 from balt import tooltip, fill, bell, bitmapButton, button, toggleButton, \
     checkBox, staticText, spinCtrl, leftSash, topSash, spacer, hSizer, vSizer, \
     hsbSizer, vsbSizer, colors, images, Image, Links, Link, SeparatorLink, \
     MenuLink
 from gui.settings import SettingsWindow
-
 import conf
 import globals
-
 import exception
-
 # general messageboxes
 import gui.dialog
-
 import gui.utils
 from gui.helpbrowser import HelpBrowser
+import tes3cmd
+import tes3cmd.gui
 
 #this hides the complexities of loading mlox and imports mlox to the name mlox
 from mlox.loader import importMlox
 mlox = importMlox()
-
-import tes3cmd
-import tes3cmd.gui
 
 bosh = mosh # --Cheap compatibility for imported code.
 

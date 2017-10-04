@@ -20,17 +20,16 @@
 # =============================================================================
 import os
 import sys
+from types import StringTypes
+
+from ..localization import _, formatInteger, formatDate
 
 import wx
 
 from .. import globals
 from .. import conf
 from .. import mosh
-
 from ..balt import button, Links, leftSash, hSizer, vSizer
-from ..mosh import _
-from types import StringTypes
-
 from .. import gui
 from . import dialog
 from .. import exception

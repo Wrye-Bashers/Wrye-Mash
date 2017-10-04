@@ -27,28 +27,7 @@
 # mush is imported several times : first as global module, then in functions as local module.
 # Is it realy necessary ?
 # =============================================================================
-
-# Localization ----------------------------------------------------------------
-# --Not totally clear on this, but it seems to safest to put locale first...
-import locale;
-
-locale.setlocale(locale.LC_ALL, '')
-# locale.setlocale(locale.LC_ALL, 'German') #--Language test
 import time
-
-
-def formatInteger(value):
-    """Convert integer to string formatted to locale."""
-    return locale.format('%d', int(value), 1)
-
-
-def formatDate(value):
-    """Convert time to string formatted to to locale's default date/time."""
-    return time.strftime('%c', time.localtime(value))
-
-
-# Imports ---------------------------------------------------------------------
-# --Python
 import array
 import cPickle
 import cStringIO
@@ -62,10 +41,12 @@ import string
 import struct
 import sys
 import stat
-import exception
+
+from localization import _, formatInteger, formatDate
+
 import bolt
 from bolt import LString, GPath, Flags, DataDict, SubProgress, PickleDict
-
+import exception
 import compat
 import mush
 
@@ -89,76 +70,6 @@ _moshSettingDefaults = {
     'mosh.fileInfo.hiddenDir'  : r'Mash\Hidden',
     'mosh.fileInfo.snapshotDir': r'Mash\Snapshots',
 }
-
-
-# Locale: String Translation --------------------------------------------------
-def compileTranslator(txtPath, pklPath):
-    """Compiles specified txtFile into pklFile."""
-    reSource = re.compile(r'^=== ')
-    reValue = re.compile(r'^>>>>\s*$')
-    reBlank = re.compile(r'^\s*$')
-    reNewLine = re.compile(r'\\n')
-    # --Scan text file
-    translator = {}
-
-    def addTranslation(key, value):
-        key = reNewLine.sub('\n', key[:-1])
-        value = reNewLine.sub('\n', value[:-1])
-        if key and value:
-            translator[key] = value
-
-    key, value, mode = '', '', 0
-    textFile = file(txtPath)
-    for line in textFile:
-        # --Blank line. Terminates key, value pair
-        if reBlank.match(line):
-            addTranslation(key, value)
-            key, value, mode = '', '', 0
-        # --Begin key input?
-        elif reSource.match(line):
-            addTranslation(key, value)
-            key, value, mode = '', '', 1
-        # --Begin value input?
-        elif reValue.match(line):
-            mode = 2
-        elif mode == 1:
-            key += line
-        elif mode == 2:
-            value += line
-    addTranslation(key, value)  # --In case missed last pair
-    textFile.close()
-    # --Write translator to pickle
-    filePath = pklPath
-    tempPath = filePath + '.tmp'
-    cPickle.dump(translator, open(tempPath, 'w'))
-    if os.path.exists(filePath):
-        os.remove(filePath)
-    os.rename(tempPath, filePath)
-
-
-# --Do translator test and set
-language = locale.getlocale()[0].split('_', 1)[0]
-languagePkl, languageTxt = (os.path.join('locale', language + ext) for ext in
-('.pkl', '.txt'))
-# --Recompile pkl file?
-if os.path.exists(languageTxt) and (
-        not os.path.exists(languagePkl) or (
-            os.path.getmtime(languageTxt) > os.path.getmtime(languagePkl)
-    )
-):
-    compileTranslator(languageTxt, languagePkl)
-# --Use dictionary from pickle as translator
-if os.path.exists(languagePkl):
-    pklFile = open(languagePkl)
-    _translator = cPickle.load(pklFile)
-    pklFile.close()
-
-
-    def _(text):
-        return _translator.get(text, text)
-else:
-    def _(text):
-        return text
 
 
 # Data Dictionaries -----------------------------------------------------------

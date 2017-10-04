@@ -18,8 +18,6 @@
 #  Wrye Mash copyright (C) 2005, 2006, 2007, 2008, 2009 Wrye
 #
 # =============================================================================
-# Imports ----------------------------------------------------------------------
-# --Standard
 import os
 import re
 import string
@@ -28,9 +26,9 @@ import StringIO
 import sys
 import types
 
-# --Local
+from localization import _, formatInteger, formatDate
+
 import mosh
-from mosh import _
 import mush
 
 

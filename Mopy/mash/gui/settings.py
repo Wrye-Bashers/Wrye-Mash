@@ -30,10 +30,11 @@
 #
 # Added installers path.
 # =============================================================================
+from ..localization import _, formatInteger, formatDate
 
 import wx
 
-from ..mosh import _, dirs, GPath
+from ..mosh import dirs, GPath
 
 dataMap = {"Inst": "installers", "Mw": "Morrowind"}
 

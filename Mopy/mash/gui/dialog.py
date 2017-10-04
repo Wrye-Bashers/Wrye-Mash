@@ -18,11 +18,12 @@
 #  Wrye Mash copyright (C) 2005, 2006, 2007, 2008, 2009 Wrye
 #
 # =============================================================================
+from ..localization import _, formatInteger, formatDate
+
 import wx
 
 from .. import conf
 from .. import globals
-from ..mosh import _
 from .. import mosh
 from .. import exception
 
@@ -157,7 +158,7 @@ def ErrorMessage(parent, message, title=_('Error'),
 
 
 def Message(parent, message, title='', style=wx.OK):
-    """Shows a modal MessageDialog. 
+    """Shows a modal MessageDialog.
     Use ErrorMessage, WarningMessage or InfoMessage."""
     dialog = wx.MessageDialog(parent, message, title, style)
     result = dialog.ShowModal()

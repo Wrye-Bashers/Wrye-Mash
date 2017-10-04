@@ -22,7 +22,7 @@ import os
 
 import wx
 
-from mosh import _
+from localization import _, formatInteger, formatDate
 
 settings = None
 
