@@ -3163,9 +3163,13 @@ class MashApp(wx.App):
         # --Init Data
         self.InitData()
         self.InitVersion()
+        # TODO: move to localization
         # --Locale (Only in later versions of wxPython??)
-        if sys.version[:3] != '2.4':
-            wx.Locale(wx.LOCALE_LOAD_DEFAULT)
+        # wx.Locale encapsulates all language-dependent settings and is
+        # a generalization of the C locale concept. I have no idea if this
+        # is even needed
+        # if sys.version[:3] != '2.4':
+        # wx.Locale(wx.LOCALE_LOAD_DEFAULT)
         # --MWFrame
         frame = MashFrame(
             pos=conf.settings['mash.framePos'],
