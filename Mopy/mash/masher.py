@@ -3103,7 +3103,7 @@ class JournalBrowser(wx.Frame):
         # --Window
         pos = conf.settings['mash.journal.pos']
         size = conf.settings['mash.journal.size']
-        wx.Frame.__init__(self, globals.mashFrame, -1, _('Journal'), pos, size,
+        wx.Frame.__init__(self, globals.mashFrame, -1, _(u'Journal'), pos, size,
             style=wx.DEFAULT_FRAME_STYLE)
         self.SetBackgroundColour(wx.NullColour)
         self.SetSizeHints(250, 250)
@@ -3131,7 +3131,7 @@ class JournalBrowser(wx.Frame):
         elif saveName in mosh.saveInfos:
             text = mosh.saveInfos[saveName].getJournal()
         else:
-            text = _('[Savefile %s not found.]') % (saveName,)
+            text = _(u'[Savefile {!s} not found.]'.format(saveName))
         self.htmlText.LoadString(text)
 
     # --Window Closing
