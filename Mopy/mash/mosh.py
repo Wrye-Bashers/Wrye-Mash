@@ -397,7 +397,7 @@ def renameFile(oldPath, newPath, makeBack=False):
     will either be moved to newPath.bak or deleted depending on makeBack."""
     if os.path.exists(newPath):
         if makeBack:
-            backPath = newPath + '.bak'
+            backPath = newPath + u'.bak'
             if os.path.exists(backPath):
                 os.remove(backPath)
             os.rename(newPath, backPath)
