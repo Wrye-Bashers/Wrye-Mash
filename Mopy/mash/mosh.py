@@ -3367,7 +3367,7 @@ class SaveInfo(FileInfo):
         if 'journal' in self.extras:
             return self.extras['journal']
         # --Default
-        self.extras['journal'] = _('[No Journal Record Found.]')
+        self.extras['journal'] = _(u'[No Journal Record Found.]')
         # --Open save file and look for journal entry
         inPath = os.path.join(self.dir, self.name)
         ins = Tes3Reader(self.name, file(inPath, 'rb'))
@@ -3381,14 +3381,13 @@ class SaveInfo(FileInfo):
             else:
                 (subName, subSize) = ins.unpackSubHeader('JOUR')
                 if subName != 'NAME':
-                    self.extras['journal'] == _('[Error reading file.]')
+                    self.extras['journal'] == _(u'[Error reading file.]')
                 else:
-                    reDate = re.compile(
-                        r'<FONT COLOR="9F0000">(.+?)</FONT><BR>')
-                    reTopic = re.compile(r'@(.*?)#')
+                    reDate = re.compile(ur'<FONT COLOR="9F0000">(.+?)</FONT><BR>',re.U)
+                    reTopic = re.compile(ur'@(.*?)#',re.U)
                     data = ins.read(subSize)
                     data = reDate.sub(ReplJournalDate(), data)
-                    data = reTopic.sub(r'\1', data)
+                    data = reTopic.sub(ur'\1', data)
                     self.extras['journal'] = cstrip(data)
                 break
         # --Done
@@ -3409,11 +3408,11 @@ class SaveInfo(FileInfo):
             ins = Tes3Reader(self.name, file(path, 'rb'))
             (name, size, delFlag, recFlag) = ins.unpackRecHeader()
             if name != 'TES3':
-                raise exception.FileError(self.name, _('Expected TES3, but got ') + name)
+                raise exception.FileError(self.name, _(u'Expected TES3, but got ') + name)
             self.tes3 = Tes3(name, size, delFlag, recFlag, ins, True)
         except struct.error, rex:
             ins.close()
-            raise exception.FileError(self.name, 'Struct.error: ' + `rex`)
+            raise exception.FileError(self.name, u'Struct.error: {}'.format(rex))
         except exception.FileError, error:
             ins.close()
             error.inName = self.name
