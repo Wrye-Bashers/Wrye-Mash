@@ -522,19 +522,6 @@ class Progress:
 
 
 # ------------------------------------------------------------------------------
-class ProgressFile(Progress):
-    """Prints progress to file (stdout by default)."""
-
-    def __init__(self, interval=0.5, out=None):
-        Progress.__init__(self, interval)
-        self.out = out
-
-    def doProgress(self, progress, message):
-        out = self.out or sys.stdout  # --Defaults to stdout
-        out.write('%0.2f %s\n' % (progress, message))
-
-
-# ------------------------------------------------------------------------------
 class Tes3Reader:
     """Wrapper around an TES3 file in read mode.
     Will throw a Tes3ReadError if read operation fails to return correct size."""
