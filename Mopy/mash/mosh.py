@@ -487,6 +487,7 @@ class LogFile(Log):
 # ------------------------------------------------------------------------------
 class Progress:
     """Progress Callable: Shows progress on message change and at regular intervals."""
+    # TODO: look through code and use bolt.class Progress instead
 
     def __init__(self, interval=0.5):
         self.interval = interval
@@ -498,7 +499,7 @@ class Progress:
 
     def setBaseScale(self, base=0.0, scale=1.0):
         if scale == 0:
-            raise exception.ArgumentError(_('Scale must not equal zero!'))
+            raise exception.ArgumentError(_(u'Scale must not equal zero!'))
         self.base = base
         self.scale = scale
 
