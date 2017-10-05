@@ -7479,16 +7479,16 @@ def InitSaveLinks():
     """Initialize save tab menus."""
     # --SaveList: Column Links
     if True:  # --Sort
-        sortMenu = MenuLink(_("Sort by"))
-        sortMenu.links.append(Files_SortBy('File'))
-        sortMenu.links.append(Files_SortBy('Cell'))
-        sortMenu.links.append(Files_SortBy('Modified'))
-        sortMenu.links.append(Files_SortBy('Player'))
-        sortMenu.links.append(Files_SortBy('Save Name'))
-        sortMenu.links.append(Files_SortBy('Status'))
+        sortMenu = MenuLink(_(u"Sort by"))
+        sortMenu.links.append(Files_SortBy(u'File'))
+        sortMenu.links.append(Files_SortBy(u'Cell'))
+        sortMenu.links.append(Files_SortBy(u'Modified'))
+        sortMenu.links.append(Files_SortBy(u'Player'))
+        sortMenu.links.append(Files_SortBy(u'Save Name'))
+        sortMenu.links.append(Files_SortBy(u'Status'))
         SaveList.mainMenu.append(sortMenu)
     if True:  # --Save Subdirs
-        subDirMenu = MenuLink(_("Profile"))
+        subDirMenu = MenuLink(_(u"Profile"))
         subDirMenu.links.append(Saves_Profiles())
         SaveList.mainMenu.append(subDirMenu)
     SaveList.mainMenu.append(SeparatorLink())
@@ -7498,7 +7498,7 @@ def InitSaveLinks():
 
     # --SaveList: Item Links
     if True:  # --File
-        fileMenu = MenuLink(_("File"))  # >>
+        fileMenu = MenuLink(_(u"File"))  # >>
         fileMenu.links.append(File_Backup())
         fileMenu.links.append(Save_Duplicate())
         fileMenu.links.append(File_Snapshot())
@@ -7512,7 +7512,7 @@ def InitSaveLinks():
     # --------------------------------------------
     SaveList.itemMenu.append(SeparatorLink())
     if True:  # --Remove
-        removeMenu = MenuLink(_("Remove"))
+        removeMenu = MenuLink(_(u"Remove"))
         removeMenu.links.append(Save_Remove_DebrisCells())
         removeMenu.links.append(Save_Remove_SpawnedCreatures())
         # --------------------------------------------
