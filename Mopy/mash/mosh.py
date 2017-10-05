@@ -840,7 +840,7 @@ class ListRecord(Record):
         """Initialize."""
         # --Record type.
         if name not in ('LEVC', 'LEVI'):
-            raise exception.ArgumentError(_('Type must be either LEVC or LEVI.'))
+            raise exception.ArgumentError(_(u'Type must be either LEVC or LEVI.'))
         # --Data
         self.id = None
         self.calcFromAllLevels = False
@@ -895,7 +895,7 @@ class ListRecord(Record):
         # --No id?
         if not self.id:
             raise exception.FileError(self.inName,
-                _('No id for %s record.') % (self.name,))
+                _(u'No id for %s record.') % (self.name,))
         # --Bad count?
         if self.count != len(self.entries):
             self.count = len(self.entries)
