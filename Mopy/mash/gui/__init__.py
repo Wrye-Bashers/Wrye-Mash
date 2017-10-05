@@ -149,7 +149,7 @@ class ListDrop(wx.PyDropTarget):
         self.setFn = setFn
 
         # specify the type of data we will accept
-        self.data = wx.CustomDataObject('ListItems%d' % dataId)
+        self.data = wx.CustomDataObject(u'ListItems{:d}'.format(dataId))
         self.SetDataObject(self.data)
 
     # Called when OnDrop returns True.  We need to get the data and
@@ -288,9 +288,9 @@ class List(wx.Panel):
         """Deletes selected items."""
         items = self.GetSelected()
         if items:
-            message = _(r'Delete these items? This operation cannot be undone.')
-            message += '\n* ' + '\n* '.join(x for x in sorted(items))
-            if balt.askYes(self, message, _('Delete Items')):
+            message = _(u'Delete these items? This operation cannot be undone.')
+            message += u'\n* ' + u'\n* '.join(x for x in sorted(items))
+            if balt.askYes(self, message, _(u'Delete Items')):
                 for item in items:
                     self.data.delete(item)
             globals.modList.Refresh()
