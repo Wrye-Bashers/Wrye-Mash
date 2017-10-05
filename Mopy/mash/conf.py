@@ -24,8 +24,6 @@ import wx
 
 from localization import _, formatInteger, formatDate
 
-settings = None
-
 
 def findMwDir(curPath, trys):
     if os.path.exists(os.path.join(curPath, 'Morrowind.exe')):

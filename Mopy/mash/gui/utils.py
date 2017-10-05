@@ -27,13 +27,11 @@ from ..localization import _, formatInteger, formatDate
 import wx
 
 from .. import globalvars
-from .. import conf
-from .. import mosh
 from ..balt import button, Links, leftSash, hSizer, vSizer
 from .. import gui
 from . import dialog
 from .. import exception
-
+from .. import mosh
 
 class FakeColumnEvent:
     """..."""
@@ -54,7 +52,7 @@ class UtilsPanel(gui.NotebookPanel):
         """Initialize."""
         wx.Panel.__init__(self, parent, -1)
         # --Left
-        sashPos = conf.settings.get('bash.screens.sashPos', 120)
+        sashPos = mosh.settings.get('bash.screens.sashPos', 120)
         left = self.left = leftSash(self, defaultSize=(sashPos, 100),
             onSashDrag=self.OnSashDrag)
         right = self.right = wx.Panel(self, style=wx.NO_BORDER)
@@ -89,7 +87,7 @@ class UtilsPanel(gui.NotebookPanel):
         self.left.SetDefaultSize((sashPos, 10))
         wx.LayoutAlgorithm().LayoutWindow(self, self.right)
         # screensList.picture.Refresh()
-        conf.settings['bash.screens.sashPos'] = sashPos
+        mosh.settings['bash.screens.sashPos'] = sashPos
 
     def OnSize(self, event=None):
         wx.LayoutAlgorithm().LayoutWindow(self, self.right)
@@ -108,14 +106,14 @@ class UtilsList(gui.List):
 
     def __init__(self, parent):
         # --Columns
-        self.cols = conf.settings['bash.screens.cols']
-        self.colAligns = conf.settings['bash.screens.colAligns']
-        self.colNames = conf.settings['mash.colNames']
-        self.colReverse = conf.settings.getChanged('bash.screens.colReverse')
-        self.colWidths = conf.settings['bash.screens.colWidths']
+        self.cols = mosh.settings['bash.screens.cols']
+        self.colAligns = mosh.settings['bash.screens.colAligns']
+        self.colNames = mosh.settings['mash.colNames']
+        self.colReverse = mosh.settings.getChanged('bash.screens.colReverse')
+        self.colWidths = mosh.settings['bash.screens.colWidths']
         # --Data/Items
         self.data = mosh.utilsData = mosh.UtilsData()
-        self.sort = conf.settings['bash.screens.sort']
+        self.sort = mosh.settings['bash.screens.sort']
         # --Links
         self.mainMenu = UtilsList.mainMenu
         self.itemMenu = UtilsList.itemMenu
@@ -174,7 +172,7 @@ class UtilsList(gui.List):
     # --Sort Items
     def SortItems(self, col=None, reverse=-2):
         (col, reverse) = self.GetSortSettings(col, reverse)
-        conf.settings['bash.screens.sort'] = col
+        mosh.settings['bash.screens.sort'] = col
         data = self.data
         # --Start with sort by name
         self.items.sort()
@@ -194,7 +192,7 @@ class UtilsList(gui.List):
         colDex = event.GetColumn()
         colName = self.cols[colDex]
         self.colWidths[colName] = self.list.GetColumnWidth(colDex)
-        conf.settings.setChanged('bash.screens.colWidths')
+        mosh.settings.setChanged('bash.screens.colWidths')
 
     def OnItemSelected(self, event=None):
         """..."""
