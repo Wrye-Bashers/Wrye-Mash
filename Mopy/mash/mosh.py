@@ -314,7 +314,11 @@ reExGroup = re.compile(u'(.*?),',re.U)
 
 # ------------------------------------------------------------------------------
 def cstrip(inString):
-    """Convert c-string (null-terminated string) to python string."""
+    """Convert c-string (null-terminated string) to python string.
+
+    Do not convert to Unicode: causes error: UnicodeDecodeError: 'ascii'
+    codec can't decode byte 0xe1 in position 143: ordinal not in range(128)
+    """
     zeroDex = inString.find('\x00')
     if zeroDex == -1:
         return inString
