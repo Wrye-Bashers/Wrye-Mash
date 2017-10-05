@@ -103,7 +103,7 @@ def ContinueQuery(parent, message, continueKey, title=_(u'Warning')):
     return result
 
 
-def LogMessage(parent, message, logText, title='', style=0, asDialog=True):
+def LogMessage(parent, message, logText, title=u'', style=0, asDialog=True):
     # --Query Dialog
     pos = conf.settings.get('mash.message.log.pos', wx.DefaultPosition)
     size = conf.settings.get('mash.message.log.size', (400, 400))
