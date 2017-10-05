@@ -62,7 +62,7 @@ def TextEntry(parent, message, default=u''):
         return value
 
 
-def DirDialog(parent, message=_('Choose a directory.'), defaultPath=''):
+def DirDialog(parent, message=_(u'Choose a directory.'), defaultPath=u''):
     """Shows a modal directory dialog and return the resulting path, or None if canceled."""
     dialog = wx.DirDialog(parent, message, defaultPath,
         style=wx.DD_NEW_DIR_BUTTON)
