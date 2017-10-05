@@ -378,7 +378,7 @@ class NotebookPanel(wx.Panel):
 
     def SetStatusCount(self):
         """Sets status bar count field."""
-        globals.statusBar.SetStatusText('', 2)
+        globals.statusBar.SetStatusText(u'', 2)
 
     def OnShow(self):
         """To be called when particular panel is changed to and/or shown for first time.
