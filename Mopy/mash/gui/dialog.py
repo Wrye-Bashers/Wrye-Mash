@@ -75,7 +75,7 @@ def DirDialog(parent, message=_(u'Choose a directory.'), defaultPath=u''):
         return path
 
 
-def ContinueQuery(parent, message, continueKey, title=_('Warning')):
+def ContinueQuery(parent, message, continueKey, title=_(u'Warning')):
     """Shows a modal continue query if value of continueKey is false. Returns True to continue.
     Also provides checkbox "Don't show this in future." to set continueKey to true."""
     # --ContinueKey set?
@@ -87,7 +87,7 @@ def ContinueQuery(parent, message, continueKey, title=_('Warning')):
     sizer = wx.BoxSizer(wx.VERTICAL)
     staticText = wx.StaticText(dialog, -1, message, style=wx.ST_NO_AUTORESIZE)
     sizer.Add(staticText, 1, wx.EXPAND | wx.ALL, 6)
-    checkBox = wx.CheckBox(dialog, -1, _("Don't show this in the future."))
+    checkBox = wx.CheckBox(dialog, -1, _(u"Don't show this in the future."))
     sizer.Add(checkBox, 0, wx.EXPAND | wx.LEFT | wx.RIGHT | wx.BOTTOM, 6)
     # --Save/Cancel
     sizer_h1 = wx.BoxSizer(wx.HORIZONTAL)
