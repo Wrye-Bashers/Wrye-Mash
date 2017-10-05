@@ -69,14 +69,6 @@ import tes3cmd.gui
 from mlox.loader import importMlox
 mlox = importMlox()
 
-bosh = mosh # --Cheap compatibility for imported code.
-
-# --Python
-
-
-
-# --Balt
-
 # --Internet Explorer
 #  - Make sure that python root directory is in PATH, so can access dll's.
 if sys.prefix not in set(os.environ['PATH'].split(';')):
