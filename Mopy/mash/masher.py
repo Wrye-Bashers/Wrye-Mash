@@ -387,19 +387,19 @@ class ListEditorDialog(wx.Dialog):
         if data.showAdd or data.showEdit or data.showRename or data.showRemove:
             sizer_v1 = wx.BoxSizer(wx.VERTICAL)
             if data.showAdd:
-                sizer_v1.Add(wx.Button(self, wx.ID_NEW, _('Add')), 0,
+                sizer_v1.Add(wx.Button(self, wx.ID_NEW, _(u'Add')), 0,
                     wx.LEFT | wx.TOP, 4)
                 wx.EVT_BUTTON(self, wx.ID_NEW, self.DoAdd)
             if data.showEdit:
-                sizer_v1.Add(wx.Button(self, wx.ID_REPLACE, _('Edit')), 0,
+                sizer_v1.Add(wx.Button(self, wx.ID_REPLACE, _(u'Edit')), 0,
                     wx.LEFT | wx.TOP, 4)
                 wx.EVT_BUTTON(self, wx.ID_REPLACE, self.DoEdit)
             if data.showRename:
-                sizer_v1.Add(wx.Button(self, ID_RENAME, _('Rename')), 0,
+                sizer_v1.Add(wx.Button(self, ID_RENAME, _(u'Rename')), 0,
                     wx.LEFT | wx.TOP, 4)
                 wx.EVT_BUTTON(self, ID_RENAME, self.DoRename)
             if data.showRemove:
-                sizer_v1.Add(wx.Button(self, wx.ID_DELETE, _('Remove')), 0,
+                sizer_v1.Add(wx.Button(self, wx.ID_DELETE, _(u'Remove')), 0,
                     wx.LEFT | wx.TOP, 4)
                 wx.EVT_BUTTON(self, wx.ID_DELETE, self.DoRemove)
             sizer.Add(sizer_v1, 0, wx.EXPAND)
@@ -448,7 +448,7 @@ class ListEditorDialog(wx.Dialog):
         itemDex = selections[0]
         curName = self.list.GetString(itemDex)
         # --Dialog
-        dialog = wx.TextEntryDialog(self, _('Rename to:'), _('Rename'), curName)
+        dialog = wx.TextEntryDialog(self, _(u'Rename to:'), _(u'Rename'), curName)
         result = dialog.ShowModal()
         # --Okay?
         if result != wx.ID_OK:
@@ -459,7 +459,7 @@ class ListEditorDialog(wx.Dialog):
         if newName == curName:
             pass
         elif newName in self.items:
-            gui.dialog.ErrorMessage(self, _('Name must be unique.'))
+            gui.dialog.ErrorMessage(self, _(u'Name must be unique.'))
         elif self.data.rename(curName, newName):
             self.items[itemDex] = newName
             self.list.SetString(itemDex, newName)
