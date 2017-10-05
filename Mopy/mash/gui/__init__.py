@@ -25,7 +25,7 @@ from ..localization import _, formatInteger, formatDate
 import wx
 from wx.lib.mixins.listctrl import ListCtrlAutoWidthMixin
 
-from .. import globals
+from .. import globalvars
 from .. import exception
 from .. import balt
 
@@ -184,7 +184,7 @@ class List(wx.Panel):
         # --ListCtrl
         listId = self.listId = wx.NewId()
         self.list = ListCtrl(self, listId, style=ctrlStyle)
-        self.checkboxes = globals.images['mash.checkboxes']
+        self.checkboxes = globalvars.images['mash.checkboxes']
         # --Columns
         self.PopulateColumns()
         # --Items
@@ -293,7 +293,7 @@ class List(wx.Panel):
             if balt.askYes(self, message, _(u'Delete Items')):
                 for item in items:
                     self.data.delete(item)
-            globals.modList.Refresh()
+            globalvars.modList.Refresh()
 
     # $#
 
@@ -378,7 +378,7 @@ class NotebookPanel(wx.Panel):
 
     def SetStatusCount(self):
         """Sets status bar count field."""
-        globals.statusBar.SetStatusText(u'', 2)
+        globalvars.statusBar.SetStatusText(u'', 2)
 
     def OnShow(self):
         """To be called when particular panel is changed to and/or shown for first time.

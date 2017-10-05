@@ -55,7 +55,7 @@ from balt import tooltip, fill, bell, bitmapButton, button, toggleButton, \
     MenuLink
 from gui.settings import SettingsWindow
 import conf
-import globals
+import globalvars
 import exception
 # general messageboxes
 import gui.dialog
@@ -163,7 +163,7 @@ class Checkboxes(balt.ImageList):
                 shortKey = color + '.' + status
                 imageKey = 'checkbox.' + shortKey
                 file = os.path.join(imgPath, r'checkbox_' + color + '_' + status + '.png')
-                image = globals.images[imageKey] = Image(file, wx.BITMAP_TYPE_PNG)
+                image = globalvars.images[imageKey] = Image(file, wx.BITMAP_TYPE_PNG)
                 self.Add(image, shortKey)
 
     def Get(self, status, on):
@@ -925,7 +925,7 @@ class ModList(guiWxList, gui.ListDragDropMixin):
         guiWxList.__init__(self, parent, -1, ctrlStyle=(wx.LC_REPORT))
         gui.ListDragDropMixin.__init__(self, self.list)
         # --Image List
-        checkboxesIL = globals.images['mash.checkboxes'].GetImageList()
+        checkboxesIL = globalvars.images['mash.checkboxes'].GetImageList()
         self.list.SetImageList(checkboxesIL, wx.IMAGE_LIST_SMALL)
         # --Events
         wx.EVT_LIST_ITEM_SELECTED(self, self.listId, self.OnItemSelected)
@@ -952,9 +952,9 @@ class ModList(guiWxList, gui.ListDragDropMixin):
         else:  # --Iterable
             for file in files:
                 self.PopulateItem(file, selected=selected)
-        globals.modDetails.SetFile(detail)
+        globalvars.modDetails.SetFile(detail)
         # --Saves
-        globals.saveList.Refresh()
+        globalvars.saveList.Refresh()
 
     # --Populate Item
     def PopulateItem(self, itemDex, mode=0, selected=set()):
@@ -1081,11 +1081,11 @@ class ModList(guiWxList, gui.ListDragDropMixin):
         if hitItem < 0:
             return
         fileInfo = self.data[self.items[hitItem]]
-        if not globals.docBrowser:
+        if not globalvars.docBrowser:
             DocBrowser().Show()
             conf.settings['mash.modDocs.show'] = True
-        globals.docBrowser.SetMod(fileInfo.name)
-        globals.docBrowser.Raise()
+        globalvars.docBrowser.SetMod(fileInfo.name)
+        globalvars.docBrowser.Raise()
 
     # $# from FallenWizard
     def OnChar(self, event):
@@ -1123,8 +1123,8 @@ class ModList(guiWxList, gui.ListDragDropMixin):
     def OnItemSelected(self, event):
         modName = self.items[event.m_itemIndex]
         self.details.SetFile(modName)
-        if globals.docBrowser:
-            globals.docBrowser.SetMod(modName)
+        if globalvars.docBrowser:
+            globalvars.docBrowser.SetMod(modName)
 
     def OnKeyDown(self, event):
         fmap = {
@@ -1278,7 +1278,7 @@ class ModDetails(wx.Window):
     def __init__(self, parent):
         wx.Window.__init__(self, parent, -1, style=wx.TAB_TRAVERSAL)
         # --Singleton
-        globals.modDetails = self
+        globalvars.modDetails = self
         # --Data
         self.modInfo = None
         self.edited = False
@@ -1398,12 +1398,12 @@ class ModDetails(wx.Window):
 
     def OnBrowser(self, event):
         """Event: Clicked Doc Browser button."""
-        if not globals.docBrowser:
+        if not globalvars.docBrowser:
             DocBrowser().Show()
             conf.settings['mash.modDocs.show'] = True
         if self.modInfo:
-            globals.docBrowser.SetMod(self.modInfo.name)
-        globals.docBrowser.Raise()
+            globalvars.docBrowser.SetMod(self.modInfo.name)
+        globalvars.docBrowser.Raise()
 
     def OnTextEdit(self, event):
         if self.modInfo and not self.edited:
@@ -1488,7 +1488,7 @@ class ModDetails(wx.Window):
             modInfo.setMTime(newTimeInt)
             self.SetFile(self.modInfo.name)
             mosh.modInfos.refreshDoubleTime()
-            globals.modList.Refresh()
+            globalvars.modList.Refresh()
             return
         # --Backup
         modInfo.makeBackup()
@@ -1496,7 +1496,7 @@ class ModDetails(wx.Window):
         fileName = modInfo.name
         if changeName:
             (oldName, newName) = (modInfo.name, self.fileStr.strip())
-            globals.modList.items[globals.modList.items.index(oldName)] = newName
+            globalvars.modList.items[globalvars.modList.items.index(oldName)] = newName
             conf.settings.getChanged('mash.mods.renames')[oldName] = newName
             mosh.modInfos.rename(oldName, newName)
             fileName = newName
@@ -1535,7 +1535,7 @@ class ModDetails(wx.Window):
         except exception.FileError:
             gui.dialog.ErrorMessage(self,_(u'File corrupted on save!'))
             self.SetFile(None)
-        globals.modList.Refresh()
+        globalvars.modList.Refresh()
 
     def OnCancel(self, event):
         self.SetFile(self.modInfo.name)
@@ -1546,11 +1546,11 @@ class ModPanel(gui.NotebookPanel):
     def __init__(self, parent):
         wx.Panel.__init__(self, parent, -1)
         sizer = wx.BoxSizer(wx.HORIZONTAL)
-        globals.modList = ModList(self)
-        sizer.Add(globals.modList, 1, wx.GROW)
+        globalvars.modList = ModList(self)
+        sizer.Add(globalvars.modList, 1, wx.GROW)
         sizer.Add((4, -1), 0)
         self.modDetails = ModDetails(self)
-        globals.modList.details = self.modDetails
+        globalvars.modList.details = self.modDetails
         sizer.Add(self.modDetails, 0, wx.EXPAND)
         self.SetSizer(sizer)
         self.modDetails.Fit()
@@ -1560,11 +1560,11 @@ class ModPanel(gui.NotebookPanel):
     def SetStatusCount(self):
         """Sets mod count in last field."""
         text = _(u"Mods: {:d}/{:d}".format(len(mosh.mwIniFile.loadFiles), len(mosh.modInfos.data)))
-        globals.statusBar.SetStatusText(text, 2)
+        globalvars.statusBar.SetStatusText(text, 2)
 
     def OnSize(self, event):
         wx.Window.Layout(self)
-        globals.modList.Layout()
+        globalvars.modList.Layout()
         self.modDetails.Layout()
 
 
@@ -1614,7 +1614,7 @@ class SaveList(guiWxList):
         else:  # --Iterable
             for file in files:
                 self.PopulateItem(file, selected=selected)
-        globals.saveDetails.SetFile(detail)
+        globalvars.saveDetails.SetFile(detail)
 
     # --Populate Item
     def PopulateItem(self, itemDex, mode=0, selected=set()):
@@ -1699,8 +1699,8 @@ class SaveList(guiWxList):
     def OnItemSelected(self, event=None):
         saveName = self.items[event.m_itemIndex]
         self.details.SetFile(saveName)
-        if globals.journalBrowser:
-            globals.journalBrowser.SetSave(saveName)
+        if globalvars.journalBrowser:
+            globalvars.journalBrowser.SetSave(saveName)
 
     # $# from FallenWizard
     def OnChar(self, event):
@@ -1719,7 +1719,7 @@ class SaveDetails(wx.Window):
         wx.Window.__init__(self, parent, -1, style=wx.TAB_TRAVERSAL)
         readOnlyColour = self.GetBackgroundColour()
         # --Singleton
-        globals.saveDetails = self
+        globalvars.saveDetails = self
         # --Data
         self.saveInfo = None
         self.edited = False
@@ -1847,12 +1847,12 @@ class SaveDetails(wx.Window):
 
     def OnBrowser(self, event):
         """Event: Clicked Journal Browser button."""
-        if not globals.journalBrowser:
+        if not globalvars.journalBrowser:
             JournalBrowser().Show()
             conf.settings['mash.journal.show'] = True
         if self.saveInfo:
-            globals.journalBrowser.SetSave(self.saveInfo.name)
-        globals.journalBrowser.Raise()
+            globalvars.journalBrowser.SetSave(self.saveInfo.name)
+        globalvars.journalBrowser.Raise()
 
     def OnTextEdit(self, event):
         """Event: Editing file or save name text."""
@@ -1907,8 +1907,8 @@ class SaveDetails(wx.Window):
         # --Change Name?
         if changeName:
             (oldName, newName) = (saveInfo.name, self.fileStr.strip())
-            globals.saveList.items[
-                globals.saveList.items.index(oldName)] = newName
+            globalvars.saveList.items[
+                globalvars.saveList.items.index(oldName)] = newName
             mosh.saveInfos.rename(oldName, newName)
         # --Change hedr?
         if changeHedr:
@@ -1944,7 +1944,7 @@ class SaveDetails(wx.Window):
             gui.dialog.ErrorMessage(self, _(u'File corrupted on save!'))
             self.SetFile(None)
         self.SetFile(self.saveInfo.name)
-        globals.saveList.Refresh(saveInfo.name)
+        globalvars.saveList.Refresh(saveInfo.name)
 
     def OnCancel(self, event):
         """Event: Clicked cancel button."""
@@ -1956,11 +1956,11 @@ class SavePanel(gui.NotebookPanel):
     def __init__(self, parent):
         wx.Panel.__init__(self, parent, -1)
         sizer = wx.BoxSizer(wx.HORIZONTAL)
-        globals.saveList = SaveList(self)
-        sizer.Add(globals.saveList, 1, wx.GROW)
+        globalvars.saveList = SaveList(self)
+        sizer.Add(globalvars.saveList, 1, wx.GROW)
         sizer.Add((4, -1), 0)
         self.saveDetails = SaveDetails(self)
-        globals.saveList.details = self.saveDetails
+        globalvars.saveList.details = self.saveDetails
         sizer.Add(self.saveDetails, 0, wx.EXPAND)
         self.SetSizer(sizer)
         self.saveDetails.Fit()
@@ -1970,11 +1970,11 @@ class SavePanel(gui.NotebookPanel):
     def SetStatusCount(self):
         """Sets mod count in last field."""
         text = _(u"Saves: {:d}".format(len(mosh.saveInfos.data)))
-        globals.statusBar.SetStatusText(text, 2)
+        globalvars.statusBar.SetStatusText(text, 2)
 
     def OnSize(self, event=None):
         wx.Window.Layout(self)
-        globals.saveList.Layout()
+        globalvars.saveList.Layout()
         self.saveDetails.Layout()
 
 
@@ -2055,7 +2055,7 @@ class InstallersPanel(SashTankPanel):
 
     def __init__(self, parent):
         """Initialize."""
-        globals.gInstallers = self
+        globalvars.gInstallers = self
         data = mosh.InstallersData()
         SashTankPanel.__init__(self, data, parent)
         left, right = self.left, self.right
@@ -2181,7 +2181,7 @@ class InstallersPanel(SashTankPanel):
         """Sets status bar count field."""
         active = len([x for x in self.data.itervalues() if x.isActive])
         text = _(u'Packages: {:d}/{:d}').format(active, len(self.data.data))
-        globals.statusBar.SetStatusText(text, 2)
+        globalvars.statusBar.SetStatusText(text, 2)
 
     # --Details view (if it exists)
     def SaveDetails(self):
@@ -2200,7 +2200,7 @@ class InstallersPanel(SashTankPanel):
         self.gList.RefreshUI()
         if mosh.modInfos.refresh():
             del mosh.modInfos.mtimesReset[:]
-            globals.modList.Refresh('ALL')
+            globalvars.modList.Refresh('ALL')
 
     def RefreshDetails(self, item=None):
         """Refreshes detail view associated with data from item."""
@@ -2393,7 +2393,7 @@ class ScreensList(guiWxList):
         self.colReverse = conf.settings.getChanged('bash.screens.colReverse')
         self.colWidths = conf.settings['bash.screens.colWidths']
         # --Data/Items
-        self.data = globals.screensData = mosh.ScreensData()
+        self.data = globalvars.screensData = mosh.ScreensData()
         self.sort = conf.settings['bash.screens.sort']
         # --Links
         self.mainMenu = ScreensList.mainMenu
@@ -2418,7 +2418,7 @@ class ScreensList(guiWxList):
         else:  # --Iterable
             for file in files:
                 self.PopulateItem(file, selected=selected)
-        globals.mashFrame.SetStatusCount()
+        globalvars.mashFrame.SetStatusCount()
 
     # --Populate Item
     def PopulateItem(self, itemDex, mode=0, selected=set()):
@@ -2475,7 +2475,7 @@ class ScreensList(guiWxList):
 
     def OnItemSelected(self, event=None):
         fileName = self.items[event.m_itemIndex]
-        filePath = globals.screensData.dir.join(fileName)
+        filePath = globalvars.screensData.dir.join(fileName)
         bitmap = (filePath.exists() and wx.Bitmap(filePath.s)) or None
         self.picture.SetBitmap(bitmap)
 
@@ -2493,20 +2493,20 @@ class ScreensPanel(gui.NotebookPanel):
             onSashDrag=self.OnSashDrag)
         right = self.right = wx.Panel(self, style=wx.NO_BORDER)
         # --Contents
-        globals.screensList = ScreensList(left)
-        globals.screensList.SetSizeHints(100, 100)
-        globals.screensList.picture = balt.Picture(right, 256, 192)
+        globalvars.screensList = ScreensList(left)
+        globalvars.screensList.SetSizeHints(100, 100)
+        globalvars.screensList.picture = balt.Picture(right, 256, 192)
         # --Events
         self.Bind(wx.EVT_SIZE, self.OnSize)
         # --Layout
         # left.SetSizer(hSizer((screensList,1,wx.GROW),((10,0),0)))
-        right.SetSizer(hSizer((globals.screensList.picture, 1, wx.GROW)))
+        right.SetSizer(hSizer((globalvars.screensList.picture, 1, wx.GROW)))
         wx.LayoutAlgorithm().LayoutWindow(self, right)
 
     def SetStatusCount(self):
         """Sets status bar count field."""
-        text = _(u'Screens: {:d}'.format(len(globals.screensList.data.data)))
-        globals.statusBar.SetStatusText(text, 2)
+        text = _(u'Screens: {:d}'.format(len(globalvars.screensList.data.data)))
+        globalvars.statusBar.SetStatusText(text, 2)
 
     def OnSashDrag(self, event):
         """Handle sash moved."""
@@ -2514,7 +2514,7 @@ class ScreensPanel(gui.NotebookPanel):
         sashPos = max(wMin, min(wMax, event.GetDragRect().width))
         self.left.SetDefaultSize((sashPos, 10))
         wx.LayoutAlgorithm().LayoutWindow(self, self.right)
-        globals.screensList.picture.Refresh()
+        globalvars.screensList.picture.Refresh()
         conf.settings['bash.screens.sashPos'] = sashPos
 
     def OnSize(self, event=None):
@@ -2522,8 +2522,8 @@ class ScreensPanel(gui.NotebookPanel):
 
     def OnShow(self):
         """Panel is shown. Update self.data."""
-        if globals.screensData.refresh():
-            globals.screensList.RefreshUI()
+        if globalvars.screensData.refresh():
+            globalvars.screensList.RefreshUI()
         # self.Refresh()
         self.SetStatusCount()
 
@@ -2563,7 +2563,7 @@ class MashStatusBar(wx.StatusBar):
 
     def __init__(self, parent):
         wx.StatusBar.__init__(self, parent, -1)
-        globals.statusBar = self
+        globalvars.statusBar = self
         self.SetFieldsCount(3)
         links = MashStatusBar.links
         self.buttons = []
@@ -2603,7 +2603,7 @@ class MashFrame(wx.Frame):
         style=wx.DEFAULT_FRAME_STYLE):
         """Initialization."""
         # --Singleton
-        globals.mashFrame = self
+        globalvars.mashFrame = self
         # --Window
         wx.Frame.__init__(self, parent, wx.ID_ANY, u'Wrye Mash', pos, size,
             style)
@@ -2669,12 +2669,12 @@ class MashFrame(wx.Frame):
             popSaves = 'ALL'
         # --Repopulate
         if popMods:
-            globals.modList.Refresh(popMods)  # --Will repop saves too.
+            globalvars.modList.Refresh(popMods)  # --Will repop saves too.
         elif popSaves:
-            globals.saveList.Refresh(popSaves)
+            globalvars.saveList.Refresh(popSaves)
         # --Current notebook panel
-        if globals.gInstallers:
-            globals.gInstallers.frameActivated = True
+        if globalvars.gInstallers:
+            globalvars.gInstallers.frameActivated = True
         self.notebook.GetPage(self.notebook.GetSelection()).OnShow()
         # --WARNINGS----------------------------------------
         # --Does morrowind.ini have any bad or missing files?
@@ -2716,8 +2716,8 @@ class MashFrame(wx.Frame):
     def OnCloseWindow(self, event):
         """Handle Close event. Save application data."""
         self.CleanSettings()
-        if globals.docBrowser:
-            globals.docBrowser.DoSave()
+        if globalvars.docBrowser:
+            globalvars.docBrowser.DoSave()
         if not self.IsIconized() and not self.IsMaximized():
             conf.settings['mash.framePos'] = self.GetPosition()
             conf.settings['mash.frameSize'] = self.GetSizeTuple()
@@ -2726,9 +2726,9 @@ class MashFrame(wx.Frame):
         for index in range(self.notebook.GetPageCount()):
             self.notebook.GetPage(index).OnCloseWindow()
         # -#
-        if globals.settingsWindow:
-            globals.settingsWindow.Destroy()
-        globals.gInstallers.SaveCfgFile()
+        if globalvars.settingsWindow:
+            globalvars.settingsWindow.Destroy()
+        globalvars.gInstallers.SaveCfgFile()
         # -#
         event.Skip()
         conf.settings.save()
@@ -2772,11 +2772,11 @@ class DocBrowser(wx.Frame):
         self.docType = None
         self.docIsWtxt = False
         # --Singleton
-        globals.docBrowser = self
+        globalvars.docBrowser = self
         # --Window
         pos = conf.settings['mash.modDocs.pos']
         size = conf.settings['mash.modDocs.size']
-        wx.Frame.__init__(self, globals.mashFrame, -1, _(u'Doc Browser'), pos,
+        wx.Frame.__init__(self, globalvars.mashFrame, -1, _(u'Doc Browser'), pos,
             size,
             style=wx.DEFAULT_FRAME_STYLE)
         self.SetBackgroundColour(wx.NullColour)
@@ -2787,7 +2787,7 @@ class DocBrowser(wx.Frame):
             choices=sorted(self.data.keys()), style=wx.LB_SINGLE | wx.LB_SORT)
         self.modNameList.Bind(wx.EVT_LISTBOX, self.DoSelectMod)
         # --Application Icons
-        self.SetIcons(globals.images['mash.icons2'].GetIconBundle())
+        self.SetIcons(globalvars.images['mash.icons2'].GetIconBundle())
         # --Set Doc
         self.setButton = wx.Button(self, ID_SET, _(u"Set Doc..."))
         wx.EVT_BUTTON(self.setButton, ID_SET, self.DoSet)
@@ -3084,16 +3084,16 @@ class JournalBrowser(wx.Frame):
         self.data = None
         self.counter = 0
         # --Singleton
-        globals.journalBrowser = self
+        globalvars.journalBrowser = self
         # --Window
         pos = conf.settings['mash.journal.pos']
         size = conf.settings['mash.journal.size']
-        wx.Frame.__init__(self, globals.mashFrame, -1, _(u'Journal'), pos, size,
+        wx.Frame.__init__(self, globalvars.mashFrame, -1, _(u'Journal'), pos, size,
             style=wx.DEFAULT_FRAME_STYLE)
         self.SetBackgroundColour(wx.NullColour)
         self.SetSizeHints(250, 250)
         # --Application Icons
-        self.SetIcons(globals.images['mash.icons2'].GetIconBundle())
+        self.SetIcons(globalvars.images['mash.icons2'].GetIconBundle())
         # --Sizers
         # --Doc fields
         mainSizer = wx.BoxSizer(wx.VERTICAL)
@@ -3170,13 +3170,13 @@ class MashApp(wx.App):
         if conf.settings['mash.journal.show']:
             JournalBrowser().Show()
         if conf.settings.get('mash.help.show'):
-            HelpBrowser(globals.mashFrame, globals.images).Show()
+            HelpBrowser(globalvars.mashFrame, globalvars.images).Show()
         # -# D.C.-G. for SettingsWindow
         if conf.settings['mash.settings.show']:
-            globals.settingsWindow = SettingsWindow()
-            globals.settingsWindow.SetSettings(conf.settings,
+            globalvars.settingsWindow = SettingsWindow()
+            globalvars.settingsWindow.SetSettings(conf.settings,
                 Inst=mosh.dirs["installers"].s)
-            globals.settingsWindow.Show()
+            globalvars.settingsWindow.Show()
         # -#
         return True
 
@@ -3412,7 +3412,7 @@ class Files_Unhide(Link):
             else:
                 shutil.move(srcPath, destPath)
         # --Repopulate
-        globals.mashFrame.RefreshData()
+        globalvars.mashFrame.RefreshData()
 
 
 # File Links ------------------------------------------------------------------
@@ -4352,7 +4352,7 @@ class File_Stats(Link):
         fileInfo.getStats()
         frame = wx.Frame(self.window, -1, fileName, size=(200, 300),
             style=(wx.RESIZE_BORDER | wx.CAPTION | wx.SYSTEM_MENU | wx.CLOSE_BOX | wx.CLIP_CHILDREN))
-        frame.SetIcons(globals.images['mash.icons2'].GetIconBundle())
+        frame.SetIcons(globalvars.images['mash.icons2'].GetIconBundle())
         sizer = wx.BoxSizer(wx.VERTICAL)
         sizer.Add(File_StatsList(frame, fileInfo.stats), 1, wx.EXPAND)
         frame.SetSizer(sizer)
@@ -4377,7 +4377,7 @@ class Installers_AddMarker(Link):
         name = '==' + name + '=='
         self.data.addMarker(name)
         self.data.refresh(what='OS')
-        globals.gInstallers.RefreshUIMods()
+        globalvars.gInstallers.RefreshUIMods()
 
 
 # ------------------------------------------------------------------------------
@@ -4397,7 +4397,7 @@ class Installers_AnnealAll(Link):
         finally:
             progress.Destroy()
             self.data.refresh(what='NS')
-            globals.gInstallers.RefreshUIMods()
+            globalvars.gInstallers.RefreshUIMods()
 
 
 # ------------------------------------------------------------------------------
@@ -4436,12 +4436,12 @@ class Installers_Enabled(Link):
             return
         enabled = conf.settings['bash.installers.enabled'] = not enabled
         if enabled:
-            globals.gInstallers.refreshed = False
-            globals.gInstallers.OnShow()
-            globals.gInstallers.gList.RefreshUI()
+            globalvars.gInstallers.refreshed = False
+            globalvars.gInstallers.OnShow()
+            globalvars.gInstallers.gList.RefreshUI()
         else:
-            globals.gInstallers.gList.gList.DeleteAllItems()
-            globals.gInstallers.RefreshDetails(None)
+            globalvars.gInstallers.gList.gList.DeleteAllItems()
+            globalvars.gInstallers.RefreshDetails(None)
 
 
 # ------------------------------------------------------------------------------
@@ -4517,9 +4517,9 @@ class Installers_Refresh(Link):
                 "Refresh ALL data from scratch? This may take five to ten minutes (or more) depending on the number of mods you have installed."))
             if not balt.askWarning(self.gTank, fill(message, 80), self.title):
                 return
-        globals.gInstallers.refreshed = False
-        globals.gInstallers.fullRefresh = self.fullRefresh
-        globals.gInstallers.OnShow()
+        globalvars.gInstallers.refreshed = False
+        globalvars.gInstallers.fullRefresh = self.fullRefresh
+        globalvars.gInstallers.OnShow()
 
 
 # ------------------------------------------------------------------------------
@@ -4639,7 +4639,7 @@ class Installer_Anneal(InstallerLink):
         finally:
             progress.Destroy()
             self.data.refresh(what='NS')
-            globals.gInstallers.RefreshUIMods()
+            globalvars.gInstallers.RefreshUIMods()
 
 
 # ------------------------------------------------------------------------------
@@ -4756,7 +4756,7 @@ class Installer_Install(InstallerLink):
         finally:
             progress.Destroy()
             self.data.refresh(what='N')
-            globals.gInstallers.RefreshUIMods()
+            globalvars.gInstallers.RefreshUIMods()
 
 
 # ------------------------------------------------------------------------------
@@ -4866,7 +4866,7 @@ class Installer_Uninstall(InstallerLink):
         finally:
             progress.Destroy()
             self.data.refresh(what='NS')
-            globals.gInstallers.RefreshUIMods()
+            globalvars.gInstallers.RefreshUIMods()
 
 
 # InstallerArchive Links ------------------------------------------------------
@@ -5416,7 +5416,7 @@ class MloxSorter(mlox.loadorder):
                 mtime += loadorder_mtime_increment
 
             mosh.modInfos.refreshDoubleTime()
-            globals.modList.Refresh()
+            globalvars.modList.Refresh()
 
 
 class Mods_Mlox():
@@ -6114,11 +6114,11 @@ class Mod_ShowReadme(Link):
         """Handle menu selection."""
         fileName = self.data[0]
         fileInfo = self.window.data[fileName]
-        if not globals.docBrowser:
+        if not globalvars.docBrowser:
             DocBrowser().Show()
             conf.settings['mash.modDocs.show'] = True
-        globals.docBrowser.SetMod(fileInfo.name)
-        globals.docBrowser.Raise()
+        globalvars.docBrowser.SetMod(fileInfo.name)
+        globalvars.docBrowser.Raise()
 
 
 # ------------------------------------------------------------------------------
@@ -6386,7 +6386,7 @@ class Saves_Profiles:
             srcIniPath = os.path.join(srcDir, 'Morrowind.ini')
             if os.path.exists(srcIniPath):
                 shutil.copyfile(srcIniPath, mosh.mwIniFile.path)
-            globals.mashFrame.SetTitle('Wrye Mash: ' + srcProfile)
+            globalvars.mashFrame.SetTitle('Wrye Mash: ' + srcProfile)
         finally:
             progress.Destroy()
         self.window.details.SetFile(None)
@@ -6485,8 +6485,8 @@ class Save_LoadMasters(Link):
                 missing.append(error.args[0])
         mosh.mwIniFile.safeSave()
         # --Repopulate mods
-        globals.modList.PopulateItems()
-        globals.saveList.PopulateItems()
+        globalvars.modList.PopulateItems()
+        globalvars.saveList.PopulateItems()
         self.window.details.SetFile(fileName)
         # --Missing masters?
         if missing:
@@ -6762,11 +6762,11 @@ class Save_ShowJournal(Link):
     def Execute(self, event):
         """Handle menu selection."""
         fileName = self.data[0]
-        if not globals.journalBrowser:
+        if not globalvars.journalBrowser:
             JournalBrowser().Show()
             conf.settings['mash.journal.show'] = True
-        globals.journalBrowser.SetSave(fileName)
-        globals.journalBrowser.Raise()
+        globalvars.journalBrowser.SetSave(fileName)
+        globalvars.journalBrowser.Raise()
 
 
 # ------------------------------------------------------------------------------
@@ -6999,7 +6999,7 @@ class Screens_NextScreenShot(Link):
                 screensDir = mosh.dirs['app'].join(screensDir)
             screensDir.makedirs()
         ini.saveSettings(screenShotsettings)
-        globals.screensData.refresh()
+        globalvars.screensData.refresh()
         self.window.RefreshUI()
 
 
@@ -7020,7 +7020,7 @@ class Screen_ConvertToJpg(Link):
         progress = balt.Progress(_("Converting to Jpg"))
         try:
             progress.setFull(len(self.data))
-            srcDir = globals.screensData.dir
+            srcDir = globalvars.screensData.dir
             for index, fileName in enumerate(self.data):
                 progress(index, fileName.s)
                 srcPath = srcDir.join(fileName)
@@ -7035,7 +7035,7 @@ class Screen_ConvertToJpg(Link):
         finally:
             if progress:
                 progress.Destroy()
-            globals.screensData.refresh()
+            globalvars.screensData.refresh()
             self.window.RefreshUI()
 
 
@@ -7066,7 +7066,7 @@ class Screen_Rename(Link):
         root, numStr, ext = maPattern.groups()[:3]
         numLen = len(numStr)
         num = int(numStr or 0)
-        screensDir = globals.screensData.dir
+        screensDir = globalvars.screensData.dir
         for oldName in map(GPath, self.data):
             newName = GPath(root) + numStr + oldName.ext
             if newName != oldName:
@@ -7077,7 +7077,7 @@ class Screen_Rename(Link):
             num += 1
             numStr = `num`
             numStr = '0' * (numLen - len(numStr)) + numStr
-        globals.screensData.refresh()
+        globalvars.screensData.refresh()
         self.window.RefreshUI()
 
 
@@ -7090,7 +7090,7 @@ class App_Morrowind(Link):
         if not self.id:
             self.id = wx.NewId()
         button = wx.BitmapButton(window, self.id,
-            globals.images['morrowind'].GetBitmap(), style=style)
+            globalvars.images['morrowind'].GetBitmap(), style=style)
         button.SetToolTip(wx.ToolTip(_("Launch Morrowind")))
         wx.EVT_BUTTON(button, self.id, self.Execute)
         return button
@@ -7102,7 +7102,7 @@ class App_Morrowind(Link):
         os.spawnl(os.P_NOWAIT, 'Morrowind.exe', 'Morrowind.exe')
         os.chdir(cwd)
         if conf.settings.get('mash.autoQuit.on', False):
-            globals.mashFrame.Close()
+            globalvars.mashFrame.Close()
 
 
 # ------------------------------------------------------------------------------
@@ -7121,13 +7121,13 @@ class AutoQuit_Button(Link):
         elif state == -1:  # --Invert
             state = not conf.settings.get('mash.autoQuit.on', False)
         conf.settings['mash.autoQuit.on'] = state
-        image = globals.images[('checkbox.red.off', 'checkbox.red.x')[state]]
+        image = globalvars.images[('checkbox.red.off', 'checkbox.red.x')[state]]
         tip = (_("Auto-Quit Disabled"), _("Auto-Quit Enabled"))[state]
         self.gButton.SetBitmapLabel(image.GetBitmap())
         self.gButton.SetToolTip(tooltip(tip))
 
     def GetBitmapButton(self, window, style=0):
-        bitmap = globals.images['checkbox.red.off'].GetBitmap()
+        bitmap = globalvars.images['checkbox.red.off'].GetBitmap()
         gButton = self.gButton = wx.BitmapButton(window, -1, bitmap,
             style=style)
         gButton.Bind(wx.EVT_BUTTON, self.Execute)
@@ -7147,7 +7147,7 @@ class App_Help(Link):
     def GetBitmapButton(self, window, style=0):
         if not self.id:
             self.id = wx.NewId()
-        button = wx.BitmapButton(window, self.id, globals.images['help'].GetBitmap(),
+        button = wx.BitmapButton(window, self.id, globalvars.images['help'].GetBitmap(),
             style=style)
         button.SetToolTip(wx.ToolTip(_("Help File")))
         wx.EVT_BUTTON(button, self.id, self.Execute)
@@ -7156,7 +7156,7 @@ class App_Help(Link):
     def Execute(self, event):
         """Handle menu selection."""
         # if not helpBrowser:
-        HelpBrowser(globals.mashFrame, globals.images).Show()
+        HelpBrowser(globalvars.mashFrame, globalvars.images).Show()
         conf.settings['mash.help.show'] = True
 
 
@@ -7169,19 +7169,19 @@ class App_Settings(Link):
     def GetBitmapButton(self, window, style=0):
         if not self.id: self.id = wx.NewId()
         button = wx.BitmapButton(window, self.id,
-            globals.images['settings'].GetBitmap(), style=style)
+            globalvars.images['settings'].GetBitmap(), style=style)
         button.SetToolTip(wx.ToolTip(_("Settings Window")))
         wx.EVT_BUTTON(button, self.id, self.Execute)
         return button
 
     def Execute(self, event):
         """Handle menu selection."""
-        if not globals.settingsWindow:
-            globals.settingsWindow = SettingsWindow()
-            globals.settingsWindow.SetSettings(conf.settings, Inst=mosh.dirs["installers"].s)
-            globals.settingsWindow.Show()
+        if not globalvars.settingsWindow:
+            globalvars.settingsWindow = SettingsWindow()
+            globalvars.settingsWindow.SetSettings(conf.settings, Inst=mosh.dirs["installers"].s)
+            globalvars.settingsWindow.Show()
             conf.settings['mash.settings.show'] = True
-        globals.settingsWindow.Raise()
+        globalvars.settingsWindow.Raise()
 
 
 # -#
@@ -7254,34 +7254,34 @@ def InitImages():
     """Initialize images (icons, checkboxes, etc.)."""
     imgPath = 'images'
     # --Standard
-    globals.images['save.on'] = Image(os.path.join(imgPath, r'save_on.png'), wx.BITMAP_TYPE_PNG)
-    globals.images['save.off'] = Image(os.path.join(imgPath, r'save_off.png'), wx.BITMAP_TYPE_PNG)
+    globalvars.images['save.on'] = Image(os.path.join(imgPath, r'save_on.png'), wx.BITMAP_TYPE_PNG)
+    globalvars.images['save.off'] = Image(os.path.join(imgPath, r'save_off.png'), wx.BITMAP_TYPE_PNG)
     # --Misc
-    globals.images['morrowind'] = Image(os.path.join(imgPath, r'morrowind.png'), wx.BITMAP_TYPE_PNG)
-    globals.images['help'] = Image(os.path.join(imgPath, r'help.png'), wx.BITMAP_TYPE_PNG)
+    globalvars.images['morrowind'] = Image(os.path.join(imgPath, r'morrowind.png'), wx.BITMAP_TYPE_PNG)
+    globalvars.images['help'] = Image(os.path.join(imgPath, r'help.png'), wx.BITMAP_TYPE_PNG)
     # --Tools
-    globals.images['doc.on'] = Image(os.path.join(imgPath, r'doc_on.png'), wx.BITMAP_TYPE_PNG)
+    globalvars.images['doc.on'] = Image(os.path.join(imgPath, r'doc_on.png'), wx.BITMAP_TYPE_PNG)
     # --Checkboxes
-    globals.images['mash.checkboxes'] = Checkboxes()
-    globals.images['checkbox.green.on.32'] = (
+    globalvars.images['mash.checkboxes'] = Checkboxes()
+    globalvars.images['checkbox.green.on.32'] = (
         Image(os.path.join(imgPath, r'checkbox_green_on_32.png'), wx.BITMAP_TYPE_PNG))
-    globals.images['checkbox.blue.on.32'] = (
+    globalvars.images['checkbox.blue.on.32'] = (
         Image(os.path.join(imgPath, r'checkbox_blue_on_32.png'), wx.BITMAP_TYPE_PNG))
-    globals.images['checkbox.red.x'] = Image(os.path.join(imgPath, r'checkbox_red_x.png'), wx.BITMAP_TYPE_PNG)
+    globalvars.images['checkbox.red.x'] = Image(os.path.join(imgPath, r'checkbox_red_x.png'), wx.BITMAP_TYPE_PNG)
     # -#
-    globals.images["settings"] = Image(os.path.join(imgPath, r"save_on.png"),
+    globalvars.images["settings"] = Image(os.path.join(imgPath, r"save_on.png"),
         wx.BITMAP_TYPE_PNG)
     # -#
     # --Applications Icons
     wryeMashIcons = balt.ImageBundle()
-    wryeMashIcons.Add(globals.images['checkbox.green.on'])
-    wryeMashIcons.Add(globals.images['checkbox.green.on.32'])
-    globals.images['mash.icons'] = wryeMashIcons
+    wryeMashIcons.Add(globalvars.images['checkbox.green.on'])
+    wryeMashIcons.Add(globalvars.images['checkbox.green.on.32'])
+    globalvars.images['mash.icons'] = wryeMashIcons
     # --Application Subwindow Icons
     wryeMashIcons2 = balt.ImageBundle()
-    wryeMashIcons2.Add(globals.images['checkbox.blue.on'])
-    wryeMashIcons2.Add(globals.images['checkbox.blue.on.32'])
-    globals.images['mash.icons2'] = wryeMashIcons2
+    wryeMashIcons2.Add(globalvars.images['checkbox.blue.on'])
+    wryeMashIcons2.Add(globalvars.images['checkbox.blue.on.32'])
+    globalvars.images['mash.icons2'] = wryeMashIcons2
     # --Colors
     colors['mash.esm'] = (220, 220, 255)
     colors['mash.doubleTime.not'] = 'WHITE'

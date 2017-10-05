@@ -23,7 +23,7 @@ from ..localization import _, formatInteger, formatDate
 import wx
 
 from .. import conf
-from .. import globals
+from .. import globalvars
 from .. import mosh
 from .. import exception
 
@@ -113,7 +113,7 @@ def LogMessage(parent, message, logText, title=u'', style=0, asDialog=True):
     else:
         window = wx.Frame(parent, -1, title, pos=pos, size=(200, 300),
             style=(wx.RESIZE_BORDER | wx.CAPTION | wx.SYSTEM_MENU | wx.CLOSE_BOX | wx.CLIP_CHILDREN))
-        window.SetIcons(globals.images['mash.icons2'].GetIconBundle())
+        window.SetIcons(globalvars.images['mash.icons2'].GetIconBundle())
     window.SetSizeHints(200, 200)
     sizer = wx.BoxSizer(wx.VERTICAL)
     if message:

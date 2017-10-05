@@ -26,7 +26,7 @@ from ..localization import _, formatInteger, formatDate
 
 import wx
 
-from .. import globals
+from .. import globalvars
 from .. import conf
 from .. import mosh
 from ..balt import button, Links, leftSash, hSizer, vSizer
@@ -59,19 +59,19 @@ class UtilsPanel(gui.NotebookPanel):
             onSashDrag=self.OnSashDrag)
         right = self.right = wx.Panel(self, style=wx.NO_BORDER)
         # --Contents
-        globals.utilsList = UtilsList(left)
-        globals.utilsList.SetSizeHints(100, 100)
+        globalvars.utilsList = UtilsList(left)
+        globalvars.utilsList.SetSizeHints(100, 100)
         # screensList.picture = balt.Picture(right,256,192)
         # --Events
         self.Bind(wx.EVT_SIZE, self.OnSize)
         # --Layout
-        left.SetSizer(hSizer((globals.utilsList, 1, wx.GROW), ((10, 0), 0)))
+        left.SetSizer(hSizer((globalvars.utilsList, 1, wx.GROW), ((10, 0), 0)))
         self.gCommandLine = wx.TextCtrl(right, -1)
         self.gArguments = wx.TextCtrl(right, -1)
         self.gDescription = wx.TextCtrl(right, -1, style=wx.TE_MULTILINE)
-        globals.utilsList.commandLine = self.gCommandLine
-        globals.utilsList.arguments = self.gArguments
-        globals.utilsList.description = self.gDescription
+        globalvars.utilsList.commandLine = self.gCommandLine
+        globalvars.utilsList.arguments = self.gArguments
+        globalvars.utilsList.description = self.gDescription
         right.SetSizer(vSizer((self.gCommandLine, 0, wx.GROW),
             (self.gArguments, 0, wx.GROW),
             (self.gDescription, 1, wx.GROW)))
@@ -97,7 +97,7 @@ class UtilsPanel(gui.NotebookPanel):
     def OnShow(self):
         """Panel is shown. Update self.data."""
         if mosh.utilsData.refresh():
-            globals.utilsList.RefreshUI()
+            globalvars.utilsList.RefreshUI()
         self.SetStatusCount()
 
 
@@ -141,7 +141,7 @@ class UtilsList(gui.List):
         else:  # --Iterable
             for file in files:
                 self.PopulateItem(file, selected=selected)
-        globals.mashFrame.SetStatusCount()
+        globalvars.mashFrame.SetStatusCount()
 
     # --Populate Item
     def PopulateItem(self, itemDex, mode=0, selected=set()):
