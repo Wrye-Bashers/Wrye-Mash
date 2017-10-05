@@ -2742,7 +2742,7 @@ class FileInfo:
         separator = '-'
         snapLast = ['00']
         # --Look for old snapshots.
-        reSnap = re.compile('^' + root + '-([0-9\.]*[0-9]+)' + ext + '$')
+        reSnap = re.compile(u'^' + root + u'-([0-9\.]*[0-9]+)' + ext + u'$',re.U)
         for fileName in os.listdir(destDir):
             maSnap = reSnap.match(fileName)
             if not maSnap:
