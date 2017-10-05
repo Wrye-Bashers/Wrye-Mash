@@ -44,6 +44,7 @@ import wx.html
 from localization import _, formatInteger, formatDate
 
 import mosh
+from mosh import InstallersData, initDirs
 import exception
 import bolt
 from bolt import LString,GPath, SubProgress
@@ -2062,7 +2063,7 @@ class InstallersPanel(SashTankPanel):
     def __init__(self, parent):
         """Initialize."""
         globals.gInstallers = self
-        data = bosh.InstallersData()
+        data = mosh.InstallersData()
         SashTankPanel.__init__(self, data, parent)
         left, right = self.left, self.right
         # --Refreshing
@@ -2204,8 +2205,8 @@ class InstallersPanel(SashTankPanel):
     def RefreshUIMods(self):
         """Refresh UI plus refresh mods state."""
         self.gList.RefreshUI()
-        if bosh.modInfos.refresh():
-            del bosh.modInfos.mtimesReset[:]
+        if mosh.modInfos.refresh():
+            del mosh.modInfos.mtimesReset[:]
             globals.modList.Refresh('ALL')
 
     def RefreshDetails(self, item=None):
@@ -2294,7 +2295,7 @@ class InstallersPanel(SashTankPanel):
             info = _(u'== Overview\n')
             info += _(u'Type: ')
             info += (_(u'Archive'), _(u'Project'))[
-                isinstance(installer, bosh.InstallerProject)]
+                isinstance(installer, mosh.InstallerProject)]
             info += u'\n'
             if installer.type == 1:
                 info += _(u'Structure: Simple\n')
@@ -2399,7 +2400,7 @@ class ScreensList(gui.List):
         self.colReverse = conf.settings.getChanged('bash.screens.colReverse')
         self.colWidths = conf.settings['bash.screens.colWidths']
         # --Data/Items
-        self.data = bosh.screensData = bosh.ScreensData()
+        self.data = mosh.screensData = mosh.ScreensData()
         self.sort = conf.settings['bash.screens.sort']
         # --Links
         self.mainMenu = ScreensList.mainMenu
@@ -2481,7 +2482,7 @@ class ScreensList(gui.List):
 
     def OnItemSelected(self, event=None):
         fileName = self.items[event.m_itemIndex]
-        filePath = bosh.screensData.dir.join(fileName)
+        filePath = mosh.screensData.dir.join(fileName)
         bitmap = (filePath.exists() and wx.Bitmap(filePath.s)) or None
         self.picture.SetBitmap(bitmap)
 
@@ -2528,7 +2529,7 @@ class ScreensPanel(gui.NotebookPanel):
 
     def OnShow(self):
         """Panel is shown. Update self.data."""
-        if bosh.screensData.refresh():
+        if mosh.screensData.refresh():
             globals.screensList.RefreshUI()
         # self.Refresh()
         self.SetStatusCount()
@@ -3148,7 +3149,7 @@ class MashApp(wx.App):
         if not self.SetMWDir():
             return False
         # from here we are sure that the mwDir is correct
-        bosh.initDirs()
+        mosh.initDirs()
         InitLinks()
         InitImages()
         # --Init Data
@@ -4607,7 +4608,7 @@ class InstallerLink(Link):
             return False
         else:
             return isinstance(self.data[self.selected[0]],
-                bosh.InstallerProject)
+                mosh.InstallerProject)
 
     def isSingleArchive(self):
         """Indicates whether or not is single archive."""
@@ -4615,12 +4616,12 @@ class InstallerLink(Link):
             return False
         else:
             return isinstance(self.data[self.selected[0]],
-                bosh.InstallerArchive)
+                mosh.InstallerArchive)
 
     def getProjectPath(self):
         """Returns whether build directory exists."""
         archive = self.selected[0]
-        return bosh.dirs['builds'].join(archive.sroot)
+        return mosh.dirs['builds'].join(archive.sroot)
 
     def projectExists(self):
         if not len(self.selected) == 1:
@@ -4843,7 +4844,7 @@ class Installer_Refresh(InstallerLink):
             for index, archive in enumerate(self.selected):
                 progress(index, _("Refreshing Packages...\n") + archive.s)
                 installer = self.data[archive]
-                apath = bosh.dirs['installers'].join(archive)
+                apath = mosh.dirs['installers'].join(archive)
                 installer.refreshBasic(apath,
                     SubProgress(progress, index, index + 1), True)
                 self.data.hasChanged = True
@@ -4917,9 +4918,9 @@ class InstallerArchive_Unpack(InstallerLink):
             installer.unpackToProject(archive, project,
                 SubProgress(progress, 0, 0.8))
             if project not in self.data:
-                self.data[project] = bosh.InstallerProject(project)
+                self.data[project] = mosh.InstallerProject(project)
             iProject = self.data[project]
-            pProject = bosh.dirs['installers'].join(project)
+            pProject = mosh.dirs['installers'].join(project)
             iProject.refreshed = False
             iProject.refreshBasic(pProject, SubProgress(progress, 0.8, 0.99),
                 True)
@@ -4965,7 +4966,7 @@ class InstallerProject_Sync(InstallerLink):
         try:
             progress(0.1, _("Updating files."))
             installer.syncToData(project, missing | mismatched)
-            pProject = bosh.dirs['installers'].join(project)
+            pProject = mosh.dirs['installers'].join(project)
             installer.refreshed = False
             installer.refreshBasic(pProject, SubProgress(progress, 0.1, 0.99),
                 True)
@@ -7002,10 +7003,10 @@ class Screens_NextScreenShot(Link):
         screensDir = GPath(newBase).head
         if screensDir:
             if not screensDir.isabs():
-                screensDir = bosh.dirs['app'].join(screensDir)
+                screensDir = mosh.dirs['app'].join(screensDir)
             screensDir.makedirs()
         ini.saveSettings(screenShotsettings)
-        bosh.screensData.refresh()
+        mosh.screensData.refresh()
         self.window.RefreshUI()
 
 
@@ -7026,7 +7027,7 @@ class Screen_ConvertToJpg(Link):
         progress = balt.Progress(_("Converting to Jpg"))
         try:
             progress.setFull(len(self.data))
-            srcDir = bosh.screensData.dir
+            srcDir = mosh.screensData.dir
             for index, fileName in enumerate(self.data):
                 progress(index, fileName.s)
                 srcPath = srcDir.join(fileName)
@@ -7041,7 +7042,7 @@ class Screen_ConvertToJpg(Link):
         finally:
             if progress:
                 progress.Destroy()
-            bosh.screensData.refresh()
+            mosh.screensData.refresh()
             self.window.RefreshUI()
 
 
@@ -7072,7 +7073,7 @@ class Screen_Rename(Link):
         root, numStr, ext = maPattern.groups()[:3]
         numLen = len(numStr)
         num = int(numStr or 0)
-        screensDir = bosh.screensData.dir
+        screensDir = mosh.screensData.dir
         for oldName in map(GPath, self.data):
             newName = GPath(root) + numStr + oldName.ext
             if newName != oldName:
@@ -7083,7 +7084,7 @@ class Screen_Rename(Link):
             num += 1
             numStr = `num`
             numStr = '0' * (numLen - len(numStr)) + numStr
-        bosh.screensData.refresh()
+        mosh.screensData.refresh()
         self.window.RefreshUI()
 
 
