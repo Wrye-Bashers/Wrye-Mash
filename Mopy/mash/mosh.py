@@ -475,13 +475,13 @@ class LogFile(Log):
         Log.__init__(self)
 
     def writeHeader(self, header):
-        self.out.write(self.indent + header + '\n')
+        self.out.write(self.indent + header + u'\n')
 
     def writeFooter(self):
-        self.out.write(self.indent + '\n')
+        self.out.write(self.indent + u'\n')
 
     def writeMessage(self, message):
-        self.out.write(self.indent + message + '\n')
+        self.out.write(self.indent + message + u'\n')
 
 
 # ------------------------------------------------------------------------------
