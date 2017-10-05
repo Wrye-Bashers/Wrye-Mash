@@ -133,7 +133,7 @@ def LogMessage(parent, message, logText, title=u'', style=0, asDialog=True):
         window.Show()
 
 
-def InfoMessage(parent, message, title=_('Information'),
+def InfoMessage(parent, message, title=_(u'Information'),
     style=(wx.OK | wx.ICON_INFORMATION)):
     """Shows a modal information message."""
     return Message(parent, message, title, style)
