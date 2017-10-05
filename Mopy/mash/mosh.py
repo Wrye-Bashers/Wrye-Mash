@@ -324,9 +324,9 @@ def cstrip(inString):
 
 def dictFromLines(lines, sep=None):
     """Generate a dictionary from a string with lines, stripping comments and skipping empty strings."""
-    reComment = re.compile('#.*')
-    temp = [reComment.sub('', x).strip() for x in lines.split('\n')]
-    if sep == None or type(sep) == type(''):
+    reComment = re.compile(u'#.*', re.U)
+    temp = [reComment.sub(u'', x).strip() for x in lines.split(u'\n')]
+    if sep == None or type(sep) == type(u''):
         temp = dict([x.split(sep, 1) for x in temp if x])
     else:  # --Assume re object.
         temp = dict([sep.split(x, 1) for x in temp if x])
