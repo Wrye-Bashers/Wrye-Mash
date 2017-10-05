@@ -139,7 +139,7 @@ def InfoMessage(parent, message, title=_(u'Information'),
     return Message(parent, message, title, style)
 
 
-def WarningQuery(parent, message, title='',
+def WarningQuery(parent, message, title=u'',
     style=(wx.YES_NO | wx.ICON_EXCLAMATION)):
     """Shows a modal warning message."""
     return Message(parent, message, title, style)
