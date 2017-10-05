@@ -3669,10 +3669,8 @@ class Installer(object):
     dataDirsPlus = dataDirs | set()
     dataDirsMinus = set(('mash', 'replacers', 'distantland', 'clean',
     'mwse'))  # --Will be skiped even if hasExtraData == True.
-    reDataFile = re.compile(r'\.(esp|esm|bsa)$', re.I)
-    reReadMe = re.compile(
-        r'^([^\\]*)(dontreadme|read[ _]?me|lisez[ _]?moi)([^\\]*)\.(txt|rtf|htm|html|doc|odt)$',
-        re.I)
+    reDataFile = re.compile(ur'\.(esp|esm|bsa)$',re.I|re.U)
+    reReadMe = re.compile(ur'^([^\\]*)(dontreadme|read[ _]?me|lisez[ _]?moi)([^\\]*)\.(txt|rtf|htm|html|doc|odt)$',re.I|re.U)
     skipExts = set(
         ('.dll', '.dlx', '.exe', '.py', '.pyc', '.7z', '.zip', '.rar', '.db'))
     docExts = set((
