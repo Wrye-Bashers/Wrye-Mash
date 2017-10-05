@@ -32,3 +32,4 @@ modDetails = None
 modList = None
 statusBar = None
 settingsWindow = None
+screensData = {}

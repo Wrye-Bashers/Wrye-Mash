@@ -2400,7 +2400,7 @@ class ScreensList(gui.List):
         self.colReverse = conf.settings.getChanged('bash.screens.colReverse')
         self.colWidths = conf.settings['bash.screens.colWidths']
         # --Data/Items
-        self.data = mosh.screensData = mosh.ScreensData()
+        self.data = globals.screensData = mosh.ScreensData()
         self.sort = conf.settings['bash.screens.sort']
         # --Links
         self.mainMenu = ScreensList.mainMenu
@@ -2482,7 +2482,7 @@ class ScreensList(gui.List):
 
     def OnItemSelected(self, event=None):
         fileName = self.items[event.m_itemIndex]
-        filePath = mosh.screensData.dir.join(fileName)
+        filePath = globals.screensData.dir.join(fileName)
         bitmap = (filePath.exists() and wx.Bitmap(filePath.s)) or None
         self.picture.SetBitmap(bitmap)
 
@@ -2529,7 +2529,7 @@ class ScreensPanel(gui.NotebookPanel):
 
     def OnShow(self):
         """Panel is shown. Update self.data."""
-        if mosh.screensData.refresh():
+        if globals.screensData.refresh():
             globals.screensList.RefreshUI()
         # self.Refresh()
         self.SetStatusCount()
@@ -7006,7 +7006,7 @@ class Screens_NextScreenShot(Link):
                 screensDir = mosh.dirs['app'].join(screensDir)
             screensDir.makedirs()
         ini.saveSettings(screenShotsettings)
-        mosh.screensData.refresh()
+        globals.screensData.refresh()
         self.window.RefreshUI()
 
 
@@ -7027,7 +7027,7 @@ class Screen_ConvertToJpg(Link):
         progress = balt.Progress(_("Converting to Jpg"))
         try:
             progress.setFull(len(self.data))
-            srcDir = mosh.screensData.dir
+            srcDir = globals.screensData.dir
             for index, fileName in enumerate(self.data):
                 progress(index, fileName.s)
                 srcPath = srcDir.join(fileName)
@@ -7042,7 +7042,7 @@ class Screen_ConvertToJpg(Link):
         finally:
             if progress:
                 progress.Destroy()
-            mosh.screensData.refresh()
+            globals.screensData.refresh()
             self.window.RefreshUI()
 
 
@@ -7073,7 +7073,7 @@ class Screen_Rename(Link):
         root, numStr, ext = maPattern.groups()[:3]
         numLen = len(numStr)
         num = int(numStr or 0)
-        screensDir = mosh.screensData.dir
+        screensDir = globals.screensData.dir
         for oldName in map(GPath, self.data):
             newName = GPath(root) + numStr + oldName.ext
             if newName != oldName:
@@ -7084,7 +7084,7 @@ class Screen_Rename(Link):
             num += 1
             numStr = `num`
             numStr = '0' * (numLen - len(numStr)) + numStr
-        mosh.screensData.refresh()
+        globals.screensData.refresh()
         self.window.RefreshUI()
 
 
