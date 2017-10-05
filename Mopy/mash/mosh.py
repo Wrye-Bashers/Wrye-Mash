@@ -2128,10 +2128,10 @@ class Tes3(Record):
 class MWIniFile:
     """Morrowind.ini file."""
 
-    def __init__(self, dir):
+    def __init__(self, ini_dir):
         """Initialize."""
-        self.dir = dir
-        self.path = os.path.join(self.dir, 'Morrowind.ini')
+        self.ini_dir = ini_dir
+        self.path = os.path.join(self.ini_dir, u'Morrowind.ini')
         self.preLoadLines = []  # --Temp Holder
         self.postLoadLines = []  # --Temp Holder
         self.loadFilesComment = None
@@ -2147,53 +2147,55 @@ class MWIniFile:
     def getSetting(self, section, key, default=None):
         """Gets a single setting from the file."""
         section, key = map(bolt.LString, (section, key))
-        settings = self.getSettings()
-        if section in settings:
-            return settings[section].get(key, default)
+        mwini_settings = self.getSettings()
+        if section in mwini_settings:
+            return mwini_settings[section].get(key, default)
         else:
             return default
 
     def getSettings(self):
-        """Gets settings for self."""
-        reComment = re.compile(';.*')
-        reSection = re.compile(r'^\[\s*(.+?)\s*\]$')
-        reSetting = re.compile(r'(.+?)\s*=(.*)')
+        """Gets mwini_settings for self."""
+        reComment = re.compile(u';.*', re.U)
+        reSection = re.compile(ur'^\[\s*(.+?)\s*\]$', re.U)
+        reSetting = re.compile(ur'(.+?)\s*=(.*)', re.U)
         # --Read ini file
         # self.ensureExists()
         iniFile = GPath(self.path).open('r')
-        settings = {}  # settings[section][key] = value (stripped!)
+        mwini_settings = {}  # mwini_settings[section][key] = value (stripped!)
         sectionSettings = None
         for line in iniFile:
             stripped = reComment.sub('', line).strip()
             maSection = reSection.match(stripped)
             maSetting = reSetting.match(stripped)
             if maSection:
-                sectionSettings = settings[LString(maSection.group(1))] = {}
+                sectionSettings = mwini_settings[
+                    LString(maSection.group(1))] = {}
             elif maSetting:
                 if sectionSettings == None:
-                    sectionSettings = settings.setdefault(LString('General'),
+                    sectionSettings = mwini_settings.setdefault(
+                        LString(u'General'),
                         {})
                     self.isCorrupted = True
                 sectionSettings[LString(maSetting.group(1))] = maSetting.group(
                     2).strip()
         iniFile.close()
-        return settings
+        return mwini_settings
 
     def saveSetting(self, section, key, value):
         """Changes a single setting in the file."""
-        settings = {section: {key: value}}
-        self.saveSettings(settings)
+        mwini_settings = {section: {key: value}}
+        self.saveSettings(mwini_settings)
 
-    def saveSettings(self, settings):
-        """Applies dictionary of settings to ini file.
-        Values in settings dictionary can be either actual values or
+    def saveSettings(self, mwini_settings):
+        """Applies dictionary of mwini_settings to ini file.
+        Values in mwini_settings dictionary can be either actual values or
         full key=value line ending in newline char."""
-        settings = dict(
+        mwini_settings = dict(
             (LString(x), dict((LString(u), v) for u, v in y.iteritems()))
-                for x, y in settings.iteritems())
-        reComment = re.compile(';.*')
-        reSection = re.compile(r'^\[\s*(.+?)\s*\]$')
-        reSetting = re.compile(r'(.+?)\s*=')
+                for x, y in mwini_settings.iteritems())
+        reComment = re.compile(u';.*', re.U)
+        reSection = re.compile(ur'^\[\s*(.+?)\s*\]$', re.U)
+        reSetting = re.compile(ur'(.+?)\s*=', re.U)
         # --Read init, write temp
         # self.ensureExists()
         path = GPath(self.path)
@@ -2206,14 +2208,14 @@ class MWIniFile:
             maSetting = reSetting.match(stripped)
             if maSection:
                 section = LString(maSection.group(1))
-                sectionSettings = settings.get(section, {})
+                sectionSettings = mwini_settings.get(section, {})
             elif maSetting and LString(maSetting.group(1)) in sectionSettings:
                 key = LString(maSetting.group(1))
                 value = sectionSettings[key]
-                if isinstance(value, str) and value[-1] == '\n':
+                if isinstance(value, str) and value[-1] == u'\n':
                     line = value
                 else:
-                    line = '%s=%s\n' % (key, value)
+                    line = u'{!s}={!s}\n'.format(key, value)
             tmpFile.write(line)
         tmpFile.close()
         iniFile.close()
@@ -2221,31 +2223,31 @@ class MWIniFile:
         path.untemp()
 
     def applyMit(self, mitPath):
-        """Read MIT file and apply its settings to morrowind.ini.
-        Note: Will ONLY apply settings that already exist."""
-        reComment = re.compile(';.*')
-        reSection = re.compile(r'^\[\s*(.+?)\s*\]$')
-        reSetting = re.compile(r'(.+?)\s*=')
+        """Read MIT file and apply its mwini_settings to morrowind.ini.
+        Note: Will ONLY apply mwini_settings that already exist."""
+        reComment = re.compile(u';.*', re.U)
+        reSection = re.compile(ur'^\[\s*(.+?)\s*\]$', re.U)
+        reSetting = re.compile(ur'(.+?)\s*=', re.U)
         # --Read MIT file
         mitFile = open(mitPath, 'r')
         sectionSettings = None
-        settings = {}
+        mwini_settings = {}
         for line in mitFile:
             stripped = reComment.sub('', line).strip()
             maSection = reSection.match(stripped)
             maSetting = reSetting.match(stripped)
             if maSection:
-                sectionSettings = settings[maSection.group(1)] = {}
+                sectionSettings = mwini_settings[maSection.group(1)] = {}
             elif maSetting:
                 sectionSettings[maSetting.group(1).lower()] = line
         mitFile.close()
-        # --Discard Games Files (Loaded mods list) from settings
-        for section in settings.keys():
+        # --Discard Games Files (Loaded mods list) from mwini_settings
+        for section in mwini_settings.keys():
             if section.lower() in ('game files', 'archives', 'mit'):
-                del settings[section]
+                del mwini_settings[section]
         # --Apply it
         iniFile = open(self.path, 'r')
-        tmpPath = self.path + '.tmp'
+        tmpPath = self.path + u'.tmp'
         tmpFile = open(tmpPath, 'w')
         section = None
         sectionSettings = {}
@@ -2255,7 +2257,7 @@ class MWIniFile:
             maSetting = reSetting.match(stripped)
             if maSection:
                 section = maSection.group(1)
-                sectionSettings = settings.get(section, {})
+                sectionSettings = mwini_settings.get(section, {})
             elif maSetting and maSetting.group(1).lower() in sectionSettings:
                 line = sectionSettings[maSetting.group(1).lower()]
             tmpFile.write(line)
@@ -2267,8 +2269,8 @@ class MWIniFile:
 
     def loadIni(self):
         """Read data from morrowind.ini file."""
-        reLoadFiles = re.compile(r'^\[Game Files\](.*)')
-        reLoadFile = re.compile(r'GameFile[0-9]+=(.*)$')
+        reLoadFiles = re.compile(ur'^\[Game Files\](.*)', re.U)
+        reLoadFile = re.compile(ur'GameFile[0-9]+=(.*)$', re.U)
         # --Read file
         self.mtime = getmtime(self.path)
         self.size = os.path.getsize(self.path)
@@ -2281,7 +2283,7 @@ class MWIniFile:
             if not line:
                 ins.close()
                 raise exception.FileError('Morrowind.ini',
-                    _('Morrowind.ini: [GameFiles] section not found.'))
+                    _(u'Morrowind.ini: [GameFiles] section not found.'))
             maLoadFiles = reLoadFiles.match(line)
             if maLoadFiles:
                 break
@@ -2298,11 +2300,11 @@ class MWIniFile:
                     self.postLoadLines.append(line)
                 break
             loadFile = unicode(maLoadFile.group(1), 'latin-1')
-            loadPath = os.path.join(self.dir, 'Data Files', loadFile)
+            loadPath = os.path.join(self.ini_dir, u'Data Files', loadFile)
             loadExt = os.path.splitext(loadPath)[-1].lower()
             if len(self.loadFiles) == 255:
                 self.loadFilesExtra.append(loadFile)
-            elif os.path.exists(loadPath) and re.match('^\.es[pm]$', loadExt):
+            elif os.path.exists(loadPath) and re.match(ur'^\.es[pm]$', loadExt):
                 self.loadFiles.append(loadFile)
             else:
                 self.loadFilesBad.append(loadFile)
@@ -2318,14 +2320,15 @@ class MWIniFile:
     def save(self):
         """Write data to morrowind.ini file."""
         if self.hasChanged():
-            raise exception.StateError(_('Morrowind.ini has changed'))
+            raise exception.StateError(_(u'Morrowind.ini has changed'))
         out = file(self.path, 'wt')
         for line in self.preLoadLines:
             out.write(line)
         out.write("[Game Files]" + self.loadFilesComment + "\n")
         for loadDex in range(len(self.loadFiles)):
             loadFile = self.loadFiles[loadDex]
-            out.write('GameFile%d=%s\n' % (loadDex, loadFile.encode('latin-1')))
+            out.write('GameFile{:d}={!s}\n'.format(loadDex,
+                loadFile.encode('latin-1')))
         for line in self.postLoadLines:
             out.write(line)
         out.close()
@@ -2339,10 +2342,10 @@ class MWIniFile:
         # --File Path
         original = self.path
         # --Backup
-        backup = self.path + '.bak'
+        backup = self.path + u'.bak'
         shutil.copy(original, backup)
         # --First backup
-        firstBackup = self.path + '.baf'
+        firstBackup = self.path + u'.baf'
         if not os.path.exists(firstBackup):
             shutil.copy(original, firstBackup)
 
