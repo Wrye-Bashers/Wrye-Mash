@@ -60,6 +60,7 @@ import exception
 # general messageboxes
 import gui.dialog
 import gui.utils
+from gui import List as guiWxList
 from gui.helpbrowser import HelpBrowser
 import tes3cmd
 import tes3cmd.gui
@@ -496,7 +497,7 @@ class ListEditorDialog(wx.Dialog):
 
 
 #------------------------------------------------------------------------------
-class MasterList(gui.List):
+class MasterList(guiWxList):
     mainMenu = []
     itemMenu = []
 
@@ -525,7 +526,7 @@ class MasterList(gui.List):
         self.mainMenu = MasterList.mainMenu
         self.itemMenu = MasterList.itemMenu
         # --Parent init
-        gui.List.__init__(self, parent, -1,
+        guiWxList.__init__(self, parent, -1,
             ctrlStyle=(wx.LC_REPORT | wx.LC_SINGLE_SEL | wx.LC_EDIT_LABELS))
         wx.EVT_LIST_END_LABEL_EDIT(self, self.listId, self.OnLabelEdited)
         # --Image List
@@ -825,14 +826,14 @@ class MasterList(gui.List):
     def DoColumnMenu(self, event):
         if not self.fileInfo:
             return
-        gui.List.DoColumnMenu(self, event)
+        guiWxList.DoColumnMenu(self, event)
 
     # --Item Menu
     def DoItemMenu(self, event):
         if not self.edited:
             self.OnLeftDown(event)
         else:
-            gui.List.DoItemMenu(self, event)
+            guiWxList.DoItemMenu(self, event)
 
     # --Column Resize
     def OnColumnResize(self, event):
@@ -906,7 +907,7 @@ class MasterList(gui.List):
 
 
 # ------------------------------------------------------------------------------
-class ModList(gui.List, gui.ListDragDropMixin):
+class ModList(guiWxList, gui.ListDragDropMixin):
     # --Class Data
     mainMenu = []  # --Column menu
     itemMenu = []  # --Single item menu
@@ -928,8 +929,8 @@ class ModList(gui.List, gui.ListDragDropMixin):
         self.mainMenu = ModList.mainMenu
         self.itemMenu = ModList.itemMenu
         # --Parent init
-        # Possible gui.List.__init__ option |wx.SUNKEN_BORDER))
-        gui.List.__init__(self, parent, -1, ctrlStyle=(wx.LC_REPORT))
+        # Possible guiWxList.__init__ option |wx.SUNKEN_BORDER))
+        guiWxList.__init__(self, parent, -1, ctrlStyle=(wx.LC_REPORT))
         gui.ListDragDropMixin.__init__(self, self.list)
         # --Image List
         checkboxesIL = globals.images['mash.checkboxes'].GetImageList()
@@ -1576,7 +1577,7 @@ class ModPanel(gui.NotebookPanel):
 
 
 # ------------------------------------------------------------------------------
-class SaveList(gui.List):
+class SaveList(guiWxList):
     # --Class Data
     mainMenu = []  # --Column menu
     itemMenu = []  # --Single item menu
@@ -1596,7 +1597,7 @@ class SaveList(gui.List):
         self.mainMenu = SaveList.mainMenu
         self.itemMenu = SaveList.itemMenu
         # --Parent init
-        gui.List.__init__(self, parent, -1, ctrlStyle=(wx.LC_REPORT | wx.SUNKEN_BORDER))
+        guiWxList.__init__(self, parent, -1, ctrlStyle=(wx.LC_REPORT | wx.SUNKEN_BORDER))
         # --Image List
         checkboxesIL = self.checkboxes.GetImageList()
         self.list.SetImageList(checkboxesIL, wx.IMAGE_LIST_SMALL)
@@ -2387,7 +2388,7 @@ class InstallersPanel(SashTankPanel):
 
 
 # ------------------------------------------------------------------------------
-class ScreensList(gui.List):
+class ScreensList(guiWxList):
     # --Class Data
     mainMenu = Links()  # --Column menu
     itemMenu = Links()  # --Single item menu
@@ -2406,7 +2407,7 @@ class ScreensList(gui.List):
         self.mainMenu = ScreensList.mainMenu
         self.itemMenu = ScreensList.itemMenu
         # --Parent init
-        gui.List.__init__(self, parent, -1, ctrlStyle=(wx.LC_REPORT | wx.SUNKEN_BORDER))
+        guiWxList.__init__(self, parent, -1, ctrlStyle=(wx.LC_REPORT | wx.SUNKEN_BORDER))
         # --Events
         wx.EVT_LIST_ITEM_SELECTED(self, self.listId, self.OnItemSelected)
 
@@ -4270,7 +4271,7 @@ class File_SortRecords(Link):
 
 
 # ------------------------------------------------------------------------------
-class File_StatsList(gui.List):
+class File_StatsList(guiWxList):
     def __init__(self, parent, data):
         # --Columns
         self.cols = conf.settings['mash.fileStats.cols']
@@ -4285,7 +4286,7 @@ class File_StatsList(gui.List):
         self.mainMenu = []
         self.itemMenu = []
         # --Parent init
-        gui.List.__init__(self, parent, -1)
+        guiWxList.__init__(self, parent, -1)
 
     # --Populate Item
     def PopulateItem(self, itemDex, mode=0, selected=set()):
