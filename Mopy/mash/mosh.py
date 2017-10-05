@@ -232,7 +232,7 @@ class Table:
         """Saves to pickle file."""
         if self.hasChanged:
             filePath = self.path
-            tempPath = filePath + '.tmp'
+            tempPath = filePath + u'.tmp'
             fileDir = os.path.split(filePath)[0]
             if not os.path.exists(fileDir):
                 os.makedirs(fileDir)
