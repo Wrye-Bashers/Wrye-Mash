@@ -7384,31 +7384,31 @@ def InitModLinks():
     """Initialize Mods tab menus."""
     # --ModList: Column Links
     if True:  # --Load
-        loadMenu = MenuLink(_("Load"))
+        loadMenu = MenuLink(_(u"Load"))
         loadMenu.links.append(Mods_LoadList())
         ModList.mainMenu.append(loadMenu)
     if True:  # --Mlox
-        mlox = MenuLink(_("Mlox"))
+        mlox = MenuLink(_(u"Mlox"))
         mlox.links.append(Mods_Mlox())
         ModList.mainMenu.append(mlox)
     if True:  # --tes3cmd
-        tes3cmd = MenuLink(_("Tes3cmd"))
+        tes3cmd = MenuLink(_(u"Tes3cmd"))
         tes3cmd.links.append(Mods_Tes3cmd_Fixit())
         ModList.mainMenu.append(tes3cmd)
     if True:  # --Sort by
-        sortMenu = MenuLink(_("Sort by"))
+        sortMenu = MenuLink(_(u"Sort by"))
         sortMenu.links.append(Mods_EsmsFirst())
         sortMenu.links.append(Mods_SelectedFirst())
         sortMenu.links.append(SeparatorLink())
-        sortMenu.links.append(Files_SortBy('File'))
-        sortMenu.links.append(Files_SortBy('Author'))
-        sortMenu.links.append(Files_SortBy('Group'))
-        sortMenu.links.append(Files_SortBy('Load Order'))
-        sortMenu.links.append(Files_SortBy('Modified'))
-        sortMenu.links.append(Files_SortBy('Rating'))
-        sortMenu.links.append(Files_SortBy('Size'))
-        sortMenu.links.append(Files_SortBy('Status'))
-        sortMenu.links.append(Files_SortBy('Version'))
+        sortMenu.links.append(Files_SortBy(u'File'))
+        sortMenu.links.append(Files_SortBy(u'Author'))
+        sortMenu.links.append(Files_SortBy(u'Group'))
+        sortMenu.links.append(Files_SortBy(u'Load Order'))
+        sortMenu.links.append(Files_SortBy(u'Modified'))
+        sortMenu.links.append(Files_SortBy(u'Rating'))
+        sortMenu.links.append(Files_SortBy(u'Size'))
+        sortMenu.links.append(Files_SortBy(u'Status'))
+        sortMenu.links.append(Files_SortBy(u'Version'))
         ModList.mainMenu.append(sortMenu)
     # --------------------------------------------
     ModList.mainMenu.append(Mods_CopyActive())
@@ -7423,7 +7423,7 @@ def InitModLinks():
 
     # --ModList: Item Links
     if True:  # --File
-        fileMenu = MenuLink(_("File"))
+        fileMenu = MenuLink(_(u"File"))
         fileMenu.links.append(File_Backup())
         fileMenu.links.append(File_Duplicate())
         fileMenu.links.append(File_Snapshot())
@@ -7437,22 +7437,22 @@ def InitModLinks():
         fileMenu.links.append(File_RevertToSnapshot())
         ModList.itemMenu.append(fileMenu)
     if True:  # --Groups
-        groupMenu = MenuLink(_("Group"))
+        groupMenu = MenuLink(_(u"Group"))
         groupMenu.links.append(Mod_Groups())
         ModList.itemMenu.append(groupMenu)
     if True:  # --Ratings
-        ratingMenu = MenuLink(_("Rating"))
+        ratingMenu = MenuLink(_(u"Rating"))
         ratingMenu.links.append(Mod_Ratings())
         ModList.itemMenu.append(ratingMenu)
     # --------------------------------------------
     ModList.itemMenu.append(SeparatorLink())
     if True:  # --Export
-        exportMenu = MenuLink(_("Export"))
+        exportMenu = MenuLink(_(u"Export"))
         exportMenu.links.append(Mod_Export_Dialogue())
         exportMenu.links.append(Mod_Export_Scripts())
         ModList.itemMenu.append(exportMenu)
     if True:  # --Import
-        importMenu = MenuLink(_("Import"))
+        importMenu = MenuLink(_(u"Import"))
         importMenu.links.append(Mod_Import_Dialogue())
         importMenu.links.append(Mod_Import_LCVSchedules())
         importMenu.links.append(Mod_Import_MergedLists())
@@ -7463,7 +7463,7 @@ def InitModLinks():
     # --------------------------------------------
     ModList.itemMenu.append(SeparatorLink())
     if True:  # --Tes3cmd
-        tes3cmd = MenuLink(_("Tes3Cmd"))
+        tes3cmd = MenuLink(_(u"Tes3Cmd"))
         tes3cmd.links.append(Mod_Tes3cmd_Clean())
         ModList.itemMenu.append(tes3cmd)
     ModList.itemMenu.append(Mod_ShowReadme())
