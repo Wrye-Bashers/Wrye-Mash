@@ -28,7 +28,6 @@ from wx.lib.mixins.listctrl import ListCtrlAutoWidthMixin
 from .. import globals
 from .. import exception
 from .. import balt
-from .. import mosh
 
 # constant
 wxListAligns = [wx.LIST_FORMAT_LEFT, wx.LIST_FORMAT_RIGHT,
