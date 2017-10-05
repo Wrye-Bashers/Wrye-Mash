@@ -7087,9 +7087,8 @@ class ScheduleGenerator:
     def getCycleScript(self, town, cycle):
         """Return cycle script for town, cycle."""
         # --Schedules
-        reWanderCell = re.compile('wander[, ]+(\d+)', re.I)
-        rePosCell = re.compile(
-            'positionCell +(\-?\d+) +(\-?\d+) +(\-?\d+).+"(.+)"')
+        reWanderCell = re.compile(u'wander[, ]+(\d+)',re.I|re.U)
+        rePosCell = re.compile(u'positionCell +(\-?\d+) +(\-?\d+) +(\-?\d+).+"(.+)"',re.I|re.U)
         townCode = self.code.get(town, 0)
         townSchedule = self.schedule[town]
         npcs = sorted(townSchedule.keys())
