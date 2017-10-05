@@ -3624,7 +3624,7 @@ class ScreensData(DataDict):
         if ssBase.head:
             self.dir = self.dir.join(ssBase.head)
         newData = {}
-        reImageExt = re.compile(r'\.(bmp|jpg)$', re.I)
+        reImageExt = re.compile(ur'\.(bmp|jpg)$',re.I|re.U)
         # --Loop over files in directory
         for fileName in self.dir.list():
             filePath = self.dir.join(fileName)
