@@ -95,7 +95,7 @@ class ListDragDropMixin:
                 break
             selected.append(self.listCtrl.GetItemText(idx))
 
-        data = wx.CustomDataObject('ListItems%d' % self.listCtrl.GetId())
+        data = wx.CustomDataObject(u'ListItems{:d}'.format(self.listCtrl.GetId()))
         data.SetData(pickle.dumps(selected))
 
         ds = wx.DropSource(self.listCtrl)
