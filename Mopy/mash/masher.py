@@ -162,7 +162,7 @@ class Checkboxes(balt.ImageList):
             for color in ('purple', 'blue', 'green', 'orange', 'yellow', 'red'):
                 shortKey = color + '.' + status
                 imageKey = 'checkbox.' + shortKey
-                file = os.path.join(imgPath, r'checkbox_' + color + '_' + status + '.png')
+                file = os.path.join(imgPath, ur'checkbox_' + color + u'_' + status + u'.png')
                 image = globalvars.images[imageKey] = Image(file, wx.BITMAP_TYPE_PNG)
                 self.Add(image, shortKey)
 
