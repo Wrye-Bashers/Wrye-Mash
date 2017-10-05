@@ -145,7 +145,7 @@ def WarningQuery(parent, message, title=u'',
     return Message(parent, message, title, style)
 
 
-def WarningMessage(parent, message, title=_('Warning'),
+def WarningMessage(parent, message, title=_(u'Warning'),
     style=(wx.OK | wx.ICON_EXCLAMATION)):
     """Shows a modal warning message."""
     return Message(parent, message, title, style)
