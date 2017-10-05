@@ -373,8 +373,8 @@ def invertDict(indict):
 
 def listFromLines(lines):
     """Generate a list from a string with lines, stripping comments and skipping empty strings."""
-    reComment = re.compile('#.*')
-    temp = [reComment.sub('', x).strip() for x in lines.split('\n')]
+    reComment = re.compile(u'#.*', re.U)
+    temp = [reComment.sub(u'', x).strip() for x in lines.split(u'\n')]
     temp = [x for x in temp if x]
     return temp
 
