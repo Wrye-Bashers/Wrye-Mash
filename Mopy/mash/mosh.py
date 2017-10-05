@@ -585,13 +585,10 @@ class Tes3Reader:
         (name, size) = self.unpack('4si', 8, recType + '.SUB_HEAD')
         # --Match expected name?
         if expName and expName != name:
-            raise exception.FileError(self.inName,
-                _('%s: Expected %s subrecord, but found %s instead.')
-                % (recType, expName, name))
+            raise exception.FileError(self.inName, _(u'{!s}: Expected {!s} subrecord, but found {!s} instead.'.format(recType, expName, name)))
         # --Match expected size?
         if expSize and expSize != size:
-            raise exception.ModSizeError(self.inName, recType + '.' + name, size,
-                expSize, True)
+            raise exception.ModSizeError(self.inName, recType + '.' + name, size, expSize, True)
         return (name, size)
 
     # --Find data ------------------------------------------
