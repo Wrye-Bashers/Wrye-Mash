@@ -767,9 +767,9 @@ class Record:
     def dump(self, out):
         """Dumps record header and data into output file stream."""
         if self.changed:
-            raise exception.StateError(_('Data changed: ') + self.name)
+            raise exception.StateError(_(u'Data changed: ') + self.name)
         if not self.data:
-            raise exception.StateError(_('Data undefined: ') + self.name)
+            raise exception.StateError(_(u'Data undefined: ') + self.name)
         out.write(struct.pack('4s3i', self.name, self.size, self.delFlag,
             self.recFlag))
         out.write(self.data)
