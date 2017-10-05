@@ -414,7 +414,7 @@ def rgbTuple(rgb):
 
 def winNewLines(inString):
     """Converts unix newlines to windows newlines."""
-    return reUnixNewLine.sub('\r\n', inString)
+    return reUnixNewLine.sub(u'\r\n', inString)
 
 
 # IO Wrappers -----------------------------------------------------------------
