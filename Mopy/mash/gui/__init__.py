@@ -45,7 +45,6 @@ class LoggerWindow(wx.Frame):
         panel = wx.Panel(self, wx.ID_ANY)
         self.txtLog = wx.TextCtrl(panel, wx.ID_ANY, size=(300, 100),
             style=wx.TE_MULTILINE | wx.TE_READONLY | wx.HSCROLL)
-
         sizer = wx.BoxSizer(wx.VERTICAL)
         sizer.Add(self.txtLog, 1, wx.ALL | wx.EXPAND, 5)
         panel.SetSizer(sizer)
@@ -54,7 +53,7 @@ class LoggerWindow(wx.Frame):
         self.txtLog.WriteText(message)
 
     def writeLine(self, message):
-        self.txtLog.WriteText(message + '\n')
+        self.txtLog.WriteText(message + u'\n')
 
 
 # ------------------------------------------------------------------------------
