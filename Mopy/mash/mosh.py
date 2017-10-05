@@ -3131,14 +3131,14 @@ class ModInfos(FileInfos):
     def rightFileType(self, fileName):
         """Bool: File is a mod."""
         fileExt = fileName[-4:].lower()
-        return (fileExt == '.esp' or fileExt == '.esm')
+        return fileExt == u'.esp' or fileExt == u'.esm'
 
     def getVersion(self, fileName):
         """Extracts and returns version number for fileName from tes3.hedr.description."""
         if not fileName in self.data or not self.data[fileName].tes3:
-            return ''
+            return u''
         maVersion = reVersion.search(self.data[fileName].tes3.hedr.description)
-        return (maVersion and maVersion.group(2)) or ''
+        return (maVersion and maVersion.group(2)) or u''
 
     # --Circular Masters
     def circularMasters(self, stack, masters=None):
@@ -3189,7 +3189,7 @@ class ModInfos(FileInfos):
         modDex = 1
         while modDex < len(modNames):
             modName = modNames[modDex]
-            if modName[-1].lower() != 'm':
+            if modName[-1].lower() != u'm':
                 break
             if self.circularMasters([modName]):
                 modDex += 1
@@ -3264,7 +3264,7 @@ class ModInfos(FileInfos):
     def getResourceReplacers(self):
         """Returns list of ResourceReplacer objects for subdirectories of Replacers directory."""
         replacers = {}
-        replacerDir = os.path.join(self.dir, 'Replacers')
+        replacerDir = os.path.join(self.dir, u'Replacers')
         if not os.path.exists(replacerDir):
             return replacers
         if 'mosh.resourceReplacer.applied' not in settings:
