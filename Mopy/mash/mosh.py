@@ -301,15 +301,15 @@ class Table:
 # Util Functions --------------------------------------------------------------
 # Common re's
 # --Unix new lines
-reUnixNewLine = re.compile(r'(?<!\r)\n')
-reSaveFile = re.compile('\.ess$', re.I)
-reModExt = re.compile(r'\.es[mp](.ghost)?$', re.I)
+reUnixNewLine = re.compile(ur'(?<!\r)\n',re.U)
+reSaveFile = re.compile(ur'\.ess$',re.I|re.U)
+reModExt = re.compile(ur'\.es[mp](.ghost)?$',re.I|re.U)
 
 # --Version number in tes3.hedr
-reVersion = re.compile(r'^(Version:?) *([-0-9\.]*\+?) *\r?$', re.M)
+reVersion = re.compile(ur'^(Version:?) *([-0-9\.]*\+?) *\r?$',re.M|re.I|re.U)
 
 # --Misc
-reExGroup = re.compile('(.*?),')
+reExGroup = re.compile(u'(.*?),',re.U)
 
 
 # ------------------------------------------------------------------------------
