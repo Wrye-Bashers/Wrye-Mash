@@ -829,7 +829,7 @@ class ContentRecord(Record):
 
     def getId(self):
         """Returns base + index id. E.g. crate_mine00000001"""
-        return '%s%08X' % (self.id, self.index)
+        return u'{!s}{:08d}'.format(self.id, self.index)
 
 
 # ------------------------------------------------------------------------------
