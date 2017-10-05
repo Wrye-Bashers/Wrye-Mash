@@ -44,6 +44,7 @@ import stat
 
 from localization import _, formatInteger, formatDate
 
+import conf
 import bolt
 from bolt import LString, GPath, Flags, DataDict, SubProgress, PickleDict
 import exception
@@ -60,7 +61,6 @@ saveInfos = None  # --SaveInfos singleton
 
 # --Settings
 dirs = {}
-settings = None
 
 # --Default settings
 _moshSettingDefaults = {
@@ -2688,7 +2688,7 @@ class FileInfo:
         if self.madeBackup and not forceBackup:
             return
         # --Backup Directory
-        backupDir = os.path.join(self.dir, settings['mosh.fileInfo.backupDir'])
+        backupDir = os.path.join(self.dir, conf.settings['mosh.fileInfo.backupDir'])
         if not os.path.exists(backupDir):
             os.makedirs(backupDir)
         # --File Path
@@ -2723,7 +2723,7 @@ class FileInfo:
 
     # --Snapshot Parameters
     def getNextSnapshot(self):
-        destDir = os.path.join(self.dir, settings['mosh.fileInfo.snapshotDir'])
+        destDir = os.path.join(self.dir, conf.settings['mosh.fileInfo.snapshotDir'])
         if not os.path.exists(destDir):
             os.makedirs(destDir)
         (root, ext) = os.path.splitext(self.name)
@@ -2904,7 +2904,7 @@ class FileInfos(DataDict):
                 os.remove(backPath)
         # --Backups
         backRoot = os.path.join(fileInfo.dir,
-            settings['mosh.fileInfo.backupDir'], fileInfo.name)
+            conf.settings['mosh.fileInfo.backupDir'], fileInfo.name)
         for backPath in (backRoot, backRoot + 'f'):
             if os.path.exists(backPath):
                 os.remove(backPath)
@@ -2988,7 +2988,7 @@ class ResourceReplacer:
 
     def isApplied(self):
         """Returns True if has been applied."""
-        return self.file in settings['mosh.resourceReplacer.applied']
+        return self.file in conf.settings['mosh.resourceReplacer.applied']
 
     def apply(self, progress=None):
         """Copy files to appropriate resource directories (Textures, etc.)."""
@@ -2999,13 +2999,13 @@ class ResourceReplacer:
             self.doRoot(self.sizeDir)
             self.progress.setMax(self.totSize)
         self.doRoot(self.applyDir)
-        settings.getChanged('mosh.resourceReplacer.applied').append(self.file)
+        conf.settings.getChanged('mosh.resourceReplacer.applied').append(self.file)
         self.progress = None
 
     def remove(self):
         """Uncopy files from appropriate resource directories (Textures, etc.)."""
         self.doRoot(self.removeDir)
-        settings.getChanged('mosh.resourceReplacer.applied').remove(self.file)
+        conf.settings.getChanged('mosh.resourceReplacer.applied').remove(self.file)
 
     def doRoot(self, action):
         """Copy/uncopy files to/from appropriate resource directories."""
@@ -3070,7 +3070,7 @@ class ModInfos(FileInfos):
     # --Init
     def __init__(self, dir, factory=ModInfo):
         FileInfos.__init__(self, dir, factory)
-        self.resetMTimes = settings['mosh.modInfos.resetMTimes']
+        self.resetMTimes = conf.settings['mosh.modInfos.resetMTimes']
         self.mtimes = self.table.getColumn('mtime')
         self.mtimesReset = []  # --Files whose mtimes have been reset.
         self.doubleTime = {}
@@ -3259,8 +3259,8 @@ class ModInfos(FileInfos):
         replacerDir = os.path.join(self.dir, u'Replacers')
         if not os.path.exists(replacerDir):
             return replacers
-        if 'mosh.resourceReplacer.applied' not in settings:
-            settings['mosh.resourceReplacer.applied'] = []
+        if 'mosh.resourceReplacer.applied' not in conf.settings:
+            conf.settings['mosh.resourceReplacer.applied'] = []
         for name in os.listdir(replacerDir):
             path = os.path.join(replacerDir, name)
             if os.path.isdir(path):
@@ -3298,7 +3298,7 @@ class ModInfos(FileInfos):
 
     def loadObjectMaps(self):
         """Load ObjectMaps from file."""
-        path = os.path.join(self.dir, settings['mosh.modInfos.objectMaps'])
+        path = os.path.join(self.dir, conf.settings['mosh.modInfos.objectMaps'])
         if os.path.exists(path):
             self.objectMaps = compat.uncpickle(open(path, 'rb'))
         else:
@@ -3308,7 +3308,7 @@ class ModInfos(FileInfos):
         """Save ObjectMaps to file."""
         if self.objectMaps == None:
             return
-        path = os.path.join(self.dir, settings['mosh.modInfos.objectMaps'])
+        path = os.path.join(self.dir, conf.settings['mosh.modInfos.objectMaps'])
         outDir = os.path.split(path)[0]
         if not os.path.exists(outDir):
             os.makedirs(outDir)
@@ -3757,7 +3757,7 @@ class Installer(object):
                 else:
                     pending.add(rpFile)
         # --Remove empty dirs?
-        if settings['bash.installers.removeEmptyDirs']:
+        if conf.settings['bash.installers.removeEmptyDirs']:
             for dir in emptyDirs:
                 try:
                     dir.removedirs()
@@ -3884,7 +3884,7 @@ class Installer(object):
             skipEspmVoices = set(x.cs for x in espmNots)
         else:
             skipEspmVoices = None
-        skipDistantLOD = settings['bash.installers.skipDistantLOD']
+        skipDistantLOD = conf.settings['bash.installers.skipDistantLOD']
         hasExtraData = self.hasExtraData
         type = self.type
         if type == 2:
@@ -4359,7 +4359,7 @@ class InstallersData(bolt.TankData, DataDict):
         self.dir = dirs['installers']
         self.bashDir = self.dir.join('Bash')
         # --Tank Stuff
-        bolt.TankData.__init__(self, settings)
+        bolt.TankData.__init__(self, conf.settings)
         self.tankKey = 'bash.installers'
         self.tankColumns = ['Package', 'Order', 'Modified', 'Size', 'Files']
         self.title = _('Installers')
@@ -4400,7 +4400,7 @@ class InstallersData(bolt.TankData, DataDict):
         # --MakeDirs
         self.bashDir.makedirs()
         # --Archive invalidation
-        if settings.get('bash.bsaRedirection'):
+        if conf.settings.get('bash.bsaRedirection'):
             oblivionIni.setBsaRedirection(True)
         # --Refresh Data
         changed = False
@@ -4421,7 +4421,7 @@ class InstallersData(bolt.TankData, DataDict):
         if 'D' in what:
             changed |= Installer.refreshSizeCrcDate(
                 dirs['mods'], self.data_sizeCrcDate, progress,
-                settings['bash.installers.removeEmptyDirs'], fullRefresh)
+                conf.settings['bash.installers.removeEmptyDirs'], fullRefresh)
         if 'I' in what:
             changed |= self.refreshRenamed()
         if 'I' in what:
@@ -4506,11 +4506,11 @@ class InstallersData(bolt.TankData, DataDict):
                 getter = lambda x: object.__getattribute__(data[x], attr)
                 items.sort(key=getter, reverse=reverse)
         # --Special sorters
-        if settings['bash.installers.sortStructure']:
+        if conf.settings['bash.installers.sortStructure']:
             items.sort(key=lambda x: data[x].type)
-        if settings['bash.installers.sortActive']:
+        if conf.settings['bash.installers.sortActive']:
             items.sort(key=lambda x: not data[x].isActive)
-        if settings['bash.installers.sortProjects']:
+        if conf.settings['bash.installers.sortProjects']:
             items.sort(key=lambda x: not isinstance(data[x], InstallerProject))
         return items
 
@@ -4949,9 +4949,9 @@ class InstallersData(bolt.TankData, DataDict):
             mismatched = set(srcInstaller.data_sizeCrc)
         else:
             mismatched = srcInstaller.underrides
-        showInactive = conflictsMode and settings[
+        showInactive = conflictsMode and conf.settings[
             'bash.installers.conflictsReport.showInactive']
-        showLower = conflictsMode and settings[
+        showLower = conflictsMode and conf.settings[
             'bash.installers.conflictsReport.showLower']
         if not mismatched:
             return ''
@@ -7134,7 +7134,7 @@ def initDirs():
     if GPath('mash.ini').exists():
         mashIni = ConfigParser.ConfigParser()
         mashIni.read('mash.ini')
-    dirs['app'] = GPath(settings['mwDir'])
+    dirs['app'] = GPath(conf.settings['mwDir'])
     dirs['mods'] = dirs['app'].join('Data Files')
     # --Installers
     if mashIni and mashIni.has_option('General', 'sInstallersDir'):
@@ -7177,15 +7177,14 @@ def initDirs():
 
 # ------------------------------------------------------------------------------
 def initSettings(path='settings.pkl'):
-    global settings
-    settings = Settings(path)
+    conf.settings = Settings(path)
     reWryeMash = re.compile('^wrye\.mash')
-    for key in settings.data.keys():
+    for key in conf.settings.data.keys():
         newKey = reWryeMash.sub('mash', key)
         if newKey != key:
-            settings[newKey] = settings[key]
-            del settings[key]
-    settings.loadDefaults(_moshSettingDefaults)
+            conf.settings[newKey] = conf.settings[key]
+            del conf.settings[key]
+    conf.settings.loadDefaults(_moshSettingDefaults)
 
 
 # Main ------------------------------------------------------------------------

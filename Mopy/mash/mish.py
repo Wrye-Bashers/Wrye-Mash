@@ -26,6 +26,7 @@ import StringIO
 import sys
 import types
 
+import conf
 from localization import _, formatInteger, formatDate
 
 import mosh
@@ -382,7 +383,7 @@ def init(initLevel):
         3: saveInfos"""
     # --Settings
     mosh.initSettings()
-    mwDir = mosh.settings['mwDir']
+    mwDir = conf.settings['mwDir']
     # --MwIniFile (initLevel >= 1)
     if initLevel < 1: return
     mosh.mwIniFile = mosh.MWIniFile(mwDir)

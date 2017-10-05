@@ -24,6 +24,7 @@ import threading
 import time
 import Queue as queue
 
+from .. import conf
 from .. import mosh
 
 
@@ -184,8 +185,8 @@ def getLocation():
     cwd = os.getcwd()
     locs = [cwd,
         os.path.join(cwd, 'tes3cmd'),
-        mosh.settings['mwDir'],
-        os.path.join(mosh.settings['mwDir'], 'Data Files')]
+        conf.settings['mwDir'],
+        os.path.join(conf.settings['mwDir'], 'Data Files')]
     for loc in locs:
         path = os.path.join(loc, 'tes3cmd.exe')
         if os.path.exists(path):

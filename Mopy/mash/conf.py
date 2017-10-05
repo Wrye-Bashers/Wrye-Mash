@@ -211,3 +211,4 @@ settingDefaults = {
     # --Wrye Mash: World Map Reapir
     'mash.worldMap.gridLines'                     : True,
 }
+settings = None

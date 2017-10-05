@@ -25,6 +25,7 @@ import wx
 from .. import globalvars
 from .. import mosh
 from .. import exception
+from .. import conf
 
 
 class ProgressDialog(mosh.Progress):
@@ -78,7 +79,7 @@ def ContinueQuery(parent, message, continueKey, title=_(u'Warning')):
     """Shows a modal continue query if value of continueKey is false. Returns True to continue.
     Also provides checkbox "Don't show this in future." to set continueKey to true."""
     # --ContinueKey set?
-    if mosh.settings.get(continueKey):
+    if conf.settings.get(continueKey):
         return wx.ID_OK
     # --Generate/show dialog
     dialog = wx.Dialog(parent, -1, title, size=(350, 200),
@@ -98,14 +99,14 @@ def ContinueQuery(parent, message, continueKey, title=_(u'Warning')):
     # --Get continue key setting and return
     result = dialog.ShowModal()
     if checkBox.GetValue():
-        mosh.settings[continueKey] = 1
+        conf.settings[continueKey] = 1
     return result
 
 
 def LogMessage(parent, message, logText, title=u'', style=0, asDialog=True):
     # --Query Dialog
-    pos = mosh.settings.get('mash.message.log.pos', wx.DefaultPosition)
-    size = mosh.settings.get('mash.message.log.size', (400, 400))
+    pos = conf.settings.get('mash.message.log.pos', wx.DefaultPosition)
+    size = conf.settings.get('mash.message.log.size', (400, 400))
     if asDialog:
         window = wx.Dialog(parent, -1, title, pos=pos, size=size,
             style=wx.DEFAULT_DIALOG_STYLE | wx.RESIZE_BORDER)
@@ -125,8 +126,8 @@ def LogMessage(parent, message, logText, title=u'', style=0, asDialog=True):
     if asDialog:
         window.ShowModal()
         # --Done
-        mosh.settings['mash.message.log.pos'] = window.GetPosition()
-        mosh.settings['mash.message.log.size'] = window.GetSizeTuple()
+        conf.settings['mash.message.log.pos'] = window.GetPosition()
+        conf.settings['mash.message.log.size'] = window.GetSizeTuple()
         window.Destroy()
     else:
         window.Show()
