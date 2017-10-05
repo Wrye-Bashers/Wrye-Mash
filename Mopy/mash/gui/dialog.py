@@ -157,7 +157,7 @@ def ErrorMessage(parent, message, title=_(u'Error'),
     return Message(parent, message, title, style)
 
 
-def Message(parent, message, title='', style=wx.OK):
+def Message(parent, message, title=u'', style=wx.OK):
     """Shows a modal MessageDialog.
     Use ErrorMessage, WarningMessage or InfoMessage."""
     dialog = wx.MessageDialog(parent, message, title, style)
