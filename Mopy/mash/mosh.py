@@ -77,7 +77,7 @@ _moshSettingDefaults = {
 class Settings:
     """Settings dictionary. Changes are saved to pickle file."""
 
-    def __init__(self, path='settings.pkl'):
+    def __init__(self, path=u'settings.pkl'):
         """Initialize. Read settings from pickle file."""
         self.path = path
         self.changed = []
@@ -112,14 +112,14 @@ class Settings:
         for key in self.changed:
             outData[key] = self.data[key]
         # --Pickle it
-        tempPath = filePath + '.tmp'
+        tempPath = filePath + u'.tmp'
         cPickle.dump(outData, open(tempPath, 'w'))
         renameFile(tempPath, filePath, True)
 
     def setChanged(self, key):
         """Marks given key as having been changed. Use if value is a dictionary, list or other object."""
         if key not in self.data:
-            raise exception.ArgumentError("No settings data for " + key)
+            raise exception.ArgumentError(u'No settings data for {}'.format(key))
         if key not in self.changed:
             self.changed.append(key)
 
