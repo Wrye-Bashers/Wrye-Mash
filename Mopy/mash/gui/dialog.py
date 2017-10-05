@@ -50,7 +50,7 @@ class ProgressDialog(mosh.Progress):
             self.dialog = None
 
 
-def TextEntry(parent, message, default=''):
+def TextEntry(parent, message, default=u''):
     """Shows a text entry dialog and returns result or None if canceled."""
     dialog = wx.TextEntryDialog(parent, message, default)
     if dialog.ShowModal() != wx.ID_OK:
