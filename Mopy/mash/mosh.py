@@ -342,7 +342,7 @@ def getMatch(reMatch, group=0):
     if reMatch:
         return reMatch.group(group)
     else:
-        return ''
+        return u''
 
 
 y2038Resets = []
