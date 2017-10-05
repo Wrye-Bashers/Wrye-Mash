@@ -151,7 +151,7 @@ def WarningMessage(parent, message, title=_(u'Warning'),
     return Message(parent, message, title, style)
 
 
-def ErrorMessage(parent, message, title=_('Error'),
+def ErrorMessage(parent, message, title=_(u'Error'),
     style=(wx.OK | wx.ICON_HAND)):
     """Shows a modal error message."""
     return Message(parent, message, title, style)
