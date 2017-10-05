@@ -688,9 +688,9 @@ class SubRecord:
 
     def dump(self, out):
         if self.changed:
-            raise exception.StateError(_('Data changed: ') + self.name)
+            raise exception.StateError(_(u'Data changed: ') + self.name)
         if not self.data:
-            raise exception.StateError(_('Data undefined: ') + self.name)
+            raise exception.StateError(_(u'Data undefined: ') + self.name)
         out.write(struct.pack('4si', self.name, len(self.data)))
         out.write(self.data)
 
