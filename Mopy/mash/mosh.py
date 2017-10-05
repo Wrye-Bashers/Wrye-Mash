@@ -1995,8 +1995,8 @@ class Tes3_Hedr(SubRecord):
         """Initialize."""
         self.version = 1.3
         self.fileType = 0  # --0: esp; 1: esm; 32: ess
-        self.author = ''
-        self.description = ''
+        self.author = u''
+        self.description = u''
         self.numRecords = 0
         SubRecord.__init__(self, name, size, ins, unpack)
 
@@ -2013,7 +2013,7 @@ class Tes3_Hedr(SubRecord):
 
     def getSize(self):
         if not self.data and not self.changed:
-            raise exception.StateError(_('Data undefined: ') + self.name)
+            raise exception.StateError(_(u'Data undefined: ') + self.name)
         if not self.changed:
             return self.size
         self.description = winNewLines(self.description)
