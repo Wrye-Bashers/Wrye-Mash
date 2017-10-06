@@ -145,7 +145,7 @@ class HelpBrowser(wx.Frame):
         pos = conf.settings.get('mash.help.pos', (-1, -1))
         size = conf.settings.get('mash.help.size', (400, 600))
 
-        wx.Frame.__init__(self, mashFrame, -1, _('Help'), pos,
+        wx.Frame.__init__(self, mashFrame, -1, _(u'Help'), pos,
             size, style=wx.DEFAULT_FRAME_STYLE)
 
         self.SetBackgroundColour(wx.NullColour)
@@ -183,7 +183,7 @@ class HelpBrowser(wx.Frame):
         self.htmlToc.AddSelListener(self.htmlText.TocSelChanged)
         self.htmlText.SetTocObj(self.htmlToc)
 
-        path = os.path.join(os.getcwd(), 'Wrye Mash.txt')
+        path = os.path.join(os.getcwd(), u'Wrye Mash.txt')
         txt = open(path).read()
         self.htmlText.SetHtmlData(txt)
         self.htmlToc.SetHtmlData(txt)
