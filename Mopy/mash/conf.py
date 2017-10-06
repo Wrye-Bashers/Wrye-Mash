@@ -32,23 +32,25 @@ def findMwDir(curPath, trys):
         return curPath
     return findMwDir(os.path.dirname(curPath), trys - 1)
 
+settings = None
 
 settingDefaults = {
-    # -# SettingsWindow
+    # SettingsWindow
     'mash.settings.show'                          : False,
-    # --Morrowind Directory
-    # get the parent of the current directory
-    'mwDir': findMwDir(os.path.realpath(__file__), 3),
-    # --Wrye Mash
+    'mash.settings.size'                          : (475, 250),
+    'mash.settings.pos'                           : wx.DefaultPosition,
+    # Morrowind Directory
+    'mwDir'                                       : findMwDir(os.path.realpath(__file__), 3),
+    # Wrye Mash
     'mash.version'                                : 0,
     'mash.readme'                                 : (0, '84 DCG'),
     'mash.framePos'                               : (-1, -1),
     'mash.frameSize'                              : (600, 500),
     'mash.frameSize.min'                          : (400, 500),
     'mash.page'                                   : 0,
-    # --Wrye Mash: Windows
+    # Wrye Mash: Windows
     'mash.window.sizes'                           : {},
-    # --Wrye Mash: Load Lists
+    # Wrye Mash: Load Lists
     'mash.loadLists.data'                         : {
         'Bethesda ESMs': [
             'Morrowind.esm',
@@ -56,7 +58,7 @@ settingDefaults = {
             'Bloodmoon.esm',
         ],
     },
-    # --Wrye Mash: Statistics
+    # Wrye Mash: Statistics
     'mash.fileStats.cols'                         : ['Type', 'Count', 'Size'],
     'mash.fileStats.sort'                         : 'Type',
     'mash.fileStats.colReverse'                   : {
@@ -72,10 +74,9 @@ settingDefaults = {
         'Count': 1,
         'Size' : 1,
     },
-    # -# Added for Utilities page.
+    # Added for Utilities page.
     'bash.utils.page'                             : 0,
-    # -#
-    # --Installers
+    # Installers
     'bash.installers.page'                        : 1,
     'bash.installers.enabled'                     : True,
     'bash.installers.autoAnneal'                  : True,
@@ -87,7 +88,7 @@ settingDefaults = {
     'bash.installers.sortStructure'               : False,
     'bash.installers.conflictsReport.showLower'   : True,
     'bash.installers.conflictsReport.showInactive': False,
-    # --Wrye Bash: Screens
+    # Wrye Bash: Screens
     'bash.screens.cols'                           : ['File'],
     'bash.screens.sort'                           : 'File',
     'bash.screens.colReverse'                     : {
@@ -99,13 +100,13 @@ settingDefaults = {
         'Size'    : 75,
     },
     'bash.screens.colAligns'                      : {},
-    # --Wrye Mash: Group and Rating
+    # Wrye Mash: Group and Rating
     'mash.mods.groups'                            : ['Body', 'Bethesda',
         'Clothes', 'Creature', 'Fix', 'Last', 'Test', 'Game', 'GFX', 'Location',
         'Misc.', 'NPC', 'Quest', 'Race', 'Resource', 'Sound'],
     'mash.mods.ratings'                           : ['+', '1', '2', '3', '4',
         '5', '=', '~'],
-    # --Wrye Mash: RefRemovers
+    # Wrye Mash: RefRemovers
     'mash.refRemovers.data'                       : {
     },
     'mash.refRemovers.safeCells'                  : [
@@ -118,10 +119,10 @@ settingDefaults = {
         _("Tel Uvirith, Tower Lower"),
         _("Tel Uvirith, Tower Upper"),
     ],
-    # --Wrye Mash: RefReplacers
+    # Wrye Mash: RefReplacers
     'mash.refReplacers.data'                      : {
     },
-    # --Wrye Mash: Col (Sort) Names
+    # Wrye Mash: Col (Sort) Names
     'mash.colNames'                               : {
         'Author'    : _('Author'),
         'Cell'      : _('Cell'),
@@ -134,36 +135,36 @@ settingDefaults = {
         'Modified'  : _('Modified'),
         'Num'       : _('Num'),
         'Player'    : _('Player'),
-        'Rating'    : _('Rating'),
         'Save Name' : _('Save Name'),
         'Size'      : _('Size'),
         'Status'    : _('Status'),
         'Type'      : _('Type'),
         'Version'   : _('Version'),
     },
-    # --Wrye Mash: Masters
+    # Wrye Mash: Masters
     'mash.masters.cols'                           : ['File', 'Num'],
     'mash.masters.esmsFirst'                      : 1,
     'mash.masters.selectedFirst'                  : 0,
     'mash.masters.sort'                           : 'Load Order',
     'mash.masters.colReverse'                     : {},
     'mash.masters.colWidths'                      : {
-        'File': 80,
-        'Num' : 20,
+        'File': 100,
+        'Num' : 40,
     },
     'mash.masters.colAligns'                      : {
         'Num': 1,
     },
-    # --Wrye Mash: Mod Notes
+    # Wrye Mash: Mod Notes
     'mash.modNotes.show'                          : False,
-    'mash.modNotes.size'                          : (200, 300),
+    'mash.modNotes.size'                          : (400, 400),
     'mash.modNotes.pos'                           : wx.DefaultPosition,
-    # --Wrye Mash: Mod Docs
+    # Wrye Mash: Mod Docs
     'mash.modDocs.show'                           : False,
-    'mash.modDocs.size'                           : (300, 400),
+    'mash.modDocs.size'                           : (400, 400),
     'mash.modDocs.pos'                            : wx.DefaultPosition,
     'mash.modDocs.dir'                            : None,
-    # --Wrye Mash: Mods
+    # Wrye Mash: Mods
+    'mash.mods.data'                              : None,
     'mash.mods.cols'                              : ['File', 'Rating', 'Group',
         'Modified', 'Size', 'Author'],
     'mash.mods.esmsFirst'                         : 1,
@@ -172,9 +173,8 @@ settingDefaults = {
     'mash.mods.colReverse'                        : {},
     'mash.mods.colWidths'                         : {
         'File'    : 200,
-        'Rating'  : 20,
-        'Group'   : 20,
-        'Rating'  : 20,
+        'Rating'  : 75,
+        'Group'   : 40,
         'Modified': 150,
         'Size'    : 75,
         'Author'  : 100,
@@ -183,13 +183,13 @@ settingDefaults = {
         'Size': 1,
     },
     'mash.mods.renames'                           : {},
-    # --Wrye Mash: Journal
+    # Wrye Mash: Journal
     'mash.journal.show'                           : False,
-    'mash.journal.size'                           : (300, 400),
+    'mash.journal.size'                           : (400, 400),
     'mash.journal.pos'                            : wx.DefaultPosition,
-    # --Wrye Mash: Save Sets
+    # Wrye Mash: Save Sets
     'mash.saves.sets'                             : [],
-    # --Wrye Mash: Saves
+    # Wrye Mash: Saves
     'mash.saves.cols'                             : ['File', 'Modified', 'Size',
         'Save Name', 'Player', 'Cell'],
     'mash.saves.sort'                             : 'Modified',
@@ -208,7 +208,13 @@ settingDefaults = {
     'mash.saves.colAligns'                        : {
         'Size': 1,
     },
-    # --Wrye Mash: World Map Reapir
+    # Wrye Mash: World Map Reapir
     'mash.worldMap.gridLines'                     : True,
+    'balt.LogMessage.pos'                         : wx.DefaultPosition,
+    'balt.LogMessage.size'                        : (400, 400),
+    'balt.WryeLog.pos'                            : wx.DefaultPosition,
+    'balt.WryeLog.size'                           : (400, 400),
+    'balt.WryeLog.temp'                           : None,
+    'WryeLogTemp.html'                            : None,
+    'balt.WryeLog.cssDir'                         : None,
 }
-settings = None
