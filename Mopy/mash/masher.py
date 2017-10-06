@@ -7183,7 +7183,7 @@ class App_Settings(Link):
         """Handle menu selection."""
         if not globalvars.settingsWindow:
             globalvars.settingsWindow = SettingsWindow()
-            globalvars.settingsWindow.SetSettings(conf.settings, Inst=mosh.dirs["installers"].s)
+            globalvars.settingsWindow.SetSettings(conf.settings, Inst=mosh.dirs["installers"].s, DataDir=mosh.dirs["mods"].s)
             globalvars.settingsWindow.Show()
             conf.settings['mash.settings.show'] = True
         globalvars.settingsWindow.Raise()
