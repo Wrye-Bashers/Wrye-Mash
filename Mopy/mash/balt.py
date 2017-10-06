@@ -33,6 +33,7 @@ from localization import _, formatInteger, formatDate
 
 import bolt
 from bolt import GPath, deprint, delist
+import conf
 
 
 # Basics ---------------------------------------------------------------------
@@ -578,8 +579,8 @@ def showLogClose(evt=None):
     """Handle log message closing."""
     window = evt.GetEventObject()
     if not window.IsIconized() and not window.IsMaximized():
-        _settings['balt.LogMessage.pos'] = window.GetPositionTuple()
-        _settings['balt.LogMessage.size'] = window.GetSizeTuple()
+        conf.settings['balt.LogMessage.pos'] = window.GetPositionTuple()
+        conf.settings['balt.LogMessage.size'] = window.GetSizeTuple()
     window.Destroy()
 
 
@@ -587,8 +588,8 @@ def showLog(parent, logText, title=u'', style=0, asDialog=True, fixedFont=False,
     icons=None):
     """Display text in a log window"""
     # --Sizing
-    pos = _settings.get('balt.LogMessage.pos', defPos)
-    size = _settings.get('balt.LogMessage.size', (400, 400))
+    pos = conf.settings.get('balt.LogMessage.pos', defPos)
+    size = conf.settings.get('balt.LogMessage.size', (400, 400))
     # --Dialog or Frame
     if asDialog:
         window = wx.Dialog(parent, defId, title, pos=pos, size=size,
@@ -636,8 +637,8 @@ def showWryeLog(parent, logText, title=u'', style=0, asDialog=True, icons=None):
     """Convert logText from wtxt to html and display. Optionally, logText can be path to an html file."""
     import wx.lib.iewin
     # --Sizing
-    pos = _settings.get('balt.WryeLog.pos', defPos)
-    size = _settings.get('balt.WryeLog.size', (400, 400))
+    pos = conf.settings.get('balt.WryeLog.pos', defPos)
+    size = conf.settings.get('balt.WryeLog.size', (400, 400))
     # --Dialog or Frame
     if asDialog:
         window = wx.Dialog(parent, defId, title, pos=pos, size=size,
@@ -653,9 +654,9 @@ def showWryeLog(parent, logText, title=u'', style=0, asDialog=True, icons=None):
     textCtrl = wx.lib.iewin.IEHtmlWindow(window, defId,
         style=wx.NO_FULL_REPAINT_ON_RESIZE)
     if not isinstance(logText, bolt.Path):
-        logPath = _settings.get('balt.WryeLog.temp',
+        logPath = conf.settings.get('balt.WryeLog.temp',
             bolt.Path.getcwd().join('WryeLogTemp.html'))
-        cssDir = _settings.get('balt.WryeLog.cssDir', GPath(''))
+        cssDir = conf.settings.get('balt.WryeLog.cssDir', GPath(''))
         ins = cStringIO.StringIO(logText + u'\n{{CSS:wtxt_sand_small.css}}')
         out = logPath.open('w')
         bolt.WryeText.genHtml(ins, out, cssDir)
@@ -689,8 +690,8 @@ def showWryeLog(parent, logText, title=u'', style=0, asDialog=True, icons=None):
     # --Show
     if asDialog:
         window.ShowModal()
-        _settings['balt.WryeLog.pos'] = window.GetPositionTuple()
-        _settings['balt.WryeLog.size'] = window.GetSizeTuple()
+        conf.settings['balt.WryeLog.pos'] = window.GetPositionTuple()
+        conf.settings['balt.WryeLog.size'] = window.GetSizeTuple()
         window.Destroy()
     else:
         window.Show()
