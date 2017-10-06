@@ -220,8 +220,7 @@ except ImportError:
     scandir = None
 # ------------------------------------------------------------------------------
 _gpaths = {}
-# TODO: Why is there a Path here
-Path = None
+global_path_var = None
 close_fds = True
 
 
