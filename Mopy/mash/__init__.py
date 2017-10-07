@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+#
+# mash/__init__.py
+#
 # GPL License and Copyright Notice ============================================
 #  This file is part of Wrye Mash.
 #

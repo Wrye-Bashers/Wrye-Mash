@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+#
 # GPL License and Copyright Notice ============================================
 #  This file is part of Wrye Mash.
 #
@@ -4366,8 +4368,8 @@ class InstallersData(bolt.TankData, DataDict):
         # --Default Params
         self.defaultParam('columns', self.tankColumns)
         self.defaultParam('colWidths', {
-            'Package': 100, 'Package': 100, 'Order': 10, 'Group': 60,
-            'Modified': 60, 'Size': 40, 'Files': 20})
+            'Package': 100, 'Order': 50, 'Group': 100,
+            'Modified': 100, 'Size': 100, 'Files': 50})
         self.defaultParam('colAligns',
             {'Order': 'RIGHT', 'Size': 'RIGHT', 'Files': 'RIGHT',
                 'Modified': 'RIGHT'})

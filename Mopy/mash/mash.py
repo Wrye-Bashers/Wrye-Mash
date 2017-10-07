@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+#
 # GPL License and Copyright Notice ============================================
 #  This file is part of Wrye Mash.
 #
@@ -20,7 +22,8 @@
 # =============================================================================
 # Imports ---------------------------------------------------------------------
 import sys
-
+import localization
+import exception
 
 # File logger-------------------------------------------------------------------
 class ErrorLogger:
@@ -34,13 +37,6 @@ class ErrorLogger:
     def write(self, message):
         for s in self.outStream:
             s.write(message)
-
-
-# Setup log file ---------------------------------------------------------------
-f = file("WryeMash.log", "w+")
-sys.stdout = ErrorLogger([f, sys.__stdout__])
-sys.stderr = ErrorLogger([f, sys.__stderr__])
-f.write("Wrye Mash Log!\n")
 
 
 # Functions used in startup ----------------------------------------------------
@@ -60,20 +56,26 @@ def CheckWx():
             tk.destroy()
             sys.exit(1)
         except ImportError:
-            print msg
+            print(msg)
             raise  # dump the info to sdterr
 
 
-# Main ------------------------------------------------------------------------
-# This doesn't check if __name__ == '__main__' as it is used by Wrye Mash.pyc
-CheckWx()
+def main(opts):
+    CheckWx()
 
-# required to be able to run this with py2exe
-from wx.lib.pubsub import setupv1
-from wx.lib.pubsub import Publisher
+    # Setup log file ---------------------------------------------------------------
+    f = file("WryeMash.log", "w+")
+    sys.stdout = ErrorLogger([f, sys.__stdout__])
+    sys.stderr = ErrorLogger([f, sys.__stderr__])
+    f.write("Wrye Mash Log!\n")
 
-import masher
 
-# logging and showing of stdout is handled by our code. See errorlog.py
-app = masher.MashApp(redirect=False)
-app.MainLoop()
+    # required to be able to run this with py2exe
+    from wx.lib.pubsub import setupv1
+    from wx.lib.pubsub import Publisher
+
+    import masher
+
+    # logging and showing of stdout is handled by our code. See errorlog.py
+    app = masher.MashApp(redirect=False)
+    app.MainLoop()
