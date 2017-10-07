@@ -37,8 +37,45 @@ def findClass(module, name):
     Find class implementation. The same as pickle.Unpickler.find_class but
     translates module names
     '''
-    if module in ('bolt', 'masher', 'balt', 'mash', 'mosh', 'mush', 'mysh'):
+    if module in (
+        'balt', 
+        'bolt',
+        'conf',
+        'env',
+        'errorlog',
+        'exception',
+        'localization',
+        'marg',
+        'mash', 
+        'masher', 
+        'mosh', 
+        'mush', 
+        'mysh'
+        ):
         module = 'mash.' + module
+
+    if module in (
+        '__init__', 
+        'dialog',
+        'helpbrowser',
+        # 'screens', because it's empty
+        'settings',
+        'utils',
+        ):
+        module = 'mash.gui.' + module
+
+    if module in (
+        'fakemlox', 
+        'loader',
+        ):
+        module = 'mash.mlox.' + module
+
+    if module in (
+        '__init__', 
+        'gui',
+        'tes3cmdgui',
+        ):
+        module = 'mash.tes3cmd.' + module
 
     __import__(module)
     mod = sys.modules[module]
