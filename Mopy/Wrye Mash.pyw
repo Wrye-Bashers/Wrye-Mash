@@ -123,10 +123,11 @@ class get_everything(object):
 class return_mod(object):
 
     def load_module(self, fullname):
-        code = self.get_code(fullname)
-        ispkg = self.is_package(fullname)
+        #code = self.get_code(fullname)
+        #ispkg = self.is_package(fullname)
         mod = sys.modules.setdefault(fullname, types.ModuleType(fullname))
-        mod.__file__ = "<%s>" % self.__class__.__name__
+        crazy_thing = "<%s>" % self.__class__.__name__
+        mod.__file__ = crazy_thing
         mod.__loader__ = self
         if ispkg:
             mod.__path__ = []
@@ -146,8 +147,10 @@ def is_directory(full_path):
     if os.path.isdir(full_path):
         return True
 
-def is_package(filename, ext, initfile):
-    if os.path.exists(filename+ext):
+def is_package(full_path, initfile, ext):
+    the_initfile = os.path.join(full_path, initfile+ext)
+    print the_initfile
+    if os.path.exists(the_initfile):
         return True
 
 def resolve_name(name, package, level):
@@ -254,11 +257,11 @@ class UnicodeImporter(object):
             initfile = '__init__'
 
         #mod = return_mod().load_module(self)
-        if file_exists(filename,ext,initfile):
-            print "{} exists".format(filename+ext)
+        #if file_exists(filename,ext,initfile):
+        #    print "{} exists".format(filename+ext)
 
-        if is_directory(filename):
-            print "{} is a directory".format(filename)
+        #if is_directory(filename):
+        #    print "{} is a directory".format(filename)
 
         try:
             if file_exists(filename,ext,initfile):
@@ -288,9 +291,25 @@ class UnicodeImporter(object):
             else:
                 print "{} The check for os.path.exists({}) failed.".format(UnicodeImporter.count,filename+ext)
                 mod = sys.modules[fullname]
+                print "the Old Mod", mod
+                mod2 = sys.modules.setdefault(fullname, types.ModuleType(fullname))
+                print "The new Mod", mod2
+                #return_mod().load_module(fullname)
                 mod.__loader__ = self
                 mod.__file__ = os.path.join(os.getcwd(),filename)
-                mod.__path__ = [filename]
+                if is_directory(mod.__file__):
+                    print "I think this is a dir"
+
+                if is_package(mod.__file__, initfile, ext):
+                    print "I think this is a package"
+                    mod.__path__ = []
+                    mod.__package__ = fullname
+                else:
+                    mod.__package__ = fullname.rpartition('.')[0]
+                #test_varmod.__package__ = fullname.rpartition('.')[0]
+                test_var = fullname.rpartition('.')[0]
+                print "test_var", test_var
+                #mod.__path__ = [filename]
                 #init file
                 initfile = os.path.join(filename,initfile+ext)
                 print "{} So instead mod = sys.modules[fullname] was used and assigned: {}".format(UnicodeImporter.count,sys.modules[fullname])
