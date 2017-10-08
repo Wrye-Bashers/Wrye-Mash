@@ -87,20 +87,26 @@ class get_everything(object):
         #vars(the_object)
         #print "Type: ---"
         #print type(the_object)
-        #print "Repr: ---"
-        #print repr(the_object)
+        print "Repr: ---"
+        print repr(the_object)
         #print "Importlib: ---"
         #temp_import = importlib.import_module(fullname, package=None)
         #some_keys_backup = the_object.keys()
-        #some_keys = the_object.keys()
-        #some_keys.extend(['mash.gui'])
-        #get_everything().print_dif_keys(the_object)
+        some_keys = the_object.keys()
+        for key in range(len(some_keys)):
+            print sys.modules[some_keys[key]]
         #    if hasattr(sys.modules[some_keys[key]], some_keys[key]):
         #        found = the_object[some_keys[key]].__getattr__(self, some_keys[key])
         #        print "Key: {}, Value: {}, Path: {}".format(key,some_keys[key],found)
-        if hasattr(the_object, '__dict__'):
-            print "Vars: ---"
-            print vars(the_object)
+        #some_keys.extend(['mash.gui'])
+        #get_everything().print_dif_keys(the_object)
+        #for key in some_keys:
+        #    if hasattr(sys.modules[some_keys[key]], some_keys[key]):
+        #        found = the_object[some_keys[key]].__getattr__(self, some_keys[key])
+        #        print "Key: {}, Value: {}, Path: {}".format(key,some_keys[key],found)
+        #if hasattr(the_object, '__dict__'):
+        #    print "Vars: ---"
+        #    print vars(the_object)
         #print "In Object: ---"
         #somename = 'functools'
         #if somename in the_object:
@@ -108,10 +114,10 @@ class get_everything(object):
         #somename = 'copy_reg'
         #if somename in the_object:
         #    print "The Object has fullname: {}".format(somename)
-        found = types.ModuleType(fullname)
-        print "The module that was found with types: {}".format(found)
-        thenew = imp.new_module(fullname)
-        print "The module that was found with imp: {}".format(thenew)
+        #found = types.ModuleType(fullname)
+        #print "The module that was found with types: {}".format(found)
+        #thenew = imp.new_module(fullname)
+        #print "The module that was found with imp: {}".format(thenew)
         # the_found_module = the_object[fullname]
         # print "The sys.module value: {}".format(the_found_module)
         #looking_for_theloader = pkgutil.find_loader(fullname)
@@ -291,25 +297,25 @@ class UnicodeImporter(object):
             else:
                 print "{} The check for os.path.exists({}) failed.".format(UnicodeImporter.count,filename+ext)
                 mod = sys.modules[fullname]
-                print "the Old Mod", mod
-                mod2 = sys.modules.setdefault(fullname, types.ModuleType(fullname))
-                print "The new Mod", mod2
+                #print "the Old Mod", mod
+                #mod2 = sys.modules.setdefault(fullname, types.ModuleType(fullname))
+                #print "The new Mod", mod2
                 #return_mod().load_module(fullname)
                 mod.__loader__ = self
                 mod.__file__ = os.path.join(os.getcwd(),filename)
                 if is_directory(mod.__file__):
                     print "I think this is a dir"
 
-                if is_package(mod.__file__, initfile, ext):
-                    print "I think this is a package"
-                    mod.__path__ = []
-                    mod.__package__ = fullname
-                else:
-                    mod.__package__ = fullname.rpartition('.')[0]
+                #if is_package(mod.__file__, initfile, ext):
+                #    print "I think this is a package"
+                #    mod.__path__ = []
+                #    mod.__package__ = fullname
+                #else:
+                #    mod.__package__ = fullname.rpartition('.')[0]
                 #test_varmod.__package__ = fullname.rpartition('.')[0]
-                test_var = fullname.rpartition('.')[0]
-                print "test_var", test_var
-                #mod.__path__ = [filename]
+                #test_var = fullname.rpartition('.')[0]
+                #print "test_var", test_var
+                mod.__path__ = [filename]
                 #init file
                 initfile = os.path.join(filename,initfile+ext)
                 print "{} So instead mod = sys.modules[fullname] was used and assigned: {}".format(UnicodeImporter.count,sys.modules[fullname])
@@ -317,6 +323,7 @@ class UnicodeImporter(object):
                 print "{} Then 'mod.__file__ = os.path.join(os.getcwd(),filename)' was used and assigned: {} to mod.__file__".format(UnicodeImporter.count,os.path.join(os.getcwd(),filename))
                 print "{} Then 'mod.__path__ = [filename]' was used and assigned: {} to mod.__path__".format(UnicodeImporter.count,[filename])
                 print "{} And Last 'initfile = os.path.join(filename,initfile+ext)' was used which made '{}'".format(UnicodeImporter.count,initfile)
+                get_everything().print_all(sys.modules,fullname,UnicodeImporter.get_prev_path(fullname))
                 if os.path.exists(initfile):
                     with open(initfile,'U') as fp:
                         code = fp.read()
