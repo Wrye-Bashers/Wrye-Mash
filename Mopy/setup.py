@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+#
 # GPL License and Copyright Notice ============================================
 #  This file is part of Wrye Mash.
 #
@@ -156,7 +158,7 @@ opts = {'py2exe': {
 prog = Target(
     description='Morrowind mod organizer and tools.',
     author="Wrye (see 'Wrye Mash.txt' for full credits)",
-    script='mash.py',
+    script='Wrye Mash.pyw',
     icon_resources=[(0, ".\\images\\Wrye Mash.ico")],
     other_resources=[
         (RT_MANIFEST, 1, manifest_template % dict(prog="WryeMash"))],

@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+#
 # GPL License and Copyright Notice ============================================
 #  This file is part of Wrye Mash.
 #
@@ -55,7 +57,7 @@ class TestParser(unittest.TestCase):
         p.parseString(wtex)
         firstLine = p.getHeading("The Name").getTextLines().next().rawText()
         self.assertEquals("Some Text", firstLine)
-        
+
     def test_parseSimpleTextWithAstrix(self):
         wtex = "= The Name \n* Some Text"
         p = Parser()

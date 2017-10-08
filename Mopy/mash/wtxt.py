@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+#
 # GPL License and Copyright Notice ============================================
 #  This file is part of Wrye Mash.
 #
@@ -18,8 +20,8 @@
 #  Wrye Mash copyright (C) 2005, 2006, 2007, 2008, 2009 Wrye
 #
 # =============================================================================
-"""This module provides a single function for converting wtxt text files to html 
-files. 
+"""This module provides a single function for converting wtxt text files to html
+files.
 
 Headings:
 = XXXX >> H1 "XXX"
@@ -29,7 +31,7 @@ Headings:
 Notes:
 * These must start at first character of line.
 * The XXX text is compressed to form an anchor. E.g == Foo Bar gets anchored as" FooBar".
-* If the line has trailing ='s, they are discarded. This is useful for making 
+* If the line has trailing ='s, they are discarded. This is useful for making
   text version of level 1 and 2 headings more readable.
 
 Bullet Lists:
@@ -40,7 +42,7 @@ Notes:
 * These must start at first character of line.
 * Recognized bullet characters are: - ! ? . + * o The dot (.) produces an invisible
   bullet, and the * produces a bullet character.
-  
+
 Styles:
   __Text__
   ~~Italic~~
@@ -53,7 +55,7 @@ Links:
  [[file|text]] produces <a href=file>text</a>
 
 Contents
-{{CONTENTS=NN}} Where NN is the desired depth of contents (1 for single level, 
+{{CONTENTS=NN}} Where NN is the desired depth of contents (1 for single level,
 2 for two levels, etc.).
 """
 

@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+#
 # GPL License and Copyright Notice ============================================
 #  This file is part of Wrye Mash.
 #
@@ -33,6 +35,7 @@ def findMwDir(curPath, trys):
     return findMwDir(os.path.dirname(curPath), trys - 1)
 
 settings = None
+app_version = None
 
 settingDefaults = {
     # SettingsWindow

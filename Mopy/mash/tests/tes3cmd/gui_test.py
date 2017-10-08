@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+#
 # GPL License and Copyright Notice ============================================
 #  This file is part of Wrye Mash.
 #
@@ -27,7 +29,7 @@ class TestCleaner(unittest.TestCase):
     def getOutput(self, fn):
         c = gui.OutputParserMixin()
         fn = os.path.join(os.path.dirname(__file__), fn)
-        return c.ParseOutput(open(fn).read()) 
+        return c.ParseOutput(open(fn).read())
 
     def testParse1(self):
         stats, output = self.getOutput('output.imclean.txt')
@@ -49,7 +51,7 @@ class TestCleaner(unittest.TestCase):
 
     def testParse2(self):
         stats, output = self.getOutput('output.tribclean.txt')
-        
+
         expectedStats = ( 'Evil-GMST Bloodmoon:    61\n'
                         + 'Evil-GMST Tribunal:     5\n'
                         + 'duplicate record:  1479\n'

@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+#
 # GPL License and Copyright Notice ============================================
 #  This file is part of Wrye Mash.
 #
@@ -38,7 +40,7 @@ def findClass(module, name):
     translates module names
     '''
     if module in (
-        'balt', 
+        'balt',
         'bolt',
         'conf',
         'env',
@@ -46,16 +48,16 @@ def findClass(module, name):
         'exception',
         'localization',
         'marg',
-        'mash', 
-        'masher', 
-        'mosh', 
-        'mush', 
+        'mash',
+        'masher',
+        'mosh',
+        'mush',
         'mysh'
         ):
         module = 'mash.' + module
 
     if module in (
-        '__init__', 
+        '__init__',
         'dialog',
         'helpbrowser',
         # 'screens', because it's empty
@@ -65,13 +67,13 @@ def findClass(module, name):
         module = 'mash.gui.' + module
 
     if module in (
-        'fakemlox', 
+        'fakemlox',
         'loader',
         ):
         module = 'mash.mlox.' + module
 
     if module in (
-        '__init__', 
+        '__init__',
         'gui',
         'tes3cmdgui',
         ):
