@@ -206,19 +206,7 @@ class UnicodeImporter(object):
 
 
     def find_module(self,fullname,path=None):
-        #print "Stack: ---"
-        #traceback.print_stack()
-        print
-        #get_everything().print_all(sys.modules,fullname,path)
-        UnicodeImporter.count += 1
-        if fullname in sys.modules:
-            fullname_in_sysmodules = "Module {}, was in sys.modules at: {}".format(fullname,sys.modules[fullname])
-        else:
-            fullname_in_sysmodules = "Module {}, isn't in sys.modules".format(fullname)
         UnicodeImporter.set_module_path(fullname,path)
-        print "{} In 'def find_module', before converting anything; Fullname: {}, path: {}".format(UnicodeImporter.count,fullname,path)
-        print '{} types.ModuleType(fullname) returned: {}'.format(UnicodeImporter.count,types.ModuleType(fullname))
-        print '{} And {}'.format(UnicodeImporter.count,fullname_in_sysmodules)
         if isinstance(fullname,unicode):
             fullname = fullname.replace(u'.',u'\\')
             exts = (u'.pyc',u'.pyo',u'.py')
@@ -226,33 +214,16 @@ class UnicodeImporter(object):
             fullname = fullname.replace('.','\\')
             exts = ('.pyc','.pyo','.py')
         if os.path.exists(fullname) and os.path.isdir(fullname):
-            print '{} After looking for extensions fullname existed and it was a directory in {}'.format(UnicodeImporter.count,os.getcwd())
             return self
         for ext in exts:
             if os.path.exists(fullname+ext):
-                print '{} We looped using {} to see if that file exists, and was found in {}'.format(UnicodeImporter.count,fullname+ext,os.getcwd())
                 return self
-        print "{} fullname was changed but didn't meet the two criteria".format(UnicodeImporter.count)
 
     def load_module(self,fullname,path=None):
-        print "The Previous Path Was: {}, and the current fullname is {}".format(UnicodeImporter.get_prev_path(fullname),fullname)
-        print "The Module Name is: ", get_module_name(fullname,path)
-        print "{} Upon entering load_module the fullname was: {} and the path {}".format(UnicodeImporter.count,fullname,path)
         if fullname in sys.modules:
-            print "{} From 'def load_module' the fullname was: {}, in sys.modules[fullname] at: {}".format(UnicodeImporter.count,fullname,sys.modules[fullname])
             return sys.modules[fullname]
         else: # set to avoid reimporting recursively
-            print "{} From def load_module fullname: {}, wasn't in sys.modules[fullname].".format(UnicodeImporter.count,fullname)
-            print "{} Instead, types.ModuleType() was used. That assigned {} to sys.modules[fullname].".format(UnicodeImporter.count,types.ModuleType(fullname))
-            print "{} Had we used imp, then imp.new_module(fullname) would have assigned {}, which is the same thing.".format(UnicodeImporter.count,imp.new_module(fullname))
-            # sys.modules[fullname] = imp.new_module(fullname)
-            the_old = get_everything().return_keys(sys.modules)
             sys.modules[fullname] = types.ModuleType(fullname)
-            the_new = get_everything().return_keys(sys.modules)
-            get_everything().print_dif_keys(the_old, the_new)
-            print sys.modules[fullname]
-
-        #print vars(sys.modules)
         if isinstance(fullname,unicode):
             filename = fullname.replace(u'.',u'\\')
             ext = u'.py'
@@ -262,68 +233,19 @@ class UnicodeImporter(object):
             ext = '.py'
             initfile = '__init__'
 
-        #mod = return_mod().load_module(self)
-        #if file_exists(filename,ext,initfile):
-        #    print "{} exists".format(filename+ext)
-
-        #if is_directory(filename):
-        #    print "{} is a directory".format(filename)
-
         try:
             if file_exists(filename,ext,initfile):
-                print "{} In 'def load_module' we looked to see if {} existed and it did so we opened the file using 'with open(filename+ext,'U') as fp:".format(UnicodeImporter.count,filename+ext)
                 with open(filename+ext,'U') as fp:
-                    # sys.modules[fullname] = temp2
-                    # mod = importlib.import_module(fullname)
                     mod = imp.load_source(fullname,filename+ext,fp)
-                    temp = types.ModuleType(fullname)
-                    temp2 = importlib.import_module(fullname)
-                    print "{} mod = {} temp = {}, temp2 {}".format(UnicodeImporter.count,mod,temp,temp2)
-                    if fullname in sys.modules:
-                        print "it's in it already"
-                        print "Before", sys.modules[fullname]
-                    the_old = get_everything().return_keys(sys.modules)
-                    sys.modules[fullname] = temp2
-                    the_new = get_everything().return_keys(sys.modules)
-                    #print "{} mod = {} temp = {}".format(UnicodeImporter.count,mod,temp)
-                    #print "{} Then assigned {} to mod using mod = imp.load_source(fullname,filename+ext,fp)".format(UnicodeImporter.count,mod)
-                    #print "{} After that assigned mod to sys.modules[fullname] and then called 'mod.__loader__ = self'".format(UnicodeImporter.count)
-                    #print "{} I wanted to use importlib.import_module(filename+ext) but import by filename isn't supported".format(UnicodeImporter.count)
-                    #print "{} Then I tried importlib.import_module(fullname) instead and got {}".format(UnicodeImporter.count,temp2)
-                    #sys.modules[fullname] = mod
-                    get_everything().print_dif_keys(the_old, the_new)
-                    print "After ", sys.modules[fullname]
-                    temp2.__loader__ = self
+                    sys.modules[fullname] = mod
+                    mod.__loader__ = self
             else:
-                print "{} The check for os.path.exists({}) failed.".format(UnicodeImporter.count,filename+ext)
                 mod = sys.modules[fullname]
-                #print "the Old Mod", mod
-                #mod2 = sys.modules.setdefault(fullname, types.ModuleType(fullname))
-                #print "The new Mod", mod2
-                #return_mod().load_module(fullname)
                 mod.__loader__ = self
                 mod.__file__ = os.path.join(os.getcwd(),filename)
-                if is_directory(mod.__file__):
-                    print "I think this is a dir"
-
-                #if is_package(mod.__file__, initfile, ext):
-                #    print "I think this is a package"
-                #    mod.__path__ = []
-                #    mod.__package__ = fullname
-                #else:
-                #    mod.__package__ = fullname.rpartition('.')[0]
-                #test_varmod.__package__ = fullname.rpartition('.')[0]
-                #test_var = fullname.rpartition('.')[0]
-                #print "test_var", test_var
                 mod.__path__ = [filename]
                 #init file
                 initfile = os.path.join(filename,initfile+ext)
-                print "{} So instead mod = sys.modules[fullname] was used and assigned: {}".format(UnicodeImporter.count,sys.modules[fullname])
-                print "{} Then 'mod.__loader__ = self' was used and assigned: {} to mod.__loader__".format(UnicodeImporter.count,self)
-                print "{} Then 'mod.__file__ = os.path.join(os.getcwd(),filename)' was used and assigned: {} to mod.__file__".format(UnicodeImporter.count,os.path.join(os.getcwd(),filename))
-                print "{} Then 'mod.__path__ = [filename]' was used and assigned: {} to mod.__path__".format(UnicodeImporter.count,[filename])
-                print "{} And Last 'initfile = os.path.join(filename,initfile+ext)' was used which made '{}'".format(UnicodeImporter.count,initfile)
-                get_everything().print_all(sys.modules,fullname,UnicodeImporter.get_prev_path(fullname))
                 if os.path.exists(initfile):
                     with open(initfile,'U') as fp:
                         code = fp.read()
