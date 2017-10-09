@@ -36,7 +36,8 @@ from ..localization import _, formatInteger, formatDate
 
 import wx
 
-from ..mosh import dirs, GPath
+from ..mosh import GPath
+from ..conf import dirs
 from .. import conf
 
 dataMap = {

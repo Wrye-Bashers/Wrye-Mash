@@ -33,33 +33,34 @@ def init_settings_files():
     in the backup file. Values are sets of setting files in those paths,
     or empty, meaning we have to list those paths and backup everything."""
     dirs = conf.dirs
-    game = 'mw'
-    settings_info = {
-        (dirs['mopy'], jo(game, u'Mopy')): {u'bash.ini', },
-        (dirs['mods'].join(u'Bash'), jo(game, u'Data', u'Bash')): {
-            u'Table.dat', },
-        (dirs['mods'].join(u'Docs'), jo(game, u'Data', u'Docs')): {
-            u'Bash Readme Template.txt', u'Bash Readme Template.html',
-            u'My Readme Template.txt', u'My Readme Template.html',
-            u'wtxt_sand_small.css', u'wtxt_teal.css', },
-        (dirs['modsBash'], jo(game + u' Mods', u'Bash Mod Data')): {
-            u'Table.dat', },
-        (dirs['modsBash'].join(u'INI Data'),
-         jo(game + u' Mods', u'Bash Mod Data', u'INI Data')): {
-           u'Table.dat', },
-        (dirs['bainData'], jo(game + u' Mods', u'Bash Installers', u'Bash')): {
-           u'Converters.dat', u'Installers.dat', },
-        (dirs['saveBase'], jo(u'My Games', game)): {
-            u'BashProfiles.dat', u'BashSettings.dat', u'BashLoadOrders.dat',
-            u'People.dat', },
-        # backup all files in Mopy\bash\l10n, Data\Bash Patches\ and
-        # Data\INI Tweaks\
-        (dirs['l10n'], jo(game, u'Mopy', u'bash', u'l10n')): {},
-        (dirs['mods'].join(u'Bash Patches'),
-         jo(game, u'Data', u'Bash Patches')): {},
-        (dirs['mods'].join(u'INI Tweaks'),
-         jo(game, u'Data', u'INI Tweaks')): {},
-    }
+    mwDir = conf.settingDefaults['mwDir']
+    parentDir = os.path.split(os.getcwd())[0]
+    #settings_info = {
+    #    (conf.dirs['mopy'], jo(game, u'Mopy')): {u'bash.ini', },
+    #    (conf.dirs['mods'].join(u'Bash'), jo(game, u'Data', u'Bash')): {
+    #        u'Table.dat', },
+    #    (conf.dirs['mods'].join(u'Docs'), jo(game, u'Data', u'Docs')): {
+    #        u'Bash Readme Template.txt', u'Bash Readme Template.html',
+    #        u'My Readme Template.txt', u'My Readme Template.html',
+    #        u'wtxt_sand_small.css', u'wtxt_teal.css', },
+    #    (conf.dirs['modsBash'], jo(game + u' Mods', u'Bash Mod Data')): {
+    #        u'Table.dat', },
+    #    (conf.dirs['modsBash'].join(u'INI Data'),
+    #     jo(game + u' Mods', u'Bash Mod Data', u'INI Data')): {
+    #       u'Table.dat', },
+    #    (conf.dirs['bainData'], jo(game + u' Mods', u'Bash Installers', u'Bash')): {
+    #       u'Converters.dat', u'Installers.dat', },
+    #    (conf.dirs['saveBase'], jo(u'My Games', game)): {
+    #        u'BashProfiles.dat', u'BashSettings.dat', u'BashLoadOrders.dat',
+    #        u'People.dat', },
+    #    # backup all files in Mopy\bash\l10n, Data\Bash Patches\ and
+    #    # Data\INI Tweaks\
+    #    (conf.dirs['l10n'], jo(game, u'Mopy', u'bash', u'l10n')): {},
+    #    (conf.dirs['mods'].join(u'Bash Patches'),
+    #     jo(game, u'Data', u'Bash Patches')): {},
+    #    (conf.dirs['mods'].join(u'INI Tweaks'),
+    #     jo(game, u'Data', u'INI Tweaks')): {},
+    #}
     #for setting_files in settings_info.itervalues():
     #    for name in set(setting_files):
     #        if name.endswith(u'.dat'): # add corresponding bak file

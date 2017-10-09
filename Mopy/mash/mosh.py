@@ -45,6 +45,7 @@ import sys
 import stat
 
 from localization import _, formatInteger, formatDate
+from conf import dirs
 
 import conf
 import bolt
@@ -60,10 +61,6 @@ bush = mush  # --Cheap code compatibility.
 mwIniFile = None  # --MWIniFile singleton
 modInfos = None  # --ModInfos singleton
 saveInfos = None  # --SaveInfos singleton
-
-# --Settings
-dirs = {}
-
 # --Default settings
 _moshSettingDefaults = {
     'mosh.modInfos.resetMTimes': 0,
@@ -3529,12 +3526,12 @@ utilsCommands = ("mish",)
 class UtilsData(DataDict):
     def __init__(self):
         """Initialize."""
-        self.dir = dirs['app']
+        self.dir = conf.dirs['app']
         self.data = {}  # --data[Path] = (ext,mtime)
 
     def refresh(self):
         """Refresh list of utilities."""
-        self.dir = dirs['app']
+        self.dir = conf.dirs['app']
         # -# Since there is only one utils file, its name is hardcoded.
         utilsFile = "utils.dcg"
         newData = {}
@@ -3604,12 +3601,12 @@ class UtilsData(DataDict):
 class ScreensData(DataDict):
     def __init__(self):
         """Initialize."""
-        self.dir = dirs['app']
+        self.dir = conf.dirs['app']
         self.data = {}  # --data[Path] = (ext,mtime)
 
     def refresh(self):
         """Refresh list of screenshots."""
-        self.dir = dirs['app']
+        self.dir = conf.dirs['app']
         ssBase = GPath(mwIniFile.getSetting('General', 'Screen Shot Base Name',
             'ScreenShot'))
         if ssBase.head:
@@ -3677,7 +3674,7 @@ class Installer(object):
     @staticmethod
     def getGhosted():
         """Returns map of real to ghosted files in mods directory."""
-        dataDir = dirs['mods']
+        dataDir = conf.dirs['mods']
         ghosts = [x for x in dataDir.list() if x.cs[-6:] == '.ghost']
         return dict(
             (x.root, x) for x in ghosts if not dataDir.join(x).root.exists())
@@ -3705,8 +3702,8 @@ class Installer(object):
         removeEmpties=False, fullRefresh=False):
         """Update old_sizeCrcDate for root directory.
         This is used both by InstallerProject's and by InstallersData."""
-        rootIsMods = (
-        apRoot == dirs['mods'])  # --Filtered scanning for mods directory.
+        # --Filtered scanning for mods directory.
+        rootIsMods = (apRoot == conf.dirs['mods'])
         norm_ghost = (rootIsMods and Installer.getGhosted()) or {}
         ghost_norm = dict((y, x) for x, y in norm_ghost.iteritems())
         rootName = apRoot.stail
@@ -4183,7 +4180,7 @@ class InstallerArchive(Installer):
         out.close()
         # --Extract files
         self.clearTemp()
-        apath = dirs['installers'].join(archive)
+        apath = conf.dirs['installers'].join(archive)
         command = '7z.exe x "%s" -y -o%s @%s' % (
         apath.s, self.tempDir.s, self.tempList.s)
         ins = os.popen(command, 'r')
@@ -4207,7 +4204,7 @@ class InstallerArchive(Installer):
     def install(self, archive, destFiles, data_sizeCrcDate, progress=None):
         """Install specified files to Oblivion\Data directory."""
         progress = progress or bolt.Progress()
-        destDir = dirs['mods']
+        destDir = conf.dirs['mods']
         destFiles = set(destFiles)
         norm_ghost = Installer.getGhosted()
         data_sizeCrc = self.data_sizeCrc
@@ -4244,7 +4241,7 @@ class InstallerArchive(Installer):
         if not files:
             return 0
         # --Clear Project
-        destDir = dirs['installers'].join(project)
+        destDir = conf.dirs['installers'].join(project)
         if destDir.exists():
             destDir.rmtree(safety='Installers')
         # --Extract
@@ -4272,7 +4269,7 @@ class InstallerProject(Installer):
     def removeEmpties(self, name):
         """Removes empty directories from project directory."""
         empties = set()
-        projectDir = dirs['installers'].join(name)
+        projectDir = conf.dirs['installers'].join(name)
         for asDir, sDirs, sFiles in os.walk(projectDir.s):
             if not (sDirs or sFiles):
                 empties.add(GPath(asDir))
@@ -4284,7 +4281,7 @@ class InstallerProject(Installer):
         """Refreshes fileSizeCrcs, size, date and modified from source archive/directory."""
         fileSizeCrcs = self.fileSizeCrcs = []
         src_sizeCrcDate = self.src_sizeCrcDate
-        apRoot = dirs['installers'].join(archive)
+        apRoot = conf.dirs['installers'].join(archive)
         Installer.refreshSizeCrcDate(apRoot, src_sizeCrcDate,
             progress, True, fullRefresh)
         cumDate = 0
@@ -4301,7 +4298,7 @@ class InstallerProject(Installer):
 
     def install(self, name, destFiles, data_sizeCrcDate, progress=None):
         """Install specified files to Oblivion\Data directory."""
-        destDir = dirs['mods']
+        destDir = conf.dirs['mods']
         destFiles = set(destFiles)
         data_sizeCrc = self.data_sizeCrc
         dest_src = dict(
@@ -4312,7 +4309,7 @@ class InstallerProject(Installer):
         # --Copy Files
         count = 0
         norm_ghost = Installer.getGhosted()
-        srcDir = dirs['installers'].join(name)
+        srcDir = conf.dirs['installers'].join(name)
         for dest, src in dest_src.iteritems():
             size, crc = data_sizeCrc[dest]
             srcFull = srcDir.join(src)
@@ -4325,7 +4322,7 @@ class InstallerProject(Installer):
 
     def syncToData(self, package, projFiles):
         """Copies specified projFiles from Oblivion\Data to project directory."""
-        srcDir = dirs['mods']
+        srcDir = conf.dirs['mods']
         projFiles = set(projFiles)
         srcProj = tuple(
             (x, y) for x, y in self.refreshDataSizeCrc().iteritems() if
@@ -4335,7 +4332,7 @@ class InstallerProject(Installer):
         # --Sync Files
         updated = removed = 0
         norm_ghost = Installer.getGhosted()
-        projDir = dirs['installers'].join(package)
+        projDir = conf.dirs['installers'].join(package)
         for src, proj in srcProj:
             srcFull = srcDir.join(norm_ghost.get(src, src))
             projFull = projDir.join(proj)
@@ -4422,7 +4419,7 @@ class InstallersData(bolt.TankData, DataDict):
         # --Refresh Other
         if 'D' in what:
             changed |= Installer.refreshSizeCrcDate(
-                dirs['mods'], self.data_sizeCrcDate, progress,
+                conf.dirs['mods'], self.data_sizeCrcDate, progress,
                 conf.settings['bash.installers.removeEmptyDirs'], fullRefresh)
         if 'I' in what:
             changed |= self.refreshRenamed()
@@ -4608,7 +4605,7 @@ class InstallersData(bolt.TankData, DataDict):
     def refreshRenamed(self):
         """Refreshes Installer.off_local from corresponding csv file."""
         changed = False
-        pRenamed = dirs['mods'].join('Mash', 'Official_Local.csv')
+        pRenamed = GPath(conf.settings['mosh.InstallersData.officialLocalCSV'])
         if not pRenamed.exists():
             changed = bool(Installer.off_local)
             self.renamedSizeDate = (0, 0)
@@ -4648,8 +4645,8 @@ class InstallersData(bolt.TankData, DataDict):
             if isinstance(self.data[i], InstallerMarker):
                 newData[i] = self.data[i]
         # newData[self.lastKey] = self.data[self.lastKey]
-        for archive in dirs['installers'].list():
-            apath = dirs['installers'].join(archive)
+        for archive in conf.dirs['installers'].list():
+            apath = conf.dirs['installers'].join(archive)
             isdir = apath.isdir()
             if isdir:
                 projects.add(archive)
@@ -4682,7 +4679,7 @@ class InstallersData(bolt.TankData, DataDict):
                 installer = newData.get(package)
                 if not installer:
                     installer = newData.setdefault(package, iClass(package))
-                apath = dirs['installers'].join(package)
+                apath = conf.dirs['installers'].join(package)
                 try:
                     installer.refreshBasic(apath,
                         SubProgress(progress, index, index + 1))
@@ -4692,7 +4689,7 @@ class InstallersData(bolt.TankData, DataDict):
         return changed
 
     def refreshRenamedNeeded(self):
-        pRenamed = dirs['mods'].join('Mash', 'Official_Local.csv')
+        pRenamed = GPath(conf.settings['mosh.InstallersData.officialLocalCSV'])
         if not pRenamed.exists():
             return bool(Installer.off_local)
         else:
@@ -4701,8 +4698,8 @@ class InstallersData(bolt.TankData, DataDict):
     def refreshInstallersNeeded(self):
         """Returns true if refreshInstallers is necessary. (Point is to skip use
         of progress dialog when possible."""
-        for archive in dirs['installers'].list():
-            apath = dirs['installers'].join(archive)
+        for archive in conf.dirs['installers'].list():
+            apath = conf.dirs['installers'].join(archive)
             if not apath.isfile() or not archive.cext in (
             '.7z', '.zip', '.rar'):
                 continue
@@ -4852,7 +4849,7 @@ class InstallersData(bolt.TankData, DataDict):
                 masked |= files
         # --Remove files
         emptyDirs = set()
-        modsDir = dirs['mods']
+        modsDir = conf.dirs['mods']
         for file in removes:
             path = modsDir.join(file)
             path.remove()
@@ -4915,7 +4912,7 @@ class InstallersData(bolt.TankData, DataDict):
                     removes.discard(file)
         # --Remove files
         emptyDirs = set()
-        modsDir = dirs['mods']
+        modsDir = conf.dirs['mods']
         for file in removes:
             path = modsDir.join(file)
             path.remove()
