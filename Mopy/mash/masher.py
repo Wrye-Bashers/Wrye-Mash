@@ -46,7 +46,9 @@ import wx.html
 from localization import _, formatInteger, formatDate
 
 import mosh
-from mosh import InstallersData, initDirs
+from mosh import InstallersData
+import marb
+from marb import initDirs
 import exception
 import bolt
 from bolt import LString,GPath, SubProgress
@@ -3144,11 +3146,10 @@ class MashApp(wx.App):
         """wxWindows: Initialization handler."""
 
         InitSettings()
+        marb.initDirs()
         # --Check/Set mwDir
-        if not self.SetMWDir():
-            return False
+        marb.BrowseToMWDir()
         # from here we are sure that the mwDir is correct
-        mosh.initDirs()
         InitLinks()
         InitImages()
         # --Init Data
@@ -3186,46 +3187,9 @@ class MashApp(wx.App):
         # -#
         return True
 
-    def SetMWDir(self):
-        """Dialog to select Morrowind installation directory. Called by OnInit()."""
-        # --Try parent directory.
-        parentDir = os.path.split(os.getcwd())[0]
-        if os.path.exists(os.path.join(parentDir, u'Morrowind.ini')):
-            conf.settings['mwDir'] = parentDir
-            conf.dirs['app'] = GPath(parentDir)
-            return True
-        # --Already set?
-        if os.path.exists(os.path.join(conf.settings['mwDir'], u'Morrowind.ini')):
-            return True
-        # --Ask user through dialog.
-        while True:
-            mwDirDialog = wx.DirDialog(None,
-                _(u"Select your Morrowind installation directory."))
-            result = mwDirDialog.ShowModal()
-            mwDir = mwDirDialog.GetPath()
-            mwDirDialog.Destroy()
-            # --User canceled?
-            if result != wx.ID_OK:
-                return False
-            # --Valid Morrowind install directory?
-            elif os.path.exists(os.path.join(mwDir, u'Morrowind.ini')):
-                conf.settings['mwDir'] = mwDir
-                conf.dirs['app'] = GPath(mwDir)
-                return True
-            # --Retry?
-            retryDialog = wx.MessageDialog(None, _(
-                u"Can't find Morrowind.ini in {!s}! Try again?".format(mwDir)),
-                _(u'Morrowind Install Directory'),
-                wx.YES_NO | wx.ICON_EXCLAMATION)
-            result = retryDialog.ShowModal()
-            retryDialog.Destroy()
-            if result != wx.ID_YES:
-                return False
-
     def InitData(self):
         """Initialize all data. Called by OnInit()."""
         mwDir = conf.settings['mwDir']
-        conf.dirs['app'] = GPath(mwDir)
         mosh.mwIniFile = mosh.MWIniFile(mwDir)
         mosh.mwIniFile.refresh()
         mosh.modInfos = mosh.ModInfos(os.path.join(mwDir, u'Data Files'))
@@ -7251,10 +7215,6 @@ def InitSettings():
     mosh.initSettings()
     # TODO: Resolve conf.settings = mosh.settings from Yacoby move
     conf.settings.loadDefaults(conf.settingDefaults)
-
-
-def InitDirs():
-    mosh.initDirs()
 
 
 # -# D.C.-G. for SettingsWindow

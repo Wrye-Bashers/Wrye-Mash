@@ -28,7 +28,9 @@ from localization import _, formatInteger, formatDate
 
 
 def findMwDir(curPath, trys):
-    if os.path.exists(os.path.join(curPath, 'Morrowind.exe')):
+    # findMwDir(os.path.realpath(__file__), 3)
+    # the above was stupid because it will return 'D:\\Wrye-Mash\\Mopy\\mash\\conf.pyc\\Morrowind.exe'
+    if os.path.exists(os.path.join(os.path.split(curPath)[0], 'Morrowind.exe')):
         return curPath
     if trys == 0:
         return curPath
@@ -45,14 +47,14 @@ settingDefaults = {
     'mash.settings.size'                          : (475, 250),
     'mash.settings.pos'                           : wx.DefaultPosition,
     # Morrowind Directory
-    'mwDir'                                       : findMwDir(os.path.realpath(__file__), 3),
+    'mwDir'                                       : findMwDir(os.getcwd(), 3),
     # Wrye Mash
     'mash.version'                                : 0,
     'mash.readme'                                 : (0, '84 DCG'),
     'mash.framePos'                               : (-1, -1),
     'mash.frameSize'                              : (600, 500),
     'mash.frameSize.min'                          : (400, 500),
-    'mash.page'                                   : 0,
+    'mash.page'                                   : 2,
     # Wrye Mash: Windows
     'mash.window.sizes'                           : {},
     # Wrye Mash: Load Lists
@@ -222,4 +224,10 @@ settingDefaults = {
     'balt.WryeLog.temp'                           : None,
     'WryeLogTemp.html'                            : None,
     'balt.WryeLog.cssDir'                         : None,
+    # mosh.py specific settings, mostly folder locations
+    'mosh.modInfos.resetMTimes': 0,
+    'mosh.modInfos.objectMaps' : None,
+    'mosh.fileInfo.backupDir'  : None,
+    'mosh.fileInfo.hiddenDir'  : None,
+    'mosh.fileInfo.snapshotDir': None,
 }
