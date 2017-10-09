@@ -62,13 +62,6 @@ mwIniFile = None  # --MWIniFile singleton
 modInfos = None  # --ModInfos singleton
 saveInfos = None  # --SaveInfos singleton
 # --Default settings
-_moshSettingDefaults = {
-    'mosh.modInfos.resetMTimes': 0,
-    'mosh.modInfos.objectMaps' : r'Mash\ObjectMaps.pkl',
-    'mosh.fileInfo.backupDir'  : r'Mash\Backups',
-    'mosh.fileInfo.hiddenDir'  : r'Mash\Hidden',
-    'mosh.fileInfo.snapshotDir': r'Mash\Snapshots',
-}
 
 
 # Data Dictionaries -----------------------------------------------------------
@@ -7126,54 +7119,6 @@ class ScheduleGenerator:
 # -#   * path not accessible pysically (missing drive or unaccessible URL);
 # -#   * the user does not have the rights to write in the destination folder.
 # ------------------------------------------------------------------------------
-def initDirs():
-    """Init directories. Assume that settings has already been initialized."""
-    # --Bash Ini
-    mashIni = None
-    if GPath('mash.ini').exists():
-        mashIni = ConfigParser.ConfigParser()
-        mashIni.read('mash.ini')
-    dirs['app'] = GPath(conf.settings['mwDir'])
-    dirs['mods'] = dirs['app'].join('Data Files')
-    # --Installers
-    if mashIni and mashIni.has_option('General', 'sInstallersDir'):
-        installers = GPath(mashIni.get('General', 'sInstallersDir').strip())
-    else:
-        installers = GPath('Installers')
-    if installers.isabs():
-        dirs['installers'] = installers
-    else:
-        dirs['installers'] = dirs['app'].join(installers)
-    # -# D.C.-G.
-    # dirs['installers'].makedirs()
-
-    # prevHead = ""
-    # head = dirs['installers'].s
-    # print sys.platform
-    # print "prevHead", prevHead, "head", head
-    # while prevHead != head:
-    # prevHead = head
-    # head, tail = os.path.split(prevHead)
-    # print "head", head, "tail", tail
-    # detecting Windows
-    if sys.platform.lower().startswith("win") == True:
-        drv, pth = os.path.splitdrive(dirs['installers'].s)
-        if os.access(drv, os.R_OK):
-            # -# Testing the directories
-            # class Dummy: chk = None
-
-            # def testDir(a, d, ds):
-            # if d in dirs['installers'].s:
-            # Dummy.chk = os.access(d, a)
-
-            # os.path.walk(dirs['installers'].s, testDir, os.F_OK)
-            # print "chk", Dummy.chk
-            # -#
-            # print "Installers directory found."
-            dirs['installers'].makedirs()
-        # -#
-
-
 # ------------------------------------------------------------------------------
 def initSettings(path='settings.pkl'):
     conf.settings = Settings(path)
@@ -7183,7 +7128,6 @@ def initSettings(path='settings.pkl'):
         if newKey != key:
             conf.settings[newKey] = conf.settings[key]
             del conf.settings[key]
-    conf.settings.loadDefaults(_moshSettingDefaults)
 
 
 # Main ------------------------------------------------------------------------
