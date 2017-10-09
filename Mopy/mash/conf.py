@@ -34,8 +34,10 @@ def findMwDir(curPath, trys):
         return curPath
     return findMwDir(os.path.dirname(curPath), trys - 1)
 
+# - Global Vars
 settings = None
 app_version = None
+dirs = {}
 
 settingDefaults = {
     # SettingsWindow

@@ -2132,7 +2132,7 @@ class InstallersPanel(SashTankPanel):
     # -# Modified to avoid system error if installers path is not reachable.
     def DoColumnMenu(self, event):
         """..."""
-        if not os.access(mosh.dirs["installers"].s, os.W_OK):
+        if not os.access(conf.dirs["installers"].s, os.W_OK):
             pass
         self.gList.DoColumnMenu(event)
 
@@ -2161,7 +2161,8 @@ class InstallersPanel(SashTankPanel):
                 if modified == True:
                     self.gList.RefreshUI()
                 if modified == "noDir":
-                    mseeage = _(u'{!s} cannot be accessed.\nThis path is possibly on a remote drive, or mispelled, or unwritable.'.format(mosh.dirs["installers"].s))
+                    mseeage = _(u'{!s} cannot be accessed.\nThis path is possibly on a remote drive, or mispelled, or unwritable.'.format(
+                        conf.dirs["installers"].s))
                     gui.dialog.WarningMessage(self, mseeage)
                 self.fullRefresh = False
                 self.frameActivated = False
@@ -3180,7 +3181,7 @@ class MashApp(wx.App):
         if conf.settings['mash.settings.show']:
             globalvars.settingsWindow = SettingsWindow()
             globalvars.settingsWindow.SetSettings(conf.settings,
-                Inst=mosh.dirs["installers"].s)
+                Inst=conf.dirs["installers"].s)
             globalvars.settingsWindow.Show()
         # -#
         return True
@@ -3191,7 +3192,7 @@ class MashApp(wx.App):
         parentDir = os.path.split(os.getcwd())[0]
         if os.path.exists(os.path.join(parentDir, u'Morrowind.ini')):
             conf.settings['mwDir'] = parentDir
-            mosh.dirs['app'] = GPath(parentDir)
+            conf.dirs['app'] = GPath(parentDir)
             return True
         # --Already set?
         if os.path.exists(os.path.join(conf.settings['mwDir'], u'Morrowind.ini')):
@@ -3209,7 +3210,7 @@ class MashApp(wx.App):
             # --Valid Morrowind install directory?
             elif os.path.exists(os.path.join(mwDir, u'Morrowind.ini')):
                 conf.settings['mwDir'] = mwDir
-                mosh.dirs['app'] = GPath(mwDir)
+                conf.dirs['app'] = GPath(mwDir)
                 return True
             # --Retry?
             retryDialog = wx.MessageDialog(None, _(
@@ -3224,7 +3225,7 @@ class MashApp(wx.App):
     def InitData(self):
         """Initialize all data. Called by OnInit()."""
         mwDir = conf.settings['mwDir']
-        mosh.dirs['app'] = GPath(mwDir)
+        conf.dirs['app'] = GPath(mwDir)
         mosh.mwIniFile = mosh.MWIniFile(mwDir)
         mosh.mwIniFile.refresh()
         mosh.modInfos = mosh.ModInfos(os.path.join(mwDir, u'Data Files'))
@@ -4620,7 +4621,7 @@ class InstallerLink(Link):
     def getProjectPath(self):
         """Returns whether build directory exists."""
         archive = self.selected[0]
-        return mosh.dirs['builds'].join(archive.sroot)
+        return conf.dirs['builds'].join(archive.sroot)
 
     def projectExists(self):
         if not len(self.selected) == 1:
@@ -4808,7 +4809,7 @@ class Installers_Open(balt.Tank_Open):
         Link.AppendToMenu(self, menu, window, data)
         menuItem = wx.MenuItem(menu, self.id, _('Open...'))
         menu.AppendItem(menuItem)
-        if not os.access(mosh.dirs["installers"].s, os.W_OK):
+        if not os.access(conf.dirs["installers"].s, os.W_OK):
             menuItem.Enable(False)
             # print menuItem.Enabled
 
@@ -4843,7 +4844,7 @@ class Installer_Refresh(InstallerLink):
             for index, archive in enumerate(self.selected):
                 progress(index, _("Refreshing Packages...\n") + archive.s)
                 installer = self.data[archive]
-                apath = mosh.dirs['installers'].join(archive)
+                apath = conf.dirs['installers'].join(archive)
                 installer.refreshBasic(apath,
                     SubProgress(progress, index, index + 1), True)
                 self.data.hasChanged = True
@@ -4919,7 +4920,7 @@ class InstallerArchive_Unpack(InstallerLink):
             if project not in self.data:
                 self.data[project] = mosh.InstallerProject(project)
             iProject = self.data[project]
-            pProject = mosh.dirs['installers'].join(project)
+            pProject = conf.dirs['installers'].join(project)
             iProject.refreshed = False
             iProject.refreshBasic(pProject, SubProgress(progress, 0.8, 0.99),
                 True)
@@ -4965,7 +4966,7 @@ class InstallerProject_Sync(InstallerLink):
         try:
             progress(0.1, _("Updating files."))
             installer.syncToData(project, missing | mismatched)
-            pProject = mosh.dirs['installers'].join(project)
+            pProject = conf.dirs['installers'].join(project)
             installer.refreshed = False
             installer.refreshBasic(pProject, SubProgress(progress, 0.1, 0.99),
                 True)
@@ -7003,7 +7004,7 @@ class Screens_NextScreenShot(Link):
         screensDir = GPath(newBase).head
         if screensDir:
             if not screensDir.isabs():
-                screensDir = mosh.dirs['app'].join(screensDir)
+                screensDir = conf.dirs['app'].join(screensDir)
             screensDir.makedirs()
         ini.saveSettings(screenShotsettings)
         globalvars.screensData.refresh()
@@ -7185,7 +7186,8 @@ class App_Settings(Link):
         """Handle menu selection."""
         if not globalvars.settingsWindow:
             globalvars.settingsWindow = SettingsWindow()
-            globalvars.settingsWindow.SetSettings(conf.settings, Inst=mosh.dirs["installers"].s, DataDir=mosh.dirs["mods"].s)
+            globalvars.settingsWindow.SetSettings(conf.settings, Inst=
+            conf.dirs["installers"].s, DataDir=conf.dirs["mods"].s)
             globalvars.settingsWindow.Show()
             conf.settings['mash.settings.show'] = True
         globalvars.settingsWindow.Raise()

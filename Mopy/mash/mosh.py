@@ -45,6 +45,7 @@ import sys
 import stat
 
 from localization import _, formatInteger, formatDate
+from conf import dirs
 
 import conf
 import bolt
@@ -60,10 +61,6 @@ bush = mush  # --Cheap code compatibility.
 mwIniFile = None  # --MWIniFile singleton
 modInfos = None  # --ModInfos singleton
 saveInfos = None  # --SaveInfos singleton
-
-# --Settings
-dirs = {}
-
 # --Default settings
 _moshSettingDefaults = {
     'mosh.modInfos.resetMTimes': 0,
@@ -3705,8 +3702,8 @@ class Installer(object):
         removeEmpties=False, fullRefresh=False):
         """Update old_sizeCrcDate for root directory.
         This is used both by InstallerProject's and by InstallersData."""
-        rootIsMods = (
-        apRoot == dirs['mods'])  # --Filtered scanning for mods directory.
+        # --Filtered scanning for mods directory.
+        rootIsMods = (apRoot == dirs['mods'])
         norm_ghost = (rootIsMods and Installer.getGhosted()) or {}
         ghost_norm = dict((y, x) for x, y in norm_ghost.iteritems())
         rootName = apRoot.stail
