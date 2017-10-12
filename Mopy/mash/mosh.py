@@ -4348,8 +4348,9 @@ class InstallersData(bolt.TankData, DataDict):
 
     def __init__(self):
         """Initialize."""
-        self.dir = dirs['installers']
-        self.bashDir = self.dir.join('Bash')
+        self.dir = conf.dirs['installers']
+        # self.bashDir = self.dir.join('Bash')
+        self.bashDir = conf.dirs['installersData']
         # --Tank Stuff
         bolt.TankData.__init__(self, conf.settings)
         self.tankKey = 'bash.installers'
@@ -4452,32 +4453,33 @@ class InstallersData(bolt.TankData, DataDict):
     def saveCfgFile(self):
         """Save the installers path to mash.ini."""
         mash_ini = False
-        if GPath('mash.ini').exists():
-            mashIni = ConfigParser.ConfigParser()
-            mashIni.read('mash.ini')
-            mash_ini = True
-            instPath = GPath(mashIni.get('General', 'sInstallersDir').strip()).s
-        else:
-            instPath = ""
-        if instPath != dirs["installers"].s:
-            if not mash_ini:
-                if os.path.exists(
-                    os.path.join(os.getcwd(), "mash_default.ini")):
-                    f = open(os.path.join(os.getcwd(), "mash_default.ini"), "r")
-                    d = f.read()
-                    f.close()
-                else:
-                    d = "[General]\n"
-                f = open(os.path.join(os.getcwd(), "mash.ini"), "w")
-                f.write(d)
-                f.close()
+        if not GPath(bolt.Path(conf.settings['mopyDir']).join('mash.ini').s).exists():
+            if GPath('mash.ini').exists():
                 mashIni = ConfigParser.ConfigParser()
                 mashIni.read('mash.ini')
-            mashIni.set("General", "sInstallersDir",
-                os.path.abspath(dirs["installers"].s))
-            f = open(os.path.join(os.getcwd(), "mash.ini"), "w")
-            mashIni.write(f)
-            f.close()
+                mash_ini = True
+                instPath = GPath(mashIni.get('General', 'sInstallersDir').strip()).s
+            else:
+                instPath = ""
+            if instPath != dirs["installers"].s:
+                if not mash_ini:
+                    if os.path.exists(
+                        os.path.join(os.getcwd(), "mash_default.ini")):
+                        f = open(os.path.join(os.getcwd(), "mash_default.ini"), "r")
+                        d = f.read()
+                        f.close()
+                    else:
+                        d = "[General]\n"
+                    f = open(os.path.join(os.getcwd(), "mash.ini"), "w")
+                    f.write(d)
+                    f.close()
+                    mashIni = ConfigParser.ConfigParser()
+                    mashIni.read('mash.ini')
+                mashIni.set("General", "sInstallersDir",
+                    os.path.abspath(dirs["installers"].s))
+                f = open(os.path.join(os.getcwd(), "mash.ini"), "w")
+                mashIni.write(f)
+                f.close()
 
     def getSorted(self, column, reverse):
         """Returns items sorted according to column and reverse."""

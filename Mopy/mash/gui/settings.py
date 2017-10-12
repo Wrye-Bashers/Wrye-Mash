@@ -144,7 +144,7 @@ class SettingsWindow(wx.MiniFrame):
             if item.Name.startswith("fld") == True and item.Name[3:] in dataMap:
                 name = dataMap[item.Name[3:]]
                 if name in dirs:
-                    dirs[name] = GPath(item.GetValue())
+                    conf.dirs[name] = GPath(item.GetValue())
         self.Close()
 
     def Close(self):
