@@ -44,12 +44,12 @@ import struct
 import sys
 import stat
 
-from localization import _, formatInteger, formatDate
+from localization import _, formatInteger, formatDate, encode, decode
 from conf import dirs
 
 import conf
 import bolt
-from bolt import LString, GPath, Flags, DataDict, SubProgress, PickleDict
+from bolt import LString, GPath, Flags, DataDict, SubProgress, PickleDict, Path
 import exception
 import compat
 import mush
@@ -2813,7 +2813,7 @@ class FileInfos(DataDict):
             os.makedirs(self.dir)
         # --Loop over files in directory
         for fileName in os.listdir(self.dir):
-            # fileName = unicode(fileName, sys.getfilesystemencoding())
+            fileName = encode(fileName, firstEncoding=Path.sys_fs_enc)
             # --Right file type?
             filePath = os.path.join(self.dir, fileName)
             if not os.path.isfile(filePath) or not self.rightFileType(fileName):
