@@ -31,7 +31,8 @@ import shutil as _shutil
 import stat
 import struct
 
-from bolt import GPath, deprint, Path, decode
+from localization import _, encode, decode
+from bolt import GPath, deprint, Path
 from exception import BoltError, CancelError, SkipError, AccessDeniedError, \
     DirectoryFileCollisionError, InvalidPathsError, FileOperationError, \
     NonExistentDriveError
