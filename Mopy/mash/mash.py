@@ -30,17 +30,17 @@ is_standalone = hasattr(sys, 'frozen')
 opts = marb.opts
 
 # File logger-------------------------------------------------------------------
-class ErrorLogger:
-    """Class can be used for a writer to write to multiple streams. Duplicated
-    in both possible startup files so log can be created without external
-    dependacies"""
-
-    def __init__(self, outStream):
-        self.outStream = outStream
-
-    def write(self, message):
-        for s in self.outStream:
-            s.write(message)
+#class ErrorLogger:
+#    """Class can be used for a writer to write to multiple streams. Duplicated
+#    in both possible startup files so log can be created without external
+#    dependacies"""
+#
+#    def __init__(self, outStream):
+#        self.outStream = outStream
+#
+#    def write(self, message):
+#        for s in self.outStream:
+#            s.write(message)
 
 
 # Functions used in startup ----------------------------------------------------
@@ -68,10 +68,10 @@ def main(opts):
     CheckWx()
 
     # Setup log file ---------------------------------------------------------------
-    f = file("WryeMash.log", "w+")
-    sys.stdout = ErrorLogger([f, sys.__stdout__])
-    sys.stderr = ErrorLogger([f, sys.__stderr__])
-    f.write("Wrye Mash Log!\n")
+    #f = file("WryeMash.log", "w+")
+    #sys.stdout = ErrorLogger([f, sys.__stdout__])
+    #sys.stderr = ErrorLogger([f, sys.__stderr__])
+    #f.write("Wrye Mash Log!\n")
 
 
     # required to be able to run this with py2exe
