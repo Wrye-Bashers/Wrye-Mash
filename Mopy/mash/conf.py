@@ -46,8 +46,29 @@ settingDefaults = {
     'mash.settings.show'                          : False,
     'mash.settings.size'                          : (475, 250),
     'mash.settings.pos'                           : wx.DefaultPosition,
-    # Morrowind Directory
-    'mwDir'                                       : findMwDir(os.getcwd(), 3),
+    # All Directories
+    # 'mwDir'                                     : findMwDir(os.getcwd(), 3),
+    'mwDir'                                       : None,
+    'mopyDir'                                       : None,
+    'mwDirParent'                              : None,
+    'sInstallersDir'                              : None,
+    # This should have only the path, not the file name
+    'mosh.InstallersData.officialLocalCSV'        : None,
+    # 'mash.mods.data'                            : None,
+    # 'mash.modDocs.dir'                          : None,
+    # 'balt.WryeLog.temp'                         : None,
+    # 'WryeLogTemp.html'                          : None,
+    # 'balt.WryeLog.cssDir'                       : None,
+    # 'mosh.fileInfo.backupDir'  : None,
+    # 'mosh.fileInfo.hiddenDir'  : None,
+    # 'mosh.fileInfo.snapshotDir': None,
+    'tes3cmd.programDir'                          : None,
+    'tes3cmd.logDir'                              : None,
+    'mloxDir'                                     : None,
+    # dirs = {}
+    # dirs['app'] = 'mwDir'
+    # dirs['mods'] = 'Data Files'
+    # dirs['installers'] = Morrowind Mods\Mash Installers
     # Wrye Mash
     'mash.version'                                : 0,
     'mash.readme'                                 : (0, '84 DCG'),
@@ -225,9 +246,10 @@ settingDefaults = {
     'WryeLogTemp.html'                            : None,
     'balt.WryeLog.cssDir'                         : None,
     # mosh.py specific settings, mostly folder locations
-    'mosh.modInfos.resetMTimes': 0,
-    'mosh.modInfos.objectMaps' : None,
-    'mosh.fileInfo.backupDir'  : None,
-    'mosh.fileInfo.hiddenDir'  : None,
-    'mosh.fileInfo.snapshotDir': None,
+    # mosh.modInfos.objectMaps is a file name of ObjectMaps.pkl
+    'mosh.modInfos.resetMTimes'                   : 0,
+    'mosh.modInfos.objectMaps'                    : None,
+    'mosh.fileInfo.backupDir'                     : None,
+    'mosh.fileInfo.hiddenDir'                     : None,
+    'mosh.fileInfo.snapshotDir'                   : None,
 }

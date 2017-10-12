@@ -51,7 +51,7 @@ import marb
 from marb import initDirs
 import exception
 import bolt
-from bolt import LString,GPath, SubProgress
+from bolt import LString,GPath, SubProgress, Path
 import balt
 from balt import tooltip, fill, bell, bitmapButton, button, toggleButton, \
     checkBox, staticText, spinCtrl, leftSash, topSash, spacer, hSizer, vSizer, \
@@ -60,7 +60,6 @@ from balt import tooltip, fill, bell, bitmapButton, button, toggleButton, \
 from gui.settings import SettingsWindow
 import conf
 import globalvars
-import exception
 # general messageboxes
 import gui.dialog
 import gui.utils
@@ -69,7 +68,7 @@ from gui.helpbrowser import HelpBrowser
 import tes3cmd
 import tes3cmd.gui
 
-#this hides the complexities of loading mlox and imports mlox to the name mlox
+# this hides the complexities of loading mlox and imports mlox to the name mlox
 from mlox.loader import importMlox
 mlox = importMlox()
 
@@ -1335,9 +1334,7 @@ class ModDetails(wx.Window):
         # sizer.Add(sizer_h2,0,wx.EXPAND)
         # --
         id = self.descriptionId = wx.NewId()
-        self.description = (
-            wx.TextCtrl(self, id, u"", size=(textWidth, 150),
-                style=wx.TE_MULTILINE))
+        self.description = (wx.TextCtrl(self, id, u"", size=(textWidth, 150), style=wx.TE_MULTILINE))
         self.description.SetMaxLength(256)
         sizer.Add(self.description)
         wx.EVT_KILL_FOCUS(self.description, self.OnEditDescription)
@@ -1412,10 +1409,10 @@ class ModDetails(wx.Window):
 
     def OnTextEdit(self, event):
         if self.modInfo and not self.edited:
-            if ((self.fileStr != self.file.GetValue()) or
-                (self.authorStr != self.author.GetValue()) or
-                (self.modifiedStr != self.modified.GetValue()) or
-                (self.descriptionStr != self.description.GetValue())):
+            if self.fileStr != self.file.GetValue() or \
+                    self.authorStr != self.author.GetValue() or \
+                    self.modifiedStr != self.modified.GetValue() or \
+                    self.descriptionStr != self.description.GetValue():
                 self.SetEdited()
         event.Skip()
 
@@ -3147,8 +3144,6 @@ class MashApp(wx.App):
 
         InitSettings()
         marb.initDirs()
-        # --Check/Set mwDir
-        marb.BrowseToMWDir()
         # from here we are sure that the mwDir is correct
         InitLinks()
         InitImages()
@@ -5395,8 +5390,7 @@ class Mods_Mlox():
         self.settingsKey = 'mash.ext.mlox.oldorder'
 
     def HasMlox(self):
-        return os.path.exists(
-            os.path.join(os.path.dirname(mlox.__file__), 'mlox.py'))
+        return GPath(bolt.Path.getcwd().join('mlox\\mlox.py').s).exists()
 
     def AddToMenu(self, menu, text):
         """
@@ -5425,7 +5419,7 @@ class Mods_Mlox():
 
     def LaunchMlox(self, event):
         cwd = os.getcwd()
-        os.chdir(os.path.dirname(mlox.__file__))
+        os.chdir(conf.settings['mloxDir'])
 
         if os.path.exists('mlox.exe'):
             os.spawnl(os.P_NOWAIT, 'mlox.exe', 'mlox.exe')
@@ -5451,7 +5445,7 @@ class Mods_Mlox():
         conf.settings['mash.ext.mlox.oldorder'] = items
 
         cwd = os.getcwd()
-        os.chdir(os.path.dirname(mlox.__file__))
+        os.chdir(conf.settings['mloxDir'])
 
         mlox.Opt.FromFile = False
         mlox.Opt.GetAll = True
@@ -5974,6 +5968,7 @@ class Mod_Tes3cmd_Clean(Link):
         if not tes3cmd.getLocation():
             menuItem.Enable(False)
 
+    # 'tes3cmd.logDir'
     def OnDone(self):
         logDir = os.path.join(conf.settings['mwDir'],
             'Data Files',

@@ -29,7 +29,7 @@ import sys
 import wx
 
 import conf
-from bolt import GPath
+from bolt import GPath, Path
 
 from localization import _, formatInteger, formatDate
 
@@ -76,18 +76,47 @@ def SameAppVersion():
 
 #TODO: Add the cPickle routines for reading settings files to here
 
+def BrowseToMWDir():
+    """Dialog to select Morrowind installation directory. Called by OnInit()."""
+    # --Ask user through dialog.
+    while True:
+        mwDirDialog = wx.DirDialog(None,
+            _(u"Select your Morrowind installation directory."))
+        result = mwDirDialog.ShowModal()
+        mwDir = mwDirDialog.GetPath()
+        mwDirDialog.Destroy()
+        # --User canceled?
+        if result != wx.ID_OK:
+            return False
+        # --Valid Morrowind install directory?
+        elif os.path.exists(os.path.join(mwDir, u'Morrowind.ini')):
+            conf.settings['mwDir'] = mwDir
+            conf.dirs['app'] = GPath(mwDir)
+            return True
+        # --Retry?
+        retryDialog = wx.MessageDialog(None, _(
+            u"Can't find Morrowind.ini in {!s}! Try again?".format(mwDir)),
+            _(u'Morrowind Install Directory'),
+            wx.YES_NO | wx.ICON_EXCLAMATION)
+        result = retryDialog.ShowModal()
+        retryDialog.Destroy()
+        if result != wx.ID_YES:
+            return False
+
 # These correspond to the directories below
 # "mosh.modInfos.objectMaps" : None,
 # "mosh.fileInfo.backupDir"  : None,
 # "mosh.fileInfo.hiddenDir"  : None,
 # "mosh.fileInfo.snapshotDir": None,
 _defaultDirectoryExtensions = {
-    'objectMaps' : r'Data Files\Mash\ObjectMaps.pkl',
-    'backupDir'  : r'Data Files\Mash\Backups',
-    'hiddenDir'  : r'Data Files\Mash\Hidden',
-    'snapshotDir': r'Data Files\Mash\Snapshots',
-    'morrowindMods': r'Morrowind Mods',
-    'bashInstallers': r'Morrowind Mods\Bash Installers',
+    'objectMaps'      : r'Data Files\Mash\ObjectMaps.pkl',
+    'backupDir'       : r'Data Files\Mash\Backups',
+    'hiddenDir'       : r'Data Files\Mash\Hidden',
+    'snapshotDir'     : r'Data Files\Mash\Snapshots',
+    'officialLocalCSV': r'Data Files\Mash\Official_Local.csv',
+    'morrowindMods'   : r'Morrowind Mods',
+    'mashInstallers'  : r'Morrowind Mods\Mash Installers',
+    'InstallersData'  : r'Morrowind Mods\Installers Data',
 }
 
 # Have we already found the morrowind.ini file
@@ -99,29 +128,71 @@ _defaultDirectoryExtensions = {
 #    conf.settings['mwDir'] = parentDir
 #    conf.dirs['app'] = GPath(parentDir)
 #    return
+#def getDataDir():
+#    cwd = os.getcwd()
+#    mwdir = os.path.dirname(cwd)
+#    return os.path.join(mwdir, 'Data Files')
+
 def initDirs():
     """Init directories. Assume that settings has already been initialized."""
     # --Bash Ini
     mashIni = None
-    parentDir = os.path.split(os.getcwd())[0]
+    if not conf.settings['mwDir']:
+        conf.settings['mopyDir'] = os.getcwd()
+        parentDir = os.path.split(conf.settings['mopyDir'])[0]
+        conf.settings['mwDir'] = parentDir
+    else:
+        parentDir = conf.settings['mwDir']
+        conf.settings['mopyDir'] = os.getcwd()
+
+    if not GPath(Path(parentDir).join('Morrowind.exe').s).exists():
+        BrowseToMWDir()
+    # These are now defined
+    # conf.settings['mwDir'] will be a string where the EXE is located
+    # conf.dirs['app'] will be a path to where the EXE is located
+
+    # mwDirParent is intended to be the parent of Morrowind, Morrowind.exe
+    # G:\Games\steamapps\common\Morrowind, parent is G:\Games\steamapps\common
+    # This parent directory is used as the prefix for the installers
+    if not conf.settings['mwDirParent']:
+        conf.settings['mwDirParent'] = conf.settings['mwDir'].split('\\Morrowind')[0]
+
+
+
     if GPath('mash.ini').exists():
         mashIni = ConfigParser.ConfigParser()
         mashIni.read('mash.ini')
-    # --Installers - stored in dirs, not settings
     # TODO: Change it so that the installers dir is in settings, not dirs
+    # --Installers
     if mashIni and mashIni.has_option('General', 'sInstallersDir'):
         conf.dirs['installers'] = GPath(mashIni.get('General', 'sInstallersDir').strip())
+        conf.settings['sInstallersDir'] = conf.dirs['installers'].s
     else:
-        temp_var = parentDir.split('\\Morrowind')[0]
-        conf.dirs['installers'] = GPath(temp_var + '\\' + _defaultDirectoryExtensions['morrowindMods'])
+        conf.settings['sInstallersDir'] = Path(conf.settings['mwDirParent']).join(_defaultDirectoryExtensions['mashInstallers']).s
+        conf.dirs['installers'] = GPath(conf.settings['sInstallersDir'])
+    # --Installers Data
+    if mashIni and mashIni.has_option('General', 'sInstallersData'):
+        conf.dirs['installersData'] = GPath(mashIni.get('General', 'sInstallersData').strip())
+        conf.settings['installersData'] = conf.dirs['installersData'].s
+    else:
+        conf.settings['installersData'] = Path(conf.settings['mwDirParent']).join(_defaultDirectoryExtensions['InstallersData']).s
+        conf.dirs['installersData'] = GPath(conf.settings['installersData'])
     # --Morrowind
     if mashIni and mashIni.has_option('General', 'sMorrowindPath'):
-        temp_var = GPath(mashIni.get('General', 'sMorrowindPath').strip())
-        conf.settings['mwDir'] = temp_var.s
-    conf.settings['mosh.fileInfo.objectMaps'] = conf.settings['mwDir'].join(_defaultDirectoryExtensions['objectMaps'])
-    conf.settings['mosh.fileInfo.backupDir'] = conf.settings['mwDir'].join(_defaultDirectoryExtensions['backupDir'])
-    conf.settings['mosh.fileInfo.hiddenDir'] = conf.settings['mwDir'].join(_defaultDirectoryExtensions['hiddenDir'])
-    conf.settings['mosh.fileInfo.snapshotDir'] = conf.settings['mwDir'].join(_defaultDirectoryExtensions['snapshotDir'])
+        conf.dirs['app'] = GPath(mashIni.get('General', 'sMorrowindPath').strip())
+        conf.settings['mwDir'] = conf.dirs['app'].s
+
+    conf.settings['mosh.fileInfo.objectMaps'] = Path(conf.settings['mwDirParent']).join(_defaultDirectoryExtensions['objectMaps']).s
+    conf.settings['mosh.fileInfo.backupDir'] = Path(conf.settings['mwDirParent']).join(_defaultDirectoryExtensions['backupDir']).s
+    conf.settings['mosh.fileInfo.hiddenDir'] = Path(conf.settings['mwDirParent']).join(_defaultDirectoryExtensions['hiddenDir']).s
+    conf.settings['mosh.fileInfo.snapshotDir'] = Path(conf.settings['mwDirParent']).join(_defaultDirectoryExtensions['snapshotDir']).s
+    conf.settings['mosh.InstallersData.officialLocalCSV'] = Path(conf.settings['mwDirParent']).join(_defaultDirectoryExtensions['officialLocalCSV']).s
+
+    if not conf.settings['mloxDir']:
+        conf.settings['mloxDir'] = conf.settings['mwDir'] + '\\Mopy\\mlox'
+        if GPath(conf.settings['mloxDir']).exists():
+             conf.dirs['mloxDir'] = GPath(conf.settings['mloxDir'])
+
     # Set System Directories
     # conf.dirs['app'] is where Morrowind.exe is located
     # conf.dirs['mods'] should resolve to folder relative to the EXE
@@ -143,32 +214,6 @@ def initDirs():
             # -#
             # print "Installers directory found."
             conf.dirs['installers'].makedirs()
-
-
-def BrowseToMWDir():
-    """Dialog to select Morrowind installation directory. Called by OnInit()."""
-    # --Ask user through dialog.
-    if not os.path.exists(conf.dirs['app'].s+u'\\Morrowind.ini'):
-        while True:
-            mwDirDialog = wx.DirDialog(None,
-                _(u"Select your Morrowind installation directory."))
-            result = mwDirDialog.ShowModal()
-            mwDir = mwDirDialog.GetPath()
-            mwDirDialog.Destroy()
-            # --User canceled?
-            if result != wx.ID_OK:
-                return False
-            # --Valid Morrowind install directory?
-            elif os.path.exists(os.path.join(mwDir, u'Morrowind.ini')):
-                conf.settings['mwDir'] = mwDir
-                conf.dirs['app'] = GPath(mwDir)
-                return True
-            # --Retry?
-            retryDialog = wx.MessageDialog(None, _(
-                u"Can't find Morrowind.ini in {!s}! Try again?".format(mwDir)),
-                _(u'Morrowind Install Directory'),
-                wx.YES_NO | wx.ICON_EXCLAMATION)
-            result = retryDialog.ShowModal()
-            retryDialog.Destroy()
-            if result != wx.ID_YES:
-                return False
+        drv, pth = os.path.splitdrive(conf.dirs['installersData'].s)
+        if os.access(drv, os.R_OK):
+            conf.dirs['installersData'].makedirs()
