@@ -3164,8 +3164,8 @@ class MashApp(wx.App):
         self.SetTopWindow(frame)
         frame.Show()
         # --Error log
-        # import errorlog
-        # errorlog.ErrorLog(frame)
+        import errorlog
+        errorlog.ErrorLog(frame)
         # --DocBrowser, JournalBrowser
         if conf.settings['mash.modDocs.show']:
             DocBrowser().Show()
