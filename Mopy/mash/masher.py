@@ -4820,13 +4820,13 @@ class Installer_Uninstall(InstallerLink):
 
     def AppendToMenu(self, menu, window, data):
         Link.AppendToMenu(self, menu, window, data)
-        menuItem = wx.MenuItem(menu, self.id, _('Uninstall'))
+        menuItem = wx.MenuItem(menu, self.id, _(u'Uninstall'))
         menu.AppendItem(menuItem)
 
     def Execute(self, event):
         """Handle selection."""
         dir = self.data.dir
-        progress = balt.Progress(_("Uninstalling..."), '\n' + ' ' * 60)
+        progress = balt.Progress(_(u"Uninstalling..."), u'\n' + u' ' * 60)
         try:
             self.data.uninstall(self.selected, progress)
         finally:
