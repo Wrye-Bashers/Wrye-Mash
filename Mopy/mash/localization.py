@@ -172,17 +172,17 @@ def compileTranslator(txtPath, pklPath):
             value = reTrans.match(value).group(2)
             translator[key] = value
 
-    key, value, mode = u'', u'', 0
+    key, value, mode = '', '', 0
     textFile = file(txtPath)
     for line in textFile:
         # --Blank line. Terminates key, value pair
         if reBlank.match(line):
             addTranslation(key, value)
-            key, value, mode = u'', u'', 0
+            key, value, mode = '', '', 0
         # --Begin key input?
         elif reSource.match(line):
             addTranslation(key, value)
-            key, value, mode = u'', u'', 1
+            key, value, mode = '', '', 1
         # --Begin value input?
         elif reValue.match(line):
             mode = 2
@@ -237,7 +237,7 @@ if locale.getlocale() == (None, None):
 language = locale.getlocale()[0].split('_', 1)[0]
 # if language.lower() == 'german': language = 'de'  # --Hack for German speakers who arne't 'DE'.
 # languagePkl, languageTxt = (os.path.join('data', language + ext) for ext in
-languagePkl, languageTxt = (os.path.join('locale', language + ext) for ext in ('.pkl', '.txt'))
+languagePkl, languageTxt = (os.path.join('mash', 'l10n', language + ext) for ext in ('.pkl', '.txt'))
 # --Recompile pkl file?
 if os.path.exists(languageTxt) and (not os.path.exists(languagePkl) or (
     os.path.getmtime(languageTxt) > os.path.getmtime(languagePkl))):

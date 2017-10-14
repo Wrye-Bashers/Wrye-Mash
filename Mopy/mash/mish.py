@@ -340,7 +340,7 @@ def getTranslatorName():
     """Prints locale."""
     import locale
     language = locale.getlocale()[0].split('_', 1)[0]
-    print "Your translator file is: Mopy\\locale\\%s.txt" % (language,)
+    print "Your translator file is: Mopy\\mash\\l10n\\%s.txt" % (language,)
 
 
 @mainFunction
@@ -349,14 +349,15 @@ def dumpTranslator():
     # --Locale Path
     import locale
     language = locale.getlocale()[0].split('_', 1)[0]
-    outPath = 'locale\\NEW%s.txt' % (language,)
+    outPath = 'l10n\\NEW%s.txt' % (language,)
     outFile = open(outPath, 'w')
     # --Scan for keys and dump to
     keyCount = 0
     dumpedKeys = set()
-    reKey = re.compile(r'_\([\'\"](.+?)[\'\"]\)')
-    for pyFile in ('mush.py', 'mosh.py', 'mash.py', 'masher.py'):
+    reKey = re.compile(r'_\([u]?[\'\"](.+?)[\'\"]\)')
+    for pyFile in ('mush.py', 'mosh.py', 'mash.py', 'masher.py', 'errorlog.py', 'exception.py', 'tes3cmd\\gui.py', 'tes3cmd\\tes3cmdgui.py'):
         pyText = open(pyFile)
+        print pyFile
         for lineNum, line in enumerate(pyText):
             line = re.sub('#.*', '', line)
             for key in reKey.findall(line):
