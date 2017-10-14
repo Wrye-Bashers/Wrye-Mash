@@ -20,13 +20,18 @@
 #  Wrye Mash copyright (C) 2005, 2006, 2007, 2008, 2009 Wrye
 #
 # =============================================================================
+import ConfigParser
 import locale
 import time
 import os
 import re
 import cPickle
+import sys
+
 import chardet
 
+sys_fs_enc = sys.getfilesystemencoding() or 'mbcs'
+pref_encoding = locale.getpreferredencoding()
 reTrans = re.compile(ur'^([ :=\.]*)(.+?)([ :=\.]*$)', re.U)
 
 # Encoding/decoding-------------------------------------------------------------
@@ -56,6 +61,11 @@ _encodingSwap = {
     'windows-1252': 'cp1252',
     'windows-1251': 'cp1251',
     'utf-8'       : 'utf8',
+}
+_translationFileSwap = {
+    'sv': 'Swedish',
+    'de': 'German',
+    'fr': 'French',
 }
 
 
@@ -95,7 +105,6 @@ def decode(byte_str, encoding=None, avoidEncodings=()):
         except UnicodeDecodeError:
             pass
     raise UnicodeDecodeError(u'Text could not be decoded using any method')
-
 
 def encode(text_str, encodings=encodingOrder, firstEncoding=None,
     returnEncoding=False):
@@ -163,17 +172,17 @@ def compileTranslator(txtPath, pklPath):
             value = reTrans.match(value).group(2)
             translator[key] = value
 
-    key, value, mode = '', '', 0
+    key, value, mode = u'', u'', 0
     textFile = file(txtPath)
     for line in textFile:
         # --Blank line. Terminates key, value pair
         if reBlank.match(line):
             addTranslation(key, value)
-            key, value, mode = '', '', 0
+            key, value, mode = u'', u'', 0
         # --Begin key input?
         elif reSource.match(line):
             addTranslation(key, value)
-            key, value, mode = '', '', 1
+            key, value, mode = u'', u'', 1
         # --Begin value input?
         elif reValue.match(line):
             mode = 2
@@ -187,8 +196,7 @@ def compileTranslator(txtPath, pklPath):
     filePath = pklPath
     tempPath = filePath + '.tmp'
     cPickle.dump(translator, open(tempPath, 'w'))
-    if os.path.exists(filePath):
-        os.remove(filePath)
+    if os.path.exists(filePath): os.remove(filePath)
     os.rename(tempPath, filePath)
 
 
@@ -209,16 +217,30 @@ def formatDate(value):
     return decode(time.strftime('%c', local), locale.getpreferredencoding())
 
 
+# Localization ----------------------------------------------------------------
+bUseUnicode = False
+bUseUTF8 = False
+if os.path.exists('mash.ini'):
+    mashIni = ConfigParser.ConfigParser()
+    mashIni.read('mash.ini')
+    for section in mashIni.sections():
+        options = mashIni.items(section)
+        for key, value in options:
+            if key == 'benableunicode':
+                bUseUnicode = mashIni.getboolean(section, key)
+            if key == 'benableutf8':
+                bUseUTF8 = mashIni.getboolean(section, key)
+
 # --Do translator test and set
-currentLocale = locale.getlocale()
 if locale.getlocale() == (None, None):
-    locale.setlocale(locale.LC_ALL, '')
+    locale.setlocale(locale.LC_ALL, u'')
 language = locale.getlocale()[0].split('_', 1)[0]
 # if language.lower() == 'german': language = 'de'  # --Hack for German speakers who arne't 'DE'.
 # languagePkl, languageTxt = (os.path.join('data', language + ext) for ext in
 languagePkl, languageTxt = (os.path.join('locale', language + ext) for ext in ('.pkl', '.txt'))
 # --Recompile pkl file?
-if os.path.exists(languageTxt) and (not os.path.exists(languagePkl) or (os.path.getmtime(languageTxt) > os.path.getmtime(languagePkl))):
+if os.path.exists(languageTxt) and (not os.path.exists(languagePkl) or (
+    os.path.getmtime(languageTxt) > os.path.getmtime(languagePkl))):
     compileTranslator(languageTxt, languagePkl)
 # --Use dictionary from pickle as translator
 if os.path.exists(languagePkl):
@@ -228,16 +250,19 @@ if os.path.exists(languagePkl):
     pklFile.close()
 
 
-    def _(text, encode=True):
-        if encode:
-            text = reEscQuote.sub("'", text.encode('string_escape'))
+    def _(text, do_encode=True):
+        if isinstance(text, unicode):
+            text = text.encode(sys_fs_enc)
+        if do_encode:
+            text = reEscQuote.sub(u"'", text.encode('string_escape'))
         head, core, tail = reTrans.match(text).groups()
         if core and core in _translator:
             text = head + _translator[core] + tail
-        if encode:
+        if do_encode:
             text = text.decode('string_escape')
-        # return _translator.get(text, text)
+        if bUseUnicode:
+            text = unicode(text, sys_fs_enc)
         return text
 else:
-    def _(text, encode=True):
+    def _(text, do_encode=True):
         return text

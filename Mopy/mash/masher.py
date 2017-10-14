@@ -43,7 +43,8 @@ from wx.lib.mixins.listctrl import ListCtrlAutoWidthMixin
 from wx.lib.evtmgr import eventManager
 import wx.html
 
-from localization import _, formatInteger, formatDate
+from localization import _, formatInteger, formatDate, encode, decode, \
+    sys_fs_enc, pref_encoding, bUseUTF8
 
 import mosh
 from mosh import InstallersData
@@ -3151,12 +3152,12 @@ class MashApp(wx.App):
         self.InitData()
         self.InitVersion()
         # TODO: move to localization
-        # --Locale (Only in later versions of wxPython??)
-        # wx.Locale encapsulates all language-dependent settings and is
-        # a generalization of the C locale concept. I have no idea if this
-        # is even needed
-        # if sys.version[:3] != '2.4':
-        # wx.Locale(wx.LOCALE_LOAD_DEFAULT)
+        # -- Set wxPython Locale
+        # wx.Locale used with SetDefaultPyEncoding to display unicode chars
+        # from localization files.
+        wx.Locale(wx.LOCALE_LOAD_DEFAULT)
+        if bUseUTF8:
+            wx.SetDefaultPyEncoding('utf8')
         # --MWFrame
         frame = MashFrame(
             pos=conf.settings['mash.framePos'],
