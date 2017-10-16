@@ -1378,10 +1378,10 @@ class ModDetails(wx.Window):
             modInfo = self.modInfo = mosh.modInfos[fileName]
             # --Remember values for edit checks
             self.fileStr = modInfo.name
-            self.authorStr = modInfo.tes3.hedr.author
+            self.authorStr = decode(modInfo.tes3.hedr.author)
             self.modifiedStr = formatDate(modInfo.mtime)
-            self.descriptionStr = modInfo.tes3.hedr.description
-            self.versionStr = u'v%0.1f' % (modInfo.tes3.hedr.version,)
+            self.descriptionStr = decode(modInfo.tes3.hedr.description)
+            self.versionStr = u'v{:0.1f}'.format(modInfo.tes3.hedr.version)
         # --Set fields
         self.file.SetValue(self.fileStr)
         self.author.SetValue(self.authorStr)
