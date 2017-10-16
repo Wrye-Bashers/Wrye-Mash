@@ -47,6 +47,7 @@ class HelperMixin:
             stderr=subprocess.PIPE,
             stdout=subprocess.PIPE)
 
+    # TODO: Check all the directories used
     def buildFixitArgs(self, hideBackups, backupDir):
         args = ['tes3cmd.exe', 'fixit']
         if hideBackups:

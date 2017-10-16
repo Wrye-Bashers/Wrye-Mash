@@ -3516,6 +3516,7 @@ class ResPacks:
 utilsCommands = ("mish",)
 
 
+# TODO: Move to gui utils
 class UtilsData(DataDict):
     def __init__(self):
         """Initialize."""
