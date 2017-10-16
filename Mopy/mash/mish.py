@@ -349,13 +349,16 @@ def dumpTranslator():
     # --Locale Path
     import locale
     language = locale.getlocale()[0].split('_', 1)[0]
-    outPath = 'l10n\\NEW%s.txt' % (language,)
+    outPath = 'l10n\\NEW{!s}.txt'.format(language)
     outFile = open(outPath, 'w')
     # --Scan for keys and dump to
     keyCount = 0
     dumpedKeys = set()
     reKey = re.compile(r'_\([u]?[\'\"](.+?)[\'\"]\)')
-    for pyFile in ('mush.py', 'mosh.py', 'mash.py', 'masher.py', 'errorlog.py', 'exception.py', 'tes3cmd\\gui.py', 'tes3cmd\\tes3cmdgui.py'):
+    for pyFile in ('mush.py', 'mosh.py', 'mash.py', 'masher.py', 'errorlog.py',
+        'exception.py', 'tes3cmd\\gui.py', 'tes3cmd\\tes3cmdgui.py',
+        'gui\\__init__.py', 'gui\\dialog.py', 'gui\\helpbrowser.py',
+        'gui\\settings.py', 'gui\\utils.py'):
         pyText = open(pyFile)
         print pyFile
         for lineNum, line in enumerate(pyText):
@@ -694,6 +697,25 @@ def temp2(fileName=None):
     csi.loadText("Wrye CharSets.etxt")
     csi.printMajors()
     # csi.save(mosh.modInfos[fileName])
+
+
+@mainFunction
+def getLocaleInfo():
+    """Output Local Info."""
+    import sys
+    import locale
+    preferedlocale  = locale.getpreferredencoding()
+    systemencoding = sys.getfilesystemencoding()
+    currentLocale  = locale.getlocale()
+    defaultlocal   = locale.getdefaultlocale()
+    fout = open('localinfo.txt', 'w')
+    fout.write(preferedlocale +'\n')
+    fout.write(systemencoding +'\n')
+    for line in range(len(currentLocale)):
+        fout.write(currentLocale[line] +'\n')
+    for line in range(len(defaultlocal)):
+        fout.write(defaultlocal[line] +'\n')
+    fout.close()
 
 
 # Main -------------------------------------------------------------------------
