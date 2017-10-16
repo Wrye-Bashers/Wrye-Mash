@@ -44,7 +44,8 @@ import struct
 import sys
 import stat
 
-from localization import _, formatInteger, formatDate, encode, decode
+from localization import _, formatInteger, formatDate, encode, decode, \
+    sys_fs_enc, pref_encoding
 from conf import dirs
 
 import conf
@@ -2280,7 +2281,7 @@ class MWIniFile:
                 if line:
                     self.postLoadLines.append(line)
                 break
-            loadFile = unicode(maLoadFile.group(1), 'latin-1')
+            loadFile = decode(maLoadFile.group(1), 'utf8')
             loadPath = os.path.join(self.ini_dir, u'Data Files', loadFile)
             loadExt = os.path.splitext(loadPath)[-1].lower()
             if len(self.loadFiles) == 255:
@@ -2308,8 +2309,7 @@ class MWIniFile:
         out.write("[Game Files]" + self.loadFilesComment + "\n")
         for loadDex in range(len(self.loadFiles)):
             loadFile = self.loadFiles[loadDex]
-            out.write('GameFile{:d}={!s}\n'.format(loadDex,
-                loadFile.encode('latin-1')))
+            out.write('GameFile{:d}={!s}\n'.format(loadDex, encode(loadFile, firstEncoding='utf8')))
         for line in self.postLoadLines:
             out.write(line)
         out.close()
@@ -2813,7 +2813,7 @@ class FileInfos(DataDict):
             os.makedirs(self.dir)
         # --Loop over files in directory
         for fileName in os.listdir(self.dir):
-            fileName = encode(fileName, firstEncoding=Path.sys_fs_enc)
+            #fileName = decode(fileName)
             # --Right file type?
             filePath = os.path.join(self.dir, fileName)
             if not os.path.isfile(filePath) or not self.rightFileType(fileName):
@@ -3765,7 +3765,7 @@ class Installer(object):
             progress(0, _("%s: Calculating CRCs...\n") % rootName)
             progress.setFull(1 + len(pending))
             try:
-                us = unicode(rpFile.s, sys.getfilesystemencoding())
+                us = decode(rpFile.s, 'utf8')
             except TypeError:
                 us = rpFile.s
             for index, rpFile in enumerate(sorted(pending)):
@@ -4139,7 +4139,7 @@ class InstallerArchive(Installer):
         file = size = crc = isdir = 0
         ins = os.popen('7z.exe l -slt "%s"' % archive.s, 'rt')
         for line in ins:
-            line = unicode(line, sys.getfilesystemencoding())
+            line = encode(line, firstEncoding=sys_fs_enc)
             maList = reList.match(line)
             if maList:
                 key, value = maList.groups()
@@ -4646,6 +4646,8 @@ class InstallersData(bolt.TankData, DataDict):
             isdir = apath.isdir()
             if isdir:
                 projects.add(archive)
+            # TODO: update this because it's not Bash anymore and there is
+            # no Bash folder anymore so no need to check for one
             if (isdir and archive != 'Bash') or archive.cext in (
             '.7z', '.zip', '.rar'):
                 installer = self.data.get(archive)
