@@ -20,7 +20,7 @@
 #  Wrye Mash copyright (C) 2005, 2006, 2007, 2008, 2009 Wrye
 #
 # =============================================================================
-import pickle
+import cPickle
 
 from ..localization import _, formatInteger, formatDate
 
@@ -98,7 +98,7 @@ class ListDragDropMixin:
             selected.append(self.listCtrl.GetItemText(idx))
 
         data = wx.CustomDataObject(u'ListItems{:d}'.format(self.listCtrl.GetId()))
-        data.SetData(pickle.dumps(selected))
+        data.SetData(cPickle.dumps(selected))
 
         ds = wx.DropSource(self.listCtrl)
         ds.SetData(data)
@@ -159,7 +159,7 @@ class ListDrop(wx.PyDropTarget):
     def OnData(self, x, y, d):
         # copy the data from the drag source to our data object
         if self.GetData():
-            selected = pickle.loads(self.data.GetData())
+            selected = cPickle.loads(self.data.GetData())
             self.setFn(x, y, selected)
 
         # what is returned signals the source what to do
