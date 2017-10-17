@@ -2350,8 +2350,18 @@ class MWIniFile:
             self.safeSave()
         return hasChanged
 
+    def isDoubleTimeFileLoaded(self, fileName=None):
+        if fileName in self.loadFiles:
+            if self.doubleTime[modInfos[fileName].mtime]:
+                return True
+        return False
+
     def refreshDoubleTime(self):
-        """Refresh arrays that keep track of doubletime mods."""
+        """Refresh arrays that keep track of doubletime mods.
+
+        doubleTime dictionary contains True or Faluse values
+        assigned to modInfos[loadFile].mtime
+        """
         doubleTime = self.doubleTime
         doubleTime.clear()
         for loadFile in self.loadFiles:
@@ -2373,16 +2383,7 @@ class MWIniFile:
         if loadFile and loadFile not in self.loadFiles:
             return True
         elif loadFile:
-            # An attempt at a fix for issue #27
-            # I am not sure why this is now needed and wasn't before.
-            # One possibility is that when modInfos gets manipulated this isn't
-            # refreshed.
-            mtime = modInfos[loadFile].mtime
-            if mtime not in self.doubleTime:
-                self.refreshDoubleTime()
-            return not self.doubleTime[mtime]
-        else:
-            return not (True in self.doubleTime.values())
+            return not self.isDoubleTimeFileLoaded(loadFile)
 
     def getDoubleTimeFiles(self):
         dtLoadFiles = []
@@ -2423,7 +2424,9 @@ class MWIniFile:
             self.loadFiles.remove(modFile)
             if doSave:
                 self.safeSave()
-        self.refreshDoubleTime()
+        # no need to refresh DoubleTime files here because it is done after
+        # uninstalling the files in ModInfos
+        # self.refreshDoubleTime()
         self.loadOrder = modInfos.getLoadOrder(self.loadFiles)
 
 
@@ -3086,6 +3089,8 @@ class ModInfos(FileInfos):
             for loadFile in mwIniFile.loadFiles[:]:
                 if loadFile not in self.data:
                     self.unload(loadFile)
+            # Since we refreshDoubleTime here there is no need to do that
+            # after uninstalling the file in MWIniFile.unload()
             self.refreshDoubleTime()
         # --Update mwIniLoadOrder
         mwIniFile.loadOrder = modInfos.getLoadOrder(mwIniFile.loadFiles)
@@ -3103,7 +3108,11 @@ class ModInfos(FileInfos):
                 self.mtimesReset.append(fileName)
 
     def refreshDoubleTime(self):
-        """Refresh doubletime dictionary."""
+        """Refresh doubletime dictionary.
+
+        doubleTime dictionary contains True or Faluse values
+        assigned to modInfos[loadFile].mtime
+        """
         doubleTime = self.doubleTime
         doubleTime.clear()
         for modInfo in self.data.values():

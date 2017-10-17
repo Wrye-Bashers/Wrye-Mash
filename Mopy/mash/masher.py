@@ -633,20 +633,15 @@ class MasterList(guiWxList):
                 self.list.SetStringItem(itemDex, colDex, value)
         # --Text BG
         if not mosh.mwIniFile.isWellOrdered(masterName):
-            self.list.SetItemBackgroundColour(itemDex,
-                colors['mash.doubleTime.load'])
+            self.list.SetItemBackgroundColour(itemDex, colors['mash.doubleTime.load'])
         elif masterInfo.getObjectMap():
-            self.list.SetItemBackgroundColour(itemDex,
-                colors['mash.masters.remapped'])
+            self.list.SetItemBackgroundColour(itemDex, colors['mash.masters.remapped'])
         elif masterInfo.hasChanged():
-            self.list.SetItemBackgroundColour(itemDex,
-                colors['mash.masters.changed'])
+            self.list.SetItemBackgroundColour(itemDex, colors['mash.masters.changed'])
         elif masterInfo.isExOverLoaded():
-            self.list.SetItemBackgroundColour(itemDex,
-                colors['mash.exOverLoaded'])
+            self.list.SetItemBackgroundColour(itemDex, colors['mash.exOverLoaded'])
         elif not masterInfo.isWellOrdered():
-            self.list.SetItemBackgroundColour(itemDex,
-                colors['mash.doubleTime.exists'])
+            self.list.SetItemBackgroundColour(itemDex, colors['mash.doubleTime.exists'])
         elif masterName[-1].lower() == 'm':
             self.list.SetItemBackgroundColour(itemDex, colors['mash.esm'])
         else:
@@ -993,19 +988,15 @@ class ModList(guiWxList, gui.ListDragDropMixin):
                 self.list.SetStringItem(itemDex, colDex, value)
         # --Text BG
         if not mosh.mwIniFile.isWellOrdered(fileName):
-            self.list.SetItemBackgroundColour(itemDex,
-                colors['mash.doubleTime.load'])
+            self.list.SetItemBackgroundColour(itemDex, colors['mash.doubleTime.load'])
         elif fileInfo.isExOverLoaded():
-            self.list.SetItemBackgroundColour(itemDex,
-                colors['mash.exOverLoaded'])
+            self.list.SetItemBackgroundColour(itemDex, colors['mash.exOverLoaded'])
         elif not fileInfo.isWellOrdered():
-            self.list.SetItemBackgroundColour(itemDex,
-                colors['mash.doubleTime.exists'])
+            self.list.SetItemBackgroundColour(itemDex, colors['mash.doubleTime.exists'])
         elif fileName[-1].lower() == 'm':
             self.list.SetItemBackgroundColour(itemDex, colors['mash.esm'])
         else:
-            self.list.SetItemBackgroundColour(itemDex,
-                colors['mash.doubleTime.not'])
+            self.list.SetItemBackgroundColour(itemDex, colors['mash.doubleTime.not'])
         # --Image
         status = fileInfo.getStatus()
         on = fileInfo.name in mosh.mwIniFile.loadFiles
@@ -7249,8 +7240,8 @@ def InitImages():
     # --Colors
     colors['mash.esm'] = (220, 220, 255)
     colors['mash.doubleTime.not'] = 'WHITE'
-    colors['mash.doubleTime.exists'] = (255, 220, 220)
-    colors['mash.doubleTime.load'] = (255, 100, 100)
+    colors['mash.doubleTime.exists'] = (255, 220, 220) # DT-Inactive
+    colors['mash.doubleTime.load'] = (255, 100, 100) # DT-Active
     colors['mash.exOverLoaded'] = (0xFF, 0x99, 0)
     colors['mash.masters.remapped'] = (100, 255, 100)
     colors['mash.masters.changed'] = (220, 255, 220)
