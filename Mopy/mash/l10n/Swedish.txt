@@ -1,0 +1,1581 @@
+=== mosh.py, 495
+Scale must not equal zero!
+>>>>
+
+=== mosh.py, 684
+Data changed:
+>>>>
+
+=== mosh.py, 686
+Data undefined:
+>>>>
+
+=== mosh.py, 836
+Type must be either LEVC or LEVI.
+>>>>
+
+=== mosh.py, 891
+No id for %s record.
+>>>>
+
+=== mosh.py, 985
+Extraneous subrecord (%s) in %s record.
+>>>>
+
+=== mosh.py, 1157
+: Second NAM0 subrecord.
+>>>>
+
+=== mosh.py, 1339
+DIAL %d %s: Unexpected subrecords
+>>>>
+
+=== mosh.py, 1347
+Dialog %s: info with missing id.
+>>>>
+
+=== mosh.py, 1912
+Unknown SCPT record:
+>>>>
+
+=== mosh.py, 1916
+SCPT %d %s: Unexpected subrecords
+>>>>
+
+=== mosh.py, 1924
+SCPT.RNAM
+>>>>
+
+=== mosh.py, 2268
+Morrowind.ini: [GameFiles] section not found.
+>>>>
+
+=== mosh.py, 2305
+Morrowind.ini has changed
+>>>>
+
+=== mosh.py, 2569
+Expected TES3, but got
+>>>>
+
+=== mosh.py, 2751
+%s Snapshots|%s|All Snapshots|*.esp;*.esm;*.ess
+>>>>
+
+=== mosh.py, 3046
+Copying Files...
+>>>>
+
+=== mosh.py, 3363
+[No Journal Record Found.]
+>>>>
+
+=== mosh.py, 3377
+[Error reading file.]
+>>>>
+
+=== mosh.py, 3721
+%s: Pre-Scanning...
+>>>>
+
+=== mosh.py, 3727
+%s: Pre-Scanning...\n%s
+>>>>
+
+=== mosh.py, 3734
+%s: Scanning...
+>>>>
+
+=== mosh.py, 3774
+%s: Calculating CRCs...\n
+>>>>
+
+=== mosh.py, 3781
+%s: Calculating CRCs...\n%s
+>>>>
+
+=== mosh.py, 4177
+No files to extract for %s.
+>>>>
+
+=== mosh.py, 4199
+Extraction failed.
+>>>>
+
+=== mosh.py, 4220
+\nExtracting files...
+>>>>
+
+=== mosh.py, 4225
+\nMoving files...
+>>>>
+
+=== mosh.py, 4368
+Installers
+>>>>
+
+=== mosh.py, 4412
+Loading Data...
+>>>>
+
+=== mosh.py, 4682
+Scanning Packages...
+>>>>
+
+=== mosh.py, 4685
+Scanning Packages...\n
+>>>>
+
+=== mosh.py, 4987
+Lower
+>>>>
+
+=== mosh.py, 4987
+Higher
+>>>>
+
+=== mosh.py, 4995
+No Underrides. Mod is not completely un-installed.
+>>>>
+
+=== mosh.py, 5184
+Insufficient data to write file.
+>>>>
+
+=== mosh.py, 5276
+: Attempted to access damaged file.
+>>>>
+
+=== mosh.py, 5418
+FileRefs.renumberObjects is for esps only.
+>>>>
+
+=== mosh.py, 5432
+First index should be a positive integer
+>>>>
+
+=== mosh.py, 5558
+Detached Global Scripts
+>>>>
+
+=== mosh.py, 5709
+Records added:
+>>>>
+
+=== mosh.py, 5715
+References replaced:
+>>>>
+
+=== mosh.py, 5795
+Building
+>>>>
+
+=== mosh.py, 5820
+NO SUCH MASTER
+>>>>
+
+=== mosh.py, 5858
+Misordered esm: %s should load before %s
+>>>>
+
+=== mosh.py, 5893
+Cannot remove save debris from a non-save game!
+>>>>
+
+=== mosh.py, 5919
+Debris %s:
+>>>>
+
+=== mosh.py, 5936
+Overriding Lists
+>>>>
+
+=== mosh.py, 5961
+BAD DELETE>>DELETED %d %d %s
+>>>>
+
+=== mosh.py, 5962
+BAD REF>>REMATCHED  %d %d %s %d
+>>>>
+
+=== mosh.py, 5963
+BAD REF>>NO MASTER  %d %d %s
+>>>>
+
+=== mosh.py, 5964
+BAD REF>>DOUBLED    %d %d %s
+>>>>
+
+=== mosh.py, 5988
+Debris Cell Name:
+>>>>
+
+=== mosh.py, 6082
+Drawing Cells
+>>>>
+
+=== mosh.py, 6208
+Updated
+>>>>
+
+=== mosh.py, 6208
+Unmatched
+>>>>
+
+=== mosh.py, 6214
+Trimmed
+>>>>
+
+=== mosh.py, 6508
+Merged %s Lists:
+>>>>
+
+=== mosh.py, 6642
+Bad number of stats for class
+>>>>
+
+=== mosh.py, 6831
+IMPORT:
+>>>>
+
+=== mosh.py, 6839
+  [%s already imported.]
+>>>>
+
+=== mosh.py, 6848
+PROJECT:
+>>>>
+
+=== mosh.py, 6891
+Bad sleep condition state for %s in %s: %s
+>>>>
+
+=== mosh.py, 6916
+Pos cell not defined for %s %s %d
+>>>>
+
+=== mosh.py, 7025
+No project has been defined!
+>>>>
+
+=== mosh.py, 7149
+Compiled
+>>>>
+
+=== masher.py, 394
+Add
+>>>>
+
+=== masher.py, 398
+Edit
+>>>>
+
+=== masher.py, 402
+Rename
+>>>>
+
+=== masher.py, 406
+Remove
+>>>>
+
+=== masher.py, 456
+Rename to:
+>>>>
+
+=== masher.py, 467
+Name must be unique.
+>>>>
+
+=== masher.py, 686
+Unrecognized sort key:
+>>>>
+
+=== masher.py, 841
+Edit/update the masters list? Note that the update process will automatically fix some problems. Be sure to review the changes before saving.
+>>>>
+
+=== masher.py, 842
+Update Masters
+>>>>
+
+=== masher.py, 883
+Missing master:
+>>>>
+
+=== masher.py, 1162
+Must be sorted by Modified to enable ctrl based sorting.
+>>>>
+Debe tener el texto aquí <<-- Replace this with Swedish text
+
+=== masher.py, 1287
+Morrowind Mod File
+>>>>
+
+=== masher.py, 1420
+Incorrect file extension:
+>>>>
+
+=== masher.py, 1424
+File %s already exists.
+>>>>
+
+=== masher.py, 1449
+Unrecognized date:
+>>>>
+
+=== masher.py, 1453
+Mash cannot handle files dates greater than January 19, 2038.)
+>>>>
+
+=== masher.py, 1510
+Saving
+>>>>
+
+=== masher.py, 1514
+Remap Masters
+>>>>
+
+=== masher.py, 1530
+File corrupted on save!
+>>>>
+
+=== masher.py, 1726
+Morrowind Save File
+>>>>
+
+=== masher.py, 2075
+General
+>>>>
+
+=== masher.py, 2076
+Matched
+>>>>
+
+=== masher.py, 2077
+Missing
+>>>>
+
+=== masher.py, 2078
+Mismatched
+>>>>
+
+=== masher.py, 2079
+Conflicts
+>>>>
+
+=== masher.py, 2080
+Underridden
+>>>>
+
+=== masher.py, 2081
+Dirty
+>>>>
+
+=== masher.py, 2082
+Skipped
+>>>>
+
+=== masher.py, 2109
+Sub-Packages
+>>>>
+
+=== masher.py, 2113
+Esp/m Filter
+>>>>
+
+=== masher.py, 2117
+Comments
+>>>>
+
+=== masher.py, 2134
+Do you want to enable Installers If you do, Bash will first need to initialize some data. If you have many mods installed, this can take on the order of five minutes.\n\nIf you prefer to not enable Installers at this time, you can always enable it later from the column header context menu.
+>>>>
+
+=== masher.py, 2146
+Refreshing Installers...
+>>>>
+
+=== masher.py, 2179
+Packages: {:d}/{:d}
+>>>>
+
+=== masher.py, 2256
+[None]
+>>>>
+
+=== masher.py, 2284
+== Overview\n
+>>>>
+
+=== masher.py, 2285
+Type:
+>>>>
+
+=== masher.py, 2286
+Archive
+>>>>
+
+=== masher.py, 2286
+Project
+>>>>
+
+=== masher.py, 2290
+Structure: Simple\n
+>>>>
+
+=== masher.py, 2293
+Structure: Complex/Simple\n
+>>>>
+
+=== masher.py, 2295
+Structure: Complex\n
+>>>>
+
+=== masher.py, 2297
+Structure: Corrupt/Incomplete\n
+>>>>
+
+=== masher.py, 2299
+Structure: Unrecognized\n
+>>>>
+
+=== masher.py, 2314
+== Configured Files
+>>>>
+
+=== masher.py, 2333
+== Skipped (Extension)
+>>>>
+
+=== masher.py, 2335
+== Skipped (Dir)
+>>>>
+
+=== masher.py, 2534
+Utilities
+>>>>
+
+=== masher.py, 2537
+Mods
+>>>>
+
+=== masher.py, 2538
+Saves
+>>>>
+
+=== masher.py, 2539
+Screenshots
+>>>>
+
+=== masher.py, 2679
+Missing files have been removed from load list. (%s)
+>>>>
+
+=== masher.py, 2686
+Load list has been truncated because it was too long. (%s)
+>>>>
+
+=== masher.py, 2694
+The following mod files have corrupted headers:
+>>>>
+
+=== masher.py, 2701
+The following save files have corrupted headers:
+>>>>
+
+=== masher.py, 2776
+Doc Browser
+>>>>
+
+=== masher.py, 2789
+Set Doc...
+>>>>
+
+=== masher.py, 2792
+Forget Doc...
+>>>>
+
+=== masher.py, 2795
+Rename Doc...
+>>>>
+
+=== masher.py, 2798
+Edit Doc...
+>>>>
+
+=== masher.py, 2905
+Select doc for {!s}:
+>>>>
+
+=== masher.py, 2923
+Rename file to:
+>>>>
+
+=== masher.py, 2954
+Filename not defined.
+>>>>
+
+=== masher.py, 2999
+My Readme Template.txt
+>>>>
+
+=== masher.py, 3001
+Mash Readme Template.txt
+>>>>
+
+=== masher.py, 3088
+Journal
+>>>>
+
+=== masher.py, 3286
+Open...
+>>>>
+
+=== masher.py, 3330
+Unhide...
+>>>>
+
+=== masher.py, 3360
+You can't unhide files from this directory.
+>>>>
+
+=== masher.py, 3366
+File skipped: %s. File is already present.
+>>>>
+
+=== masher.py, 3382
+Delete
+>>>>
+
+=== masher.py, 3388
+Delete Files
+>>>>
+
+=== masher.py, 3409
+Duplicate...
+>>>>
+
+=== masher.py, 3423
+Duplicate as:
+>>>>
+
+=== masher.py, 3432
+Files cannot be duplicated to themselves!
+>>>>
+
+=== masher.py, 3449
+Hide
+>>>>
+
+=== masher.py, 3456
+Hide Files
+>>>>
+
+=== masher.py, 3493
+Move To...
+>>>>
+
+=== masher.py, 3523
+Redate...
+>>>>
+
+=== masher.py, 3539
+Redate selected mods starting at...
+>>>>
+
+=== masher.py, 3540
+Redate Mods
+>>>>
+
+=== masher.py, 3553
+Mash cannot handle dates greater than January 19, 2038.)
+>>>>
+
+=== masher.py, 3570
+Sort
+>>>>
+
+=== masher.py, 3580
+Sort Mods
+>>>>
+
+=== masher.py, 3600
+Snapshot...
+>>>>
+
+=== masher.py, 3613
+Save snapshot as:
+>>>>
+
+=== masher.py, 3644
+Revert to Snapshot...
+>>>>
+
+=== masher.py, 3660
+Revert %s to snapshot:
+>>>>
+
+=== masher.py, 3669
+Revert %s to snapshot %s dated %s?
+>>>>
+
+=== masher.py, 3672
+Revert to Snapshot
+>>>>
+
+=== masher.py, 3684
+Snapshot file is corrupt!
+>>>>
+
+=== masher.py, 3696
+Backup
+>>>>
+
+=== masher.py, 3735
+Revert to Backup
+>>>>
+
+=== masher.py, 3743
+Revert to First Backup
+>>>>
+
+=== masher.py, 3758
+Revert %s to backup dated %s?
+>>>>
+
+=== masher.py, 3770
+Old file is corrupt!
+>>>>
+
+=== masher.py, 3796
+Cell Name:
+>>>>
+
+=== masher.py, 3797
+Add Safe Cell
+>>>>
+
+=== masher.py, 3841
+Select Ref Remover file or files:
+>>>>
+
+=== masher.py, 3854
+Combo %d
+>>>>
+
+=== masher.py, 3867
+Name must be between 1 and 64 characters long.
+>>>>
+
+=== masher.py, 3900
+Edit Removers...
+>>>>
+
+=== masher.py, 3901
+Edit Safe Cells...
+>>>>
+
+=== masher.py, 3924
+Remove Refs by Id...
+>>>>
+
+=== masher.py, 3943
+Refs Removed:
+>>>>
+
+=== masher.py, 3962
+Safe Cells
+>>>>
+
+=== masher.py, 3971
+Ref Removers
+>>>>
+
+=== masher.py, 3997
+Select Ref Replacer list file:
+>>>>
+
+=== masher.py, 4047
+Edit Replacers...
+>>>>
+
+=== masher.py, 4069
+Replace Refs by Id...
+>>>>
+
+=== masher.py, 4074
+Refs Replaced:
+>>>>
+
+=== masher.py, 4091
+Source mod %s is not in Data Files folder.
+>>>>
+
+=== masher.py, 4093
+Source Mod
+>>>>
+
+=== masher.py, 4094
+None
+>>>>
+
+=== masher.py, 4099
+No replacements necessary.
+>>>>
+
+=== masher.py, 4115
+Ref Replacers
+>>>>
+
+=== masher.py, 4127
+Repair Refs
+>>>>
+
+=== masher.py, 4139
+File master list is out of date. Please edit masters before attempting repair.
+>>>>
+
+=== masher.py, 4145
+Repairing
+>>>>
+
+=== masher.py, 4157
+\nExample Bad Ref from %s:
+>>>>
+
+=== masher.py, 4160
+\n  Mod Index: %d (%s)
+>>>>
+
+=== masher.py, 4174
+No problems found!
+>>>>
+
+=== masher.py, 4180
+Objects repaired: %d.\nObjects deleted: %d.
+>>>>
+
+=== masher.py, 4200
+Sort Records
+>>>>
+
+=== masher.py, 4211
+Sort Records...
+>>>>
+
+=== masher.py, 4219
+Record sort completed.
+>>>>
+
+=== masher.py, 4299
+Statistics
+>>>>
+
+=== masher.py, 4326
+Add Marker...
+>>>>
+
+=== masher.py, 4331
+Enter a title:
+>>>>
+
+=== masher.py, 4331
+Add Marker
+>>>>
+
+=== masher.py, 4346
+Anneal All
+>>>>
+
+=== masher.py, 4351
+Annealing...
+>>>>
+
+=== masher.py, 4366
+Auto-Anneal
+>>>>
+
+=== masher.py, 4382
+Enabled
+>>>>
+
+=== masher.py, 4410
+Show Inactive Conflicts
+>>>>
+
+=== masher.py, 4427
+Show Lower Conflicts
+>>>>
+
+=== masher.py, 4444
+Avoid at Startup
+>>>>
+
+=== masher.py, 4466
+Refresh Data
+>>>>
+
+=== masher.py, 4466
+Full Refresh
+>>>>
+
+=== masher.py, 4488
+Clean Data Directory
+>>>>
+
+=== masher.py, 4505
+Sort by Active
+>>>>
+
+=== masher.py, 4521
+Projects First
+>>>>
+
+=== masher.py, 4537
+Sort by Structure
+>>>>
+
+=== masher.py, 4589
+Anneal
+>>>>
+
+=== masher.py, 4636
+ Copy (%d)
+>>>>
+
+=== masher.py, 4638
+Duplicate %s to:
+>>>>
+
+=== masher.py, 4646
+%s is not a valid name.
+>>>>
+
+=== masher.py, 4649
+%s already exists.
+>>>>
+
+=== masher.py, 4654
+%s does not have correct extension (%s).
+>>>>
+
+=== masher.py, 4672
+Has Extra Directories
+>>>>
+
+=== masher.py, 4693
+Install
+>>>>
+
+=== masher.py, 4693
+Install Last
+>>>>
+
+=== masher.py, 4694
+Install Missing
+>>>>
+
+=== masher.py, 4709
+Installing...
+>>>>
+
+=== masher.py, 4739
+Position must be an integer.
+>>>>
+
+=== masher.py, 4786
+Refresh
+>>>>
+
+=== masher.py, 4792
+Refreshing Packages...
+>>>>
+
+=== masher.py, 4796
+Refreshing Packages...\n
+>>>>
+
+=== masher.py, 4815
+Uninstall
+>>>>
+
+=== masher.py, 4821
+Uninstalling...
+>>>>
+
+=== masher.py, 4837
+Unpack to Project...
+>>>>
+
+=== masher.py, 4847
+Unpack %s to Project:
+>>>>
+
+=== masher.py, 4856
+%s is not a valid project name.
+>>>>
+
+=== masher.py, 4859
+%s is a file.
+>>>>
+
+=== masher.py, 4863
+%s already exists. Overwrite it?
+>>>>
+
+=== masher.py, 4867
+Unpacking to Project...
+>>>>
+
+=== masher.py, 4895
+Sync from Data
+>>>>
+
+=== masher.py, 4918
+Updating files.
+>>>>
+
+=== masher.py, 4936
+Sync and Pack
+>>>>
+
+=== masher.py, 4950
+Pack Archive
+>>>>
+
+=== masher.py, 5012
+All
+>>>>
+
+=== masher.py, 5014
+Save List...
+>>>>
+
+=== masher.py, 5015
+Edit Lists...
+>>>>
+
+=== masher.py, 5046
+Unable to add mod %s because load list is full.
+>>>>
+
+=== masher.py, 5075
+Save current load list as:
+>>>>
+
+=== masher.py, 5082
+Load list name must be between 1 and 64 characters long.
+>>>>
+
+=== masher.py, 5092
+Load Lists
+>>>>
+
+=== masher.py, 5107
+Type
+>>>>
+
+=== masher.py, 5123
+Copy Active Mods
+>>>>
+
+=== masher.py, 5128
+Active Mods
+>>>>
+
+=== masher.py, 5145
+Morrowind.ini...
+>>>>
+
+=== masher.py, 5165
+Selection
+>>>>
+
+=== masher.py, 5183
+Lock Times
+>>>>
+
+=== masher.py, 5248
+Replacers...
+>>>>
+
+=== masher.py, 5254
+Replacers
+>>>>
+
+=== masher.py, 5266
+INI Tweaks...
+>>>>
+
+=== masher.py, 5275
+INI Tweaks
+>>>>
+
+=== masher.py, 5289
+%s applied.
+>>>>
+
+=== masher.py, 5297
+Fixit
+>>>>
+
+=== masher.py, 5401
+Launch Mlox
+>>>>
+
+=== masher.py, 5402
+Sort Using Mlox
+>>>>
+
+=== masher.py, 5404
+Revert Changes
+>>>>
+
+=== masher.py, 5420
+Couldn\'t find mlox.exe to launch
+>>>>
+
+=== masher.py, 5431
+Cannot revert. Nothing to revert to
+>>>>
+
+=== masher.py, 5607
+Edit Groups...
+>>>>
+
+=== masher.py, 5608
+Groups
+>>>>
+
+=== masher.py, 5609
+Add group:
+>>>>
+
+=== masher.py, 5622
+Edit Ratings...
+>>>>
+
+=== masher.py, 5623
+Ratings
+>>>>
+
+=== masher.py, 5624
+Add rating:
+>>>>
+
+=== masher.py, 5635
+Copy to Esm
+>>>>
+
+=== masher.py, 5642
+Copy to Esp
+>>>>
+
+=== masher.py, 5654
+Replace existing %s?
+>>>>
+
+=== masher.py, 5674
+Dialogue
+>>>>
+
+=== masher.py, 5684
+Export dialogs to:
+>>>>
+
+=== masher.py, 5706
+Scripts
+>>>>
+
+=== masher.py, 5716
+Export scripts to:
+>>>>
+
+=== masher.py, 5752
+Import dialogs from:
+>>>>
+
+=== masher.py, 5781
+LCV Schedules
+>>>>
+
+=== masher.py, 5792
+Import LCV Schedules...
+>>>>
+
+=== masher.py, 5815
+Import LCV schedules from:
+>>>>
+
+=== masher.py, 5842
+Merged Lists
+>>>>
+
+=== masher.py, 5858
+Loading
+>>>>
+
+=== masher.py, 5884
+Saving:
+>>>>
+
+=== masher.py, 5904
+No lists required merging.
+>>>>
+
+=== masher.py, 5927
+Import scripts from:
+>>>>
+
+=== masher.py, 5948
+Scripts changed:\n*
+>>>>
+
+=== masher.py, 5951
+No scripts changed.
+>>>>
+
+=== masher.py, 5958
+Clean Selected
+>>>>
+
+=== masher.py, 5992
+Renumber Refs
+>>>>
+
+=== masher.py, 6002
+Renumbers new objects placed by esp, thus reducing likelihood of local ref conflicts between mods. Note that using TESCS on this mod will undo this renumbering. Also if an existing save game depends on this mod, doubling will likely result.
+>>>>
+
+=== masher.py, 6003
+Renumber References...
+>>>>
+
+=== masher.py, 6012
+Renumbering
+>>>>
+
+=== masher.py, 6021
+No local references to renumber.
+>>>>
+
+=== masher.py, 6027
+Enter first objectIndex. [Current value: %d]
+>>>>
+
+=== masher.py, 6028
+First Object Index
+>>>>
+
+=== masher.py, 6034
+Object index must be an integer in range 1:100,000.
+>>>>
+
+=== masher.py, 6038
+New object index is same as old object index!
+>>>>
+
+=== masher.py, 6044
+References changed: %d.
+>>>>
+
+=== masher.py, 6068
+Readme...
+>>>>
+
+=== masher.py, 6110
+Morrowind Mod Files
+>>>>
+
+=== masher.py, 6112
+Select previous version:
+>>>>
+
+=== masher.py, 6124
+Previous mod file must be located in Data Files directory.
+>>>>
+
+=== masher.py, 6150
+No updater required for conversion from %s to %s.
+>>>>
+
+=== masher.py, 6161
+Updaters...
+>>>>
+
+=== masher.py, 6169
+Updaters
+>>>>
+
+=== masher.py, 6199
+Enter profile name:
+>>>>
+
+=== masher.py, 6219
+ cannot be renamed.
+>>>>
+
+=== masher.py, 6239
+Active profile cannot be removed.
+>>>>
+
+=== masher.py, 6242
+Default profile cannot be removed.
+>>>>
+
+=== masher.py, 6252
+Delete Profile
+>>>>
+
+=== masher.py, 6270
+Default
+>>>>
+
+=== masher.py, 6284
+Edit Profiles...
+>>>>
+
+=== masher.py, 6303
+Save Profiles
+>>>>
+
+=== masher.py, 6326
+Moving Files
+>>>>
+
+=== masher.py, 6360
+World Map Gridlines
+>>>>
+
+=== masher.py, 6381
+ Copy
+>>>>
+
+=== masher.py, 6386
+Duplicate
+>>>>
+
+=== masher.py, 6424
+Load Masters
+>>>>
+
+=== masher.py, 6452
+Please update masters to correct for missing masters (%s).
+>>>>
+
+=== masher.py, 6462
+Map Notes
+>>>>
+
+=== masher.py, 6473
+Map Notes:
+>>>>
+
+=== masher.py, 6498
+Spawned Creatures
+>>>>
+
+=== masher.py, 6519
+%d spawn points removed/reset.
+>>>>
+
+=== masher.py, 6521
+No spawn points to remove/reset!
+>>>>
+
+=== masher.py, 6534
+Debris Cells
+>>>>
+
+=== masher.py, 6546
+Remove Debris Cells
+>>>>
+
+=== masher.py, 6556
+Removing Debris Cells
+>>>>
+
+=== masher.py, 6583
+No orphaned content present.
+>>>>
+
+=== masher.py, 6596
+Repair All
+>>>>
+
+=== masher.py, 6644
+Orphaned content records:
+>>>>
+
+=== masher.py, 6647
+Overriding lists:
+>>>>
+
+=== masher.py, 6659
+\nDebris records deleted: %d.\nOrphan contents deleted: %d.
+>>>>
+
+=== masher.py, 6660
+\nOverriding lists deleted: %d.
+>>>>
+
+=== masher.py, 6677
+Review
+>>>>
+
+=== masher.py, 6690
+Review of
+>>>>
+
+=== masher.py, 6701
+Nothing noteworthy found.
+>>>>
+
+=== masher.py, 6717
+Journal...
+>>>>
+
+=== masher.py, 6737
+Update Map
+>>>>
+
+=== masher.py, 6755
+Re-mapping
+>>>>
+
+=== masher.py, 6783
+World map updated.
+>>>>
+
+=== masher.py, 6800
+Copy List
+>>>>
+
+=== masher.py, 6808
+Masters for %s:
+>>>>
+
+=== masher.py, 6831
+Update
+>>>>
+
+=== masher.py, 6847
+Sync to Load ESMs
+>>>>
+
+=== masher.py, 6849
+Sync to Load List
+>>>>
+
+=== masher.py, 6894
+Change to...
+>>>>
+
+=== masher.py, 6905
+Change master name to:
+>>>>
+
+=== masher.py, 6915
+File must be selected from Morrowind Data Files directory.
+>>>>
+
+=== masher.py, 6935
+Next Shot...
+>>>>
+
+=== masher.py, 6971
+Convert to jpg
+>>>>
+
+=== masher.py, 6979
+Converting to Jpg
+>>>>
+
+=== masher.py, 7007
+Rename...
+>>>>
+
+=== masher.py, 7016
+Enter new name. E.g. Screenshot 123.bmp
+>>>>
+
+=== masher.py, 7017
+Rename Files
+>>>>
+
+=== masher.py, 7023
+Bad extension or file root:
+>>>>
+
+=== masher.py, 7053
+Launch Morrowind
+>>>>
+
+=== masher.py, 7084
+Auto-Quit Disabled
+>>>>
+
+=== masher.py, 7084
+Auto-Quit Enabled
+>>>>
+
+=== masher.py, 7111
+Help File
+>>>>
+
+=== masher.py, 7132
+Settings Window
+>>>>
+
+=== masher.py, 7172
+Modify
+>>>>
+
+=== masher.py, 7187
+New
+>>>>
+
+=== masher.py, 7267
+Sort by
+>>>>
+
+=== masher.py, 7342
+Load
+>>>>
+
+=== masher.py, 7346
+Mlox
+>>>>
+
+=== masher.py, 7350
+Tes3cmd
+>>>>
+
+=== masher.py, 7381
+File
+>>>>
+
+=== masher.py, 7395
+Group
+>>>>
+
+=== masher.py, 7399
+Rating
+>>>>
+
+=== masher.py, 7405
+Export
+>>>>
+
+=== masher.py, 7410
+Import
+>>>>
+
+=== masher.py, 7421
+Tes3Cmd
+>>>>
+
+=== masher.py, 7446
+Profile
+>>>>
+
+=== exception.py, 66
+Action skipped by user.
+>>>>
+
+=== gui\__init__.py, 293
+Delete these items? This operation cannot be undone.
+>>>>
+
+=== gui\__init__.py, 295
+Delete Items
+>>>>
+
+=== gui\dialog.py, 37
+Progress
+>>>>
+
+=== gui\dialog.py, 47
+Dialog already destroyed.
+>>>>
+
+=== gui\dialog.py, 67
+Choose a directory.
+>>>>
+
+=== gui\dialog.py, 80
+Warning
+>>>>
+
+=== gui\dialog.py, 92
+Don't show this in the future.
+>>>>
+
+=== gui\dialog.py, 138
+Information
+>>>>
+
+=== gui\dialog.py, 156
+Error
+>>>>
+
+=== gui\helpbrowser.py, 150
+Help
+>>>>
+
+=== gui\settings.py, 62
+Wrye Mash Settings
+>>>>
+
+=== gui\settings.py, 69
+Ok
+>>>>
+
+=== gui\settings.py, 70
+Cancel
+>>>>
+
+=== gui\settings.py, 72
+...
+>>>>
+
+=== gui\settings.py, 74
+Morrowind directory
+>>>>
+
+=== gui\settings.py, 82
+Mods installers
+>>>>
+
+=== gui\settings.py, 90
+Data Files
+>>>>
+
+=== gui\utils.py, 326
+Name
+>>>>
+
+=== gui\utils.py, 328
+Program
+>>>>
+
+=== gui\utils.py, 331
+Browse for a program.
+>>>>
+
+=== gui\utils.py, 332
+Arguments
+>>>>
+
+=== gui\utils.py, 334
+Description
+>>>>
+
+=== gui\utils.py, 337
+OK
+>>>>
+
+=== gui\utils.py, 369
+Chose the new utility.
+>>>>
+
