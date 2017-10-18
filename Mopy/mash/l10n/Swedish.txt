@@ -305,7 +305,7 @@ Missing master:
 === masher.py, 1162
 Must be sorted by Modified to enable ctrl based sorting.
 >>>>
-Debe tener el texto aquí <<-- Replace this with Swedish text
+Ctrl baserad sortering måste vara modifierad
 
 === masher.py, 1287
 Morrowind Mod File
