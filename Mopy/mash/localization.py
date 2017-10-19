@@ -27,6 +27,7 @@ import os
 import re
 import cPickle
 import sys
+import codecs
 
 import chardet
 
@@ -221,8 +222,9 @@ def formatDate(value):
 bUseUnicode = False
 bUseUTF8 = False
 if os.path.exists('mash.ini'):
-    mashIni = ConfigParser.ConfigParser()
-    mashIni.read('mash.ini')
+    mashIni = ConfigParser.SafeConfigParser()
+    with codecs.open('mash.ini', 'r', encoding='utf-8') as f:
+        mashIni.readfp(f)
     for section in mashIni.sections():
         options = mashIni.items(section)
         for key, value in options:

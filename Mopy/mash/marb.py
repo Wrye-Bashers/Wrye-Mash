@@ -24,6 +24,7 @@
 import ConfigParser
 import os
 import sys
+import codecs
 #from os.path import join as jo
 
 import wx
@@ -159,11 +160,12 @@ def initDirs():
     if not conf.settings['mwDirParent']:
         conf.settings['mwDirParent'] = conf.settings['mwDir'].split('\\Morrowind')[0]
 
-
-
+    # Read the INI with UTF8
+    # TODO Look for a way to detect if it is UTF8 and when it is not read normally
     if GPath('mash.ini').exists():
-        mashIni = ConfigParser.ConfigParser()
-        mashIni.read('mash.ini')
+        mashIni = ConfigParser.SafeConfigParser()
+        with codecs.open('mash.ini', 'r', encoding='utf-8') as f:
+            mashIni.readfp(f)
     # --Installers
     if mashIni and mashIni.has_option('General', 'sInstallersDir'):
         conf.dirs['installers'] = GPath(mashIni.get('General', 'sInstallersDir').strip())

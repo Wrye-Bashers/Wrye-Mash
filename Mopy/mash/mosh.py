@@ -43,6 +43,7 @@ import string
 import struct
 import sys
 import stat
+import codecs
 
 from localization import _, formatInteger, formatDate, encode, decode, \
     sys_fs_enc, pref_encoding
@@ -4465,8 +4466,9 @@ class InstallersData(bolt.TankData, DataDict):
         mash_ini = False
         if not GPath(bolt.Path(conf.settings['mopyDir']).join('mash.ini').s).exists():
             if GPath('mash.ini').exists():
-                mashIni = ConfigParser.ConfigParser()
-                mashIni.read('mash.ini')
+                mashIni = ConfigParser.SafeConfigParser()
+                with codecs.open('mash.ini', 'r', encoding='utf-8') as f:
+                    mashIni.readfp(f)
                 mash_ini = True
                 instPath = GPath(mashIni.get('General', 'sInstallersDir').strip()).s
             else:
