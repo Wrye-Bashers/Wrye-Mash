@@ -39,7 +39,7 @@ from binascii import crc32
 from functools import partial
 
 import exception
-from localization import encode, decode, formatInteger, formatDate
+from localization import mash_encode, mash_decode, formatInteger, formatDate
 
 # LowStrings ------------------------------------------------------------------
 class LString(object):
@@ -123,7 +123,7 @@ def GPath(name):
     elif isinstance(name, unicode):
         norm = os.path.normpath(name)
     else:
-        norm = os.path.normpath(decode(name))
+        norm = os.path.normpath(mash_decode(name))
     path = _gpaths.get(norm)
     if path is not None:
         return path
@@ -171,7 +171,7 @@ class Path(object):
         elif not name:
             return name
         elif isinstance(name, str):
-            name = decode(name)
+            name = mash_decode(name)
         return os.path.normpath(name)
 
     @staticmethod
@@ -180,7 +180,7 @@ class Path(object):
         if not name:
             return name
         if isinstance(name, str):
-            name = decode(name)
+            name = mash_decode(name)
         return os.path.normcase(os.path.normpath(name))
 
     @staticmethod
@@ -219,7 +219,7 @@ class Path(object):
         """Used by unpickler. Reconstruct _cs."""
         # Older pickle files stored filename in str, not unicode
         if not isinstance(norm, unicode):
-            norm = decode(norm)
+            norm = mash_decode(norm)
         self._s = norm
         self._cs = os.path.normcase(self._s)
 

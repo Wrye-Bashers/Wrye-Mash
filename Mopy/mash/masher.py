@@ -43,7 +43,7 @@ from wx.lib.mixins.listctrl import ListCtrlAutoWidthMixin
 from wx.lib.evtmgr import eventManager
 import wx.html
 
-from localization import _, formatInteger, formatDate, encode, decode, \
+from localization import _, formatInteger, formatDate, mash_encode, mash_decode, \
     sys_fs_enc, pref_encoding, bUseUTF8
 
 import mosh

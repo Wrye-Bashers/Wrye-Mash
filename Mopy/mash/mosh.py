@@ -45,7 +45,7 @@ import sys
 import stat
 import codecs
 
-from localization import _, formatInteger, formatDate, encode, decode, \
+from localization import _, formatInteger, formatDate, mash_encode, mash_decode, \
     sys_fs_enc, pref_encoding
 from conf import dirs
 
@@ -2282,7 +2282,7 @@ class MWIniFile:
                 if line:
                     self.postLoadLines.append(line)
                 break
-            loadFile = decode(maLoadFile.group(1), 'utf8')
+            loadFile = mash_decode(maLoadFile.group(1), 'utf8')
             loadPath = os.path.join(self.ini_dir, u'Data Files', loadFile)
             loadExt = os.path.splitext(loadPath)[-1].lower()
             if len(self.loadFiles) == 255:
@@ -2310,7 +2310,7 @@ class MWIniFile:
         out.write("[Game Files]" + self.loadFilesComment + "\n")
         for loadDex in range(len(self.loadFiles)):
             loadFile = self.loadFiles[loadDex]
-            out.write('GameFile{:d}={!s}\n'.format(loadDex, encode(loadFile, firstEncoding='utf8')))
+            out.write('GameFile{:d}={!s}\n'.format(loadDex, mash_encode(loadFile, firstEncoding='utf8')))
         for line in self.postLoadLines:
             out.write(line)
         out.close()
@@ -3775,7 +3775,7 @@ class Installer(object):
             progress(0, _("%s: Calculating CRCs...\n") % rootName)
             progress.setFull(1 + len(pending))
             try:
-                us = decode(rpFile.s, 'utf8')
+                us = mash_decode(rpFile.s, 'utf8')
             except TypeError:
                 us = rpFile.s
             for index, rpFile in enumerate(sorted(pending)):
@@ -4149,7 +4149,7 @@ class InstallerArchive(Installer):
         file = size = crc = isdir = 0
         ins = os.popen('7z.exe l -slt "%s"' % archive.s, 'rt')
         for line in ins:
-            line = encode(line, firstEncoding=sys_fs_enc)
+            line = mash_encode(line, firstEncoding=sys_fs_enc)
             maList = reList.match(line)
             if maList:
                 key, value = maList.groups()

@@ -82,7 +82,7 @@ def _getbestencoding(bitstream):
     return encoding_, confidence
 
 
-def decode(byte_str, encoding=None, avoidEncodings=()):
+def mash_decode(byte_str, encoding=None, avoidEncodings=()):
     if isinstance(byte_str, unicode) or byte_str is None:
         return byte_str
     # Try the user specified encoding first
@@ -107,7 +107,7 @@ def decode(byte_str, encoding=None, avoidEncodings=()):
             pass
     raise UnicodeDecodeError(u'Text could not be decoded using any method')
 
-def encode(text_str, encodings=encodingOrder, firstEncoding=None,
+def mash_encode(text_str, encodings=encodingOrder, firstEncoding=None,
     returnEncoding=False):
     if isinstance(text_str, str) or text_str is None:
         if returnEncoding:
@@ -203,7 +203,7 @@ def compileTranslator(txtPath, pklPath):
 
 def formatInteger(value):
     """Convert integer to string formatted to locale."""
-    return decode(locale.format('%d', int(value), True),
+    return mash_decode(locale.format('%d', int(value), True),
         locale.getpreferredencoding())
 
 
@@ -215,7 +215,7 @@ def formatDate(value):
         local = time.gmtime(value)
         # deprint(u'Timestamp %d failed to convert to local, using %s' % (
         #     value, local))
-    return decode(time.strftime('%c', local), locale.getpreferredencoding())
+    return mash_decode(time.strftime('%c', local), locale.getpreferredencoding())
 
 
 # Localization ----------------------------------------------------------------

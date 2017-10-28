@@ -31,7 +31,7 @@ import shutil as _shutil
 import stat
 import struct
 
-from localization import _, encode, decode
+from localization import _, mash_encode, mash_decode
 from bolt import GPath, deprint, Path
 from exception import BoltError, CancelError, SkipError, AccessDeniedError, \
     DirectoryFileCollisionError, InvalidPathsError, FileOperationError, \
@@ -148,7 +148,7 @@ def __get_error_info():
                                 for key in sorted(envDefs))
     except UnicodeDecodeError:
         deprint(u'Error decoding _os.environ', traceback=True)
-        sErrorInfo = u'\n'.join(u'  %s: %s' % (key, decode(envDefs[key]))
+        sErrorInfo = u'\n'.join(u'  %s: %s' % (key, mash_decode(envDefs[key]))
                                 for key in sorted(envDefs))
     return sErrorInfo
 
