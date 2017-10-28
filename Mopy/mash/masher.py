@@ -1369,9 +1369,9 @@ class ModDetails(wx.Window):
             modInfo = self.modInfo = mosh.modInfos[fileName]
             # --Remember values for edit checks
             self.fileStr = modInfo.name
-            self.authorStr = decode(modInfo.tes3.hedr.author)
+            self.authorStr = mash_decode(modInfo.tes3.hedr.author)
             self.modifiedStr = formatDate(modInfo.mtime)
-            self.descriptionStr = decode(modInfo.tes3.hedr.description)
+            self.descriptionStr = mash_decode(modInfo.tes3.hedr.description)
             self.versionStr = u'v{:0.1f}'.format(modInfo.tes3.hedr.version)
         # --Set fields
         self.file.SetValue(self.fileStr)
@@ -1472,8 +1472,8 @@ class ModDetails(wx.Window):
         # --Change Tests
         changeName = (self.fileStr != modInfo.name)
         changeDate = (self.modifiedStr != formatDate(modInfo.mtime))
-        changeHedr = ((self.authorStr != modInfo.tes3.hedr.author) or
-                      (self.descriptionStr != modInfo.tes3.hedr.description))
+        changeHedr = ((self.authorStr != mash_decode(modInfo.tes3.hedr.author)) or
+                      (self.descriptionStr != mash_decode(modInfo.tes3.hedr.description)))
         changeMasters = self.masters.edited
         # --Only change date?
         if changeDate and not (changeName or changeHedr):
