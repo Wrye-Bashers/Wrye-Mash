@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
 # GPL License and Copyright Notice ============================================
@@ -1999,7 +2000,8 @@ class Tes3_Hedr(SubRecord):
             raise exception.StateError(_(u'Data undefined: ') + self.name)
         if not self.changed:
             return self.size
-        self.description = winNewLines(self.description)
+        self.description = mash_encode(winNewLines(self.description))
+        self.author =  mash_encode(winNewLines(self.author))
         self.data = struct.pack('fi32s256si',
             self.version,
             self.fileType,
