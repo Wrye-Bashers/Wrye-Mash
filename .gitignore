@@ -347,3 +347,5 @@ build/
 /Mopy/mash/mlox/mlox_rules_guide.txt
 /Mopy/mash/mlox/mlox_new_loadorder.out
 /Mopy/mash/mlox/current_loadorder.out
+/Mopy/mlox
+!/Mopy/mlox/mlox.py
