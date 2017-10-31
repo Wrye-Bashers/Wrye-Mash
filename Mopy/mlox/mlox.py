@@ -19,6 +19,8 @@ import traceback
 from pprint import PrettyPrinter
 from getopt import getopt, GetoptError
 import cPickle
+import ConfigParser
+
 
 class dynopt(dict):
     def __getattr__(self, item):
@@ -211,10 +213,12 @@ class caseless_dirlist:
             return(os.path.join(self.dir, self.files[f]))
         return(None)
 
-    def find_parent_dir(self, file):
+    def find_parent_dir(self, file, search_dir=None):
         """return the caseless_dirlist of the directory that contains file,
         starting from self.dir and working back towards root."""
         path = self.dir
+        if search_dir:
+            path = search_dir
         prev = None
         while path != prev:
             dl = caseless_dirlist(path)
@@ -230,6 +234,21 @@ class caseless_dirlist:
     def filelist(self):
         return(self.files.values())
 
+    def read_mash_ini(self):
+        current_dir = os.getcwd()
+        current_path = os.path.dirname(os.path.realpath(__file__))
+        current_path = os.path.split(current_path)[0]
+        os.chdir(current_path)
+        current_path = os.path.join(current_path, 'mash.ini')
+        if os.path.exists(current_path):
+            mashIni = ConfigParser.SafeConfigParser()
+        with codecs.open('mash.ini', 'r', encoding='utf-8') as f:
+            mashIni.readfp(f)
+        os.chdir(current_dir)
+        if mashIni and mashIni.has_option('General', 'sMorrowindPath'):
+            return mashIni.get('General', 'sMorrowindPath').strip()
+        else:
+            return None
 
 # Utility functions
 Lang = locale.getdefaultlocale()[0]
@@ -1053,6 +1072,9 @@ class loadorder:
     def find_game_dirs(self):
         cwd = caseless_dirlist() # start our search in our current directory
         self.gamedir = cwd.find_parent_dir("Morrowind.exe")
+        if self.gamedir == None:
+            mash_ini_mwDir = codecs.encode(cwd.read_mash_ini())
+            self.gamedir = cwd.find_parent_dir("Morrowind.exe", search_dir=mash_ini_mwDir)
         if self.gamedir != None:
             Opt._Game = "Morrowind" # we found Morrowind.exe
             self.datadir = caseless_dirlist(self.gamedir.find_path("Data Files"))
