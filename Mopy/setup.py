@@ -174,7 +174,7 @@ setup(
 from distutils import dir_util
 
 dir_util.copy_tree('..\\Data Files', '..\\bin\\Data Files')
-folds = ['Data', 'Extras', 'images', 'locale']
+folds = ['Data', 'Extras', 'images', 'l10n']
 for fold in folds:
     dir_util.copy_tree(fold, dest_folder + '\\%s' % fold)
 
