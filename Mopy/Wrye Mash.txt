@@ -135,7 +135,7 @@
     * Status icons and hilight colors.
     * Toolbar/launcher buttons.
 
-== Updating to Wrye Mash Standalone v87 or higher
+== Updating From Previous Version
 
 __Remove the following three files:__
 * mash.exe
@@ -143,7 +143,19 @@ __Remove the following three files:__
 * MSVCR71.dll
 
 == Wrye Mash Settings
+<img src="images/settings.jpg" width="475" height="245" border="0" alt="Settings Window">
 
+The Installers and Installers Data folders have been updated. However, you can specify the old location if you choose.
+
+__Old locations__
+
+* [Path]\Morrowind Mods\Bash (installers.dat)
+* [Path]\Morrowind Mods\Bash Installers (All installers *.zip, *.rar, *.7z)
+
+__New locations__
+
+* [Path]\Morrowind Mods\Installers Data (installers.dat)
+* [Path]\Morrowind Mods\Mash Installers (All installers *.zip, *.rar, *.7z)
 
 == Installation ===============================================================
 === Get and Install

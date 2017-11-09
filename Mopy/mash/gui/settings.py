@@ -36,14 +36,15 @@ from ..localization import _, formatInteger, formatDate
 
 import wx
 
-from ..mosh import GPath
+from ..mosh import GPath, Path
 from ..conf import dirs
 from .. import conf
 
 dataMap = {
-    "Inst"   : "installers",
-    "Mw"     : "app",
-    "DataDir": "mods",
+    "Inst"    : "installers",
+    "InstData": "installersData",
+    "Mw"      : "app",
+    "DataDir" : "mods",
 }
 
 class SettingsWindow(wx.MiniFrame):
@@ -52,7 +53,7 @@ class SettingsWindow(wx.MiniFrame):
     init = True
     settings_var = None
 
-    def __init__(self, parent=None, id=-1, size=(475, 250),
+    def __init__(self, parent=None, id=-1, size=(475, 350),
         pos=wx.DefaultPosition,
         style=wx.DEFAULT_FRAME_STYLE, settings=None):
         """..."""
@@ -71,7 +72,7 @@ class SettingsWindow(wx.MiniFrame):
 
         btnBrowseMw = wx.Button(p, wx.ID_OPEN, _(u"..."), size=(-1, -1),
             name=u"btnBrowseMw")
-        boxMwDir = wx.StaticBox(p, -1, _(u"Morrowind directory"))
+        boxMwDir = wx.StaticBox(p, -1, _(u"Morrowind directory (Morrowind.exe)"))
         self.fldMw = wx.TextCtrl(p, -1, name=u"fldMw")
         sizerBoxMwDir = wx.StaticBoxSizer(boxMwDir, wx.HORIZONTAL)
         sizerBoxMwDir.AddMany(
@@ -79,7 +80,7 @@ class SettingsWindow(wx.MiniFrame):
 
         btnBrowseInst = wx.Button(p, wx.ID_OPEN, _(u"..."), size=(-1, -1),
             name=u"btnBrowseInst")
-        boxInst = wx.StaticBox(p, -1, _(u"Mods installers"))
+        boxInst = wx.StaticBox(p, -1, _(u"Mods installers (*.rar, *.zip, *.7z)"))
         self.fldInst = wx.TextCtrl(p, -1, name=u"fldInst")
         sizerBoxInstallersDir = wx.StaticBoxSizer(boxInst, wx.HORIZONTAL)
         sizerBoxInstallersDir.AddMany(
@@ -87,16 +88,25 @@ class SettingsWindow(wx.MiniFrame):
 
         btnBrowseDataDir = wx.Button(p, wx.ID_OPEN, _(u"..."), size=(-1, -1),
             name=u"btnBrowseDataDir")
-        boxDataDir = wx.StaticBox(p, -1, _(u"Data Files"))
+        boxDataDir = wx.StaticBox(p, -1, _(u"Data Files (*.esp, *.esm)"))
         self.fldDataDir = wx.TextCtrl(p, -1, name=u"fldDataDir")
         sizerBoxDataDir = wx.StaticBoxSizer(boxDataDir, wx.HORIZONTAL)
         sizerBoxDataDir.AddMany(
             [(self.fldDataDir, 1, wx.EXPAND), ((2, 0)), (btnBrowseDataDir, 0)])
 
+        btnBrowseInstData = wx.Button(p, wx.ID_OPEN, _(u"..."), size=(-1, -1),
+            name=u"btnBrowseInstData")
+        boxInstData = wx.StaticBox(p, -1, _(u"Installer Data (installers.dat)"))
+        self.fldInstData = wx.TextCtrl(p, -1, name=u"fldInstData")
+        sizerBoxInstData = wx.StaticBoxSizer(boxInstData, wx.HORIZONTAL)
+        sizerBoxInstData.AddMany(
+            [(self.fldInstData, 1, wx.EXPAND), ((2, 0)), (btnBrowseInstData, 0)])
+
         sizerFields = wx.BoxSizer(wx.VERTICAL)
         sizerFields.AddMany([
             (sizerBoxMwDir,         0, wx.EXPAND), ((0, 2)),
             (sizerBoxInstallersDir, 0, wx.EXPAND), ((0, 2)),
+            (sizerBoxInstData, 0, wx.EXPAND), ((0, 2)),
             (sizerBoxDataDir, 0, wx.EXPAND)
         ])
         sizerBtn = wx.BoxSizer(wx.HORIZONTAL)
@@ -140,11 +150,15 @@ class SettingsWindow(wx.MiniFrame):
     def OnOk(self, event):
         """Ok button handler."""
         self.settings_var["mwDir"] = self.fldMw.GetValue()
+        self.settings_var["installersData"] = self.fldInstData.GetValue()
         for item in self.Panel.GetChildren():
             if item.Name.startswith("fld") == True and item.Name[3:] in dataMap:
                 name = dataMap[item.Name[3:]]
                 if name in dirs:
                     conf.dirs[name] = GPath(item.GetValue())
+        conf.settings['mwDir'] = conf.dirs['app'].s
+        conf.settings['installersData'] = conf.dirs['installersData'].s
+        conf.settings['sInstallersDir'] = conf.dirs['installers'].s
         self.Close()
 
     def Close(self):
@@ -157,6 +171,7 @@ class SettingsWindow(wx.MiniFrame):
         """External settings change."""
         self.settings_var = settings_var
         self.fldMw.SetValue(self.settings_var["mwDir"])
+        self.fldInstData.SetValue(self.settings_var["installersData"])
         if kwargs != {}:
             for a in kwargs.keys():
                 item = getattr(self, "fld{!s}".format(a), None)
