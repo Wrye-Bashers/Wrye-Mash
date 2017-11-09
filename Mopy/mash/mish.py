@@ -340,7 +340,7 @@ def getTranslatorName():
     """Prints locale."""
     import locale
     language = locale.getlocale()[0].split('_', 1)[0]
-    print "Your translator file is: Mopy\\mash\\l10n\\%s.txt" % (language,)
+    print "Your translator file is: Mopy\\l10n\\%s.txt" % (language,)
 
 
 @mainFunction
@@ -349,7 +349,8 @@ def dumpTranslator():
     # --Locale Path
     import locale
     language = locale.getlocale()[0].split('_', 1)[0]
-    outPath = 'l10n\\NEW{!s}.txt'.format(language)
+    cur_dir = os.path.split(os.getcwd())[0]
+    outPath = cur_dir + '\\l10n\\NEW{!s}.txt'.format(language)
     outFile = open(outPath, 'w')
     # --Scan for keys and dump to
     keyCount = 0
