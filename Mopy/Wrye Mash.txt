@@ -135,6 +135,16 @@
     * Status icons and hilight colors.
     * Toolbar/launcher buttons.
 
+== Updating to Wrye Mash Standalone v87 or higher
+
+__Remove the following three files:__
+* mash.exe
+* MSVCP71.dll
+* MSVCR71.dll
+
+== Wrye Mash Settings
+
+
 == Installation ===============================================================
 === Get and Install
 * Wrye Mash is written in [[http://www.python.org/doc/Summary.html|python]] and uses the [[http://wxpython.org/what.php|wxPython GUI library]] to provide the interface. So before you can run Wrye Mash, you'll need to download both of these.
@@ -151,7 +161,7 @@ You can download a standalone EXE that doesn't require Python to be installed.
 . Download link: [[https://github.com/Wrye-Bashers/Wrye-Mash/releases/tag/87|Wrye Mash 87 Standalone]]
 
 === Starting Wrye Mash
-* **Double click** the "Wrye Mash for Python 2.4 (2.5)" shortcut in the Mopy directory.
+* **Double click** the "Wrye Mash.exe" in the Mopy directory.
 * If this doesn't work, see [[#|Non-Standard Morrowind/Python Directories]] or **[[#|If Mash Won't Start]]**.
 
 === Non-Standard Morrowind/Python Directories
