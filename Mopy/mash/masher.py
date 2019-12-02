@@ -32,16 +32,12 @@ import os
 import re
 import shutil
 import string
-import struct
 import sys
-import textwrap
 import time
-import datetime
 from types import *
 
 import wx
 from wx.lib.mixins.listctrl import ListCtrlAutoWidthMixin
-from wx.lib.evtmgr import eventManager
 import wx.html
 
 from localization import _, formatInteger, formatDate, mash_encode, mash_decode, \
