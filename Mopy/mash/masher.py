@@ -36,6 +36,7 @@ import struct
 import sys
 import textwrap
 import time
+import datetime
 from types import *
 
 import wx
@@ -52,7 +53,7 @@ import marb
 from marb import initDirs
 import exception
 import bolt
-from bolt import LString,GPath, SubProgress, Path
+from bolt import LString, GPath, SubProgress, Path
 import balt
 from balt import tooltip, fill, bell, bitmapButton, button, toggleButton, \
     checkBox, staticText, spinCtrl, leftSash, topSash, spacer, hSizer, vSizer, \
@@ -3552,6 +3553,18 @@ class File_Redate(Link):
         except OverflowError:
             gui.dialog.ErrorMessage(self, _('Mash cannot handle dates greater than January 19, 2038.)'))
             return
+        # --Redate Official BSA Files
+        """When installing Morrowind the game will ignore loose files
+        (possibly other BSA files) if the game's BSA files have a newer date.
+        
+        Since the impact of this needs more research this will alter the time
+        date stamp of only the official BSA files."""
+        official_esm_list = ('Morrowind.esm','Bloodmoon.esm','Tribunal.esm')
+        if fileName in official_esm_list:
+            bsa_name = fileName.split('.')[0]+'.bsa'
+            name_path = GPath(fileInfos.dir).join(bsa_name)
+            if os.path.exists(unicode(name_path)):
+                os.utime(unicode(name_path), (newTime, newTime))
         # --Do it
         for fileInfo in selInfos:
             fileInfo.setMTime(newTime)
