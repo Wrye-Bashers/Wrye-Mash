@@ -3554,13 +3554,13 @@ class File_Redate(Link):
             gui.dialog.ErrorMessage(self, _('Mash cannot handle dates greater than January 19, 2038.)'))
             return
         # --Do it
+        official_esm_list = [GPath(s) for s in (
+            'Morrowind.esm', 'Bloodmoon.esm', 'Tribunal.esm')]
         for fileInfo in selInfos:
             # When installing Morrowind the game will ignore loose files
             # (possibly other BSA files) if the game's BSA files have a newer
             # date. Since the impact of this needs more research this will
             # alter the time date stamp of only the official BSA files.
-            official_esm_list = [GPath(s) for s in (
-                'Morrowind.esm', 'Bloodmoon.esm', 'Tribunal.esm')]
             mod_path = GPath(fileInfo.name)
             if mod_path in official_esm_list:
                 bsa_path = GPath(fileInfo.dir).join(mod_path.root + '.bsa')
