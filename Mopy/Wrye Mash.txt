@@ -1,6 +1,6 @@
 = Wrye Mash =====================================================
 * Latest Version: [[https://github.com/Wrye-Bashers/Wrye-Mash/releases | Wrye Mash]]
-* Discussion: [[https://afkmods.iguanadons.net/index.php?/topic/5068-wipz-wrye-mash/ | AFK Mods Forums]]
+* Discussion: [[https://www.afkmods.com/index.php?/topic/5068-wipz-wrye-mash/ | AFK Mods Forums]]
 
 == Contents ===================================================================
 {{CONTENTS=2}}
@@ -143,7 +143,7 @@ __Remove the following three files:__
 * MSVCR71.dll
 
 == Wrye Mash Settings
-<img src="images/settings.jpg" width="475" height="245" border="0" alt="Settings Window">
+<img src="images/settings.jpg" width="475" height="245" alt="Settings Window">
 
 The Installers and Installers Data folders have been updated. However, you can specify the old location if you choose.
 
@@ -159,22 +159,22 @@ __New locations__
 
 == Installation ===============================================================
 === Get and Install
-* Wrye Mash is written in [[http://www.python.org/doc/Summary.html|python]] and uses the [[http://wxpython.org/what.php|wxPython GUI library]] to provide the interface. So before you can run Wrye Mash, you'll need to download both of these.
+* Wrye Mash is written in [[http://www.python.org/doc/Summary.html | python]] and uses the [[http://wxpython.org/what.php | wxPython GUI library]] to provide the interface. So before you can run Wrye Mash, you'll need to download both of these.
 * __Download and Install Python 2.7.12__
-. Download link: [[https://www.python.org/downloads/release/python-2712/|Python 2.7.12]]
+. Download link: [[https://www.python.org/downloads/release/python-2712/ | Python 2.7.12]]
 * __Download and Install wxPython 2.8.0.1 Unicode__
-. Download link: [[https://sourceforge.net/projects/wxpython/files/wxPython/2.8.12.1/wxPython2.8-win32-unicode-2.8.12.1-py27.exe/download|wxPython 2.8.12.1 Unicode for python 2.7]].
+. Download link: [[https://sourceforge.net/projects/wxpython/files/wxPython/2.8.12.1/wxPython2.8-win32-unicode-2.8.12.1-py27.exe/download | wxPython 2.8.12.1 Unicode for python 2.7]].
 * __Unzip Wrye Mash XX.zip:__
 . Unzip the files ~~into your Morrowind installation directory.~~ If you've done this correctly, you'll find mash.py and other mash files under Morrowind\Mopy.
 
 === Wrye Mash Standalone
 You can download a standalone EXE that doesn't require Python to be installed.
-* __Wrye Mash 87 Standalone__
-. Download link: [[https://github.com/Wrye-Bashers/Wrye-Mash/releases/tag/87|Wrye Mash 87 Standalone]]
+* __Wrye Mash 88 Standalone__
+. Download link: [[https://github.com/Wrye-Code-Collection/Wrye-Mash/releases | Wrye Mash 88 Standalone]]
 
 === Starting Wrye Mash
 * **Double click** the "Wrye Mash.exe" in the Mopy directory.
-* If this doesn't work, see [[#|Non-Standard Morrowind/Python Directories]] or **[[#|If Mash Won't Start]]**.
+* If this doesn't work, see [[#|Non-Standard Morrowind/Python Directories]] or <font class="redfont">**[[#|If Mash Won't Start]]**</font>.
 
 === Non-Standard Morrowind/Python Directories
 * **Do this if either Morrowind or Python is in a non-standard directory.**
@@ -188,7 +188,7 @@ You can download a standalone EXE that doesn't require Python to be installed.
 * If **Python** is in a non-standard place. then edit the __Target__ field to be:
   . <code>"[PythonPath]" mash.py</code> **(e.g.** <code>"C:\Python24\pythonw.exe" mash.py</code> **)**
 
-=== <font color=red>If Mash Won't Start</font>
+=== <font class="redfont">If Mash Won't Start</font>
 * **If Mash refuses to start, or quits after quickly flashing up a window...**
 * __Check your Mash Shortcut__
   * Most users who have problems with Mash simply need to tweak the __Start In__ and/or __Target__ fields of the shortcut. (See [[#|Non-Standard Morrowind/Python Directories]] for more info.)
@@ -224,7 +224,7 @@ You can download a standalone EXE that doesn't require Python to be installed.
 == Installers Tab =============================================================
 The Installers tab provides a mod package installer facility (called Bain). It makes mod installation simpler, and perhaps more importantly, it mades mod UN-installation simple and safe. It's also useful for resolving resource file conflicts between different mods.
 
-Bain has been backported from Wrye Bash -- hence the name "Bain", aka Bash Installers.  (Yes, I probably should call it "Main", but that would be too boring.) If you're familiar with Timeslip's OBMM or MWMM, then Bain is fairly similar, but has some substantial advantages (and some disadvantages) compared to them. For a comparison, see [[http://www.uesp.net/wiki/Tes4Mod:Wrye_Bash/Bash_vs._OBMM|Bash vs. OBMM]].
+Bain has been backported from Wrye Bash -- hence the name "Bain", aka Bash Installers.  (Yes, I probably should call it "Main", but that would be too boring.) If you're familiar with Timeslip's OBMM or MWMM, then Bain is fairly similar, but has some substantial advantages (and some disadvantages) compared to them. For a comparison, see [[http://www.uesp.net/wiki/Tes4Mod:Wrye_Bash/Bash_vs._OBMM | Bash vs. OBMM]].
 
 Note that if you have been using the [[#ManageTextureReplacers|Replacers Feature]], then you should upgrade/switch to using Bain instead, since Bain completely supercedes Replacers.
 
@@ -389,7 +389,7 @@ The following commands are available by right clicking on the column header of t
   * __Show Lower Conflicts:__ If checked, then the conflicts report with show conflicts with lower order packages. If you're only interested in higher order conflicts, the uncheck this to remove some clutter from the report.
 
 == Mods Tab ===================================================================
-<img src="images/Wrye Mash_01.png" width="723" height="535" border="0" alt="Mods Tab">
+<img src="images/Wrye Mash_01.png" width="723" height="535" alt="Mods Tab">
 
 === Mods List
 * **Sorting**
@@ -436,8 +436,8 @@ The following commands are available by right clicking on the column header of t
   * While there's rarely a need to edit the masters of a mod, if the need does arise, you can use the masters list to do so. **It is recommended that you be familiar with editing masters of save games before you attempt to edit masters of mods.**
   * For more information, see [[#| Mod Updating]] below.
 
-<img src="images/Wrye Mash_03.png" width="395" height="216" border="0" alt="" align=right>
 === Using Load Lists
+<img src="images/Wrye Mash_03.png" width="395" height="216" alt="Using Load Lists">
 * Aside from using checkboxes to select and unselect mods, you can also use load lists. These are accessed through the column context menu.
 * **None:** Unselects all files.
 * **Save List...** Saves your currently selected files to a new load list.
@@ -446,10 +446,10 @@ The following commands are available by right clicking on the column header of t
   This action is not exclusive, but ~~additive~~ -- i.e., the files will be selected ~~in addition~~ to the currently selected files.
 
 === File Commands
+<img src="images/Wrye Mash_04.png" width="361" height="222" alt="File Commands">
 * **File Operations**
   * **Backup** Create a backup of the file. Note that backups are also automatically created (see "Revert to Backup" below). If you want to be sure that you can late restore from a specific point, use Duplicate or Snapshot instead.
   * **Duplicate** Creates a duplicate of the file in the mods directory.
-<img src="images/Wrye Mash_04.png" width="361" height="222" border="0" alt="" align=right>
   * **Snapshot...** Creates a snapshot copy of the current mod in a subdirectory
     (Mash\Snapshots).
     * Snapshots are indicated by appending to "-l.n.m" to the root of the
@@ -618,7 +618,7 @@ The following commands are available by right clicking on the column header of t
 * See [[#| Doubling]].
 
 == Saves Tab ==================================================================
-<img src="images/Wrye Mash_02.png" width="724" height="534" border="0" alt="Saves Tab">
+<img src="images/Wrye Mash_02.png" width="724" height="534" alt="Saves Tab">
 
 === Saves List
 * **Checkbox Colors**
@@ -749,7 +749,7 @@ The following commands are available by right clicking on the column header of t
 == Doubling ===================================================================
 === Doubling Theory
 * **Full Explanation**
-  * What follows is an extremely abridged summary of the long answer given in [[http://wrye.ufrealms.net/Wrye%20Mash.html" | Wrye Matching]].
+  * What follows is an extremely abridged summary of the long answer given in [[https://wryemusings.com/Wrye%20Mash.html | Wrye Matching]].
 * **Background: Reference Ids**
   * So, you start Morrowind, load your last saved game, and find yourself in Balmora. There on the bridge is the same MCA character. There at your feet is the potion that you just dropped. Over there is the door that you opened. And it occurs to you... How does Morrowind keep track of all this stuff? How does it know ~~this~~ potion is supposed to be here? How does it know ~~that~~ door needs to be open?
   * The answer is **reference ids** -- every object that you see in the game world has an unique numerical id attached to it, defining it. When you load a set of mods (as you do when Morrowind starts up), Morrowind first recreates the world in a "virgin" (i.e. unchanged state). Then, when you load a savegame, it reapplies all the changes that you made -- killing bandits, filling quests, opening doors, moving NPCs, etc. It makes those changes by matching the reference ids stored in the savegame against the reference ids as calculated for the virgin gameworld (i.e. for the the set of loaded mods).
@@ -811,12 +811,12 @@ The following commands are available by right clicking on the column header of t
 
 === Master List Updating
 * **Master/Save/Mod Health**
-  <img src="images/checkbox_red_on.png" width="16" height="16" border="0" alt="Red">
-  <img src="images/checkbox_orange_on.png" width="16" height="16" border="0" alt="Orange">
-  <img src="images/checkbox_yellow_on.png" width="16" height="16" border="0" alt="Yellow">
-  <img src="images/checkbox_green_on.png" width="16" height="16" border="0" alt="Green">
-  <img src="images/checkbox_blue_on.png" width="16" height="16" border="0" alt="Blue">
-  <img src="images/checkbox_purple_on.png" width="16" height="16" border="0" alt="Purple">
+  <img src="images/checkbox_red_on.png" width="16" height="16" alt="Red">
+  <img src="images/checkbox_orange_on.png" width="16" height="16" alt="Orange">
+  <img src="images/checkbox_yellow_on.png" width="16" height="16" alt="Yellow">
+  <img src="images/checkbox_green_on.png" width="16" height="16" alt="Green">
+  <img src="images/checkbox_blue_on.png" width="16" height="16" alt="Blue">
+  <img src="images/checkbox_purple_on.png" width="16" height="16" alt="Purple">
   * In the master list, checkbox colors indicate the "health" of that
     master. Blue is best, red is worst. Green, yellow and orange represent intermediate levels of health.
   * In the saves and mods list, the checkbox color is the same as the least
@@ -869,8 +869,7 @@ The following commands are available by right clicking on the column header of t
     * You can change different existing masters to point to the same new master.
       You might do this if you merged several head mods. (Note that merging may
       cause objectIndex doubling -- so hopefully the merge has been done in such a way as to prevent that.) When the file is saved, these different master references will be merged into a single reference.
-    * If the rename has an Updater associated with it (i.e., from "AoScrye
-      1.1.esp" to "AoScrye 1.15.esp"), then the new name will hilighted in dark green. Otherwise, the rename will be hilighted in pale green. (See [[#| Mod Updating]] above for more information.)
+    * If the rename has an Updater associated with it (i.e., from "AoScrye 1.1.esp" to "AoScrye 1.15.esp"), then the new name will hilighted in dark green. Otherwise, the rename will be hilighted in pale green. (See [[#| Mod Updating]] above for more information.)
   * You can unselect masters that you want removed.
     * Note that this will delete any changes that you made to that objects
       references from your save game.
@@ -909,7 +908,7 @@ The following commands are available by right clicking on the column header of t
   * However, this still leaves the problem of cleaning savegames that are contaminated by older leveled list modifications. Repair All will now (as of version 0.70) do this.
     * Repair All will remove any leveled list in the savegame if more than one master mod has a copy of the list. (Thus unique lists belonging to a single mod may still use script commands.)
   * Note however, that if an older script modifying mod is still present in your load list, it will most likely continue to readd the leveled list back into the savegame. The solution to this is to update/patch the offending mod to no longer use the leveled list script commands.
-  * For more info, including a list of problematic mods (and updates/patches for them) see: [[http://www.uesp.net/wiki/Tes3Mod:Leveled_Lists|UESP Leveled Lists]].
+  * For more info, including a list of problematic mods (and updates/patches for them) see: [[http://www.uesp.net/wiki/Tes3Mod:Leveled_Lists | UESP Leveled Lists]].
 
 == Mish =======================================================================
 Mish is a command line interface to the features of mash. At the moment [5/30/2005], there are a couple of features that you can access from it that you can't access from the GUI. Also, with a bit of python coding you can do some pretty nice useful mangling of tes3 files.
@@ -1107,8 +1106,11 @@ The Mash distribution includes additional files that assist in its operation and
   * Usage: Copy these esps to your Data Files directory, set their dates as desired and then set the dates of your various mods so that they group as desired.
   * Note that ordering is important for many mods. Reversing the order of some mods may cause problems.
 
-== Versions ===================================================================
 {{CONTENTS=0}}
+== Versions ===================================================================
+=== 88 [Minor Update]
+* When choosing Redate with the official files selected, Wrye Mash will set their BSA files to the same date.
+
 === 87 [In Development]
 * Updated 7zip files
 * Wrye Mash will remove plugins from Data Files when uninstalling
@@ -1162,7 +1164,7 @@ The Mash distribution includes additional files that assist in its operation and
 
 === 81 [2/4/2009]
 * [[#|Installers Tab]] **Betaish!**
-  * Please see [[http://www.bethsoft.com/bgsforums/index.php?showtopic=952489|discussion topic]].
+  * Please see [[http://www.bethsoft.com/bgsforums/index.php?showtopic=952489 | discussion topic]].
 
 === 80 [12/24/2008]
 * Minor code performance tweak.
