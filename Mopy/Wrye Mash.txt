@@ -1109,6 +1109,10 @@ The Mash distribution includes additional files that assist in its operation and
 
 == Versions ===================================================================
 {{CONTENTS=0}}
+=== 88 [Minor Update]
+* When choosing Redate with the official files selected, Wrye Mash will set
+  their BSA files to the same date.
+
 === 87 [In Development]
 * Updated 7zip files
 * Wrye Mash will remove plugins from Data Files when uninstalling
