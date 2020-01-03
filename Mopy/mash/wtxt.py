@@ -61,8 +61,97 @@ Contents
 
 # Imports ----------------------------------------------------------------------
 #--Standard
-import os
 import re
+import string
+import sys
+import types
+
+# ------------------------------------------------------------------------------
+class Callables:
+    """A singleton set of objects (typically functions or class instances) that
+    can be called as functions from the command line.
+
+    Functions are called with their arguments, while object instances are called
+    with their method and then their functions. E.g.:
+    * bish afunction arg1 arg2 arg3
+    * bish anInstance.aMethod arg1 arg2 arg3"""
+
+    # --Ctor
+    def __init__(self):
+        """Initialization."""
+        self.callObjs = {}
+
+    # --Add a callable
+    def add(self, callObj, callKey=None):
+        """Add a callable object.
+
+        callObj:
+            A function or class instance.
+        callKey:
+            Name by which the object will be accessed from the command line.
+            If callKey is not defined, then callObj.__name__ is used."""
+        callKey = callKey or callObj.__name__
+        self.callObjs[callKey] = callObj
+
+    # --Help
+    def printHelp(self, callKey):
+        """Print help for specified callKey."""
+        print help(self.callObjs[callKey])
+
+    # --Main
+    def main(self):
+        callObjs = self.callObjs
+        # --Call key, tail
+        callParts = string.split(sys.argv[1], '.', 1)
+        callKey = callParts[0]
+        callTail = (len(callParts) > 1 and callParts[1])
+        # --Help request?
+        if callKey == '-h':
+            self.printHelp(self)
+            return
+        # --Not have key?
+        if callKey not in callObjs:
+            print "Unknown function/object:", callKey
+            return
+        # --Callable
+        callObj = callObjs[callKey]
+        if type(callObj) == types.StringType:
+            callObj = eval(callObj)
+        if callTail:
+            callObj = eval('callObj.' + callTail)
+        # --Args
+        args = sys.argv[2:]
+        # --Keywords?
+        keywords = {}
+        argDex = 0
+        reKeyArg = re.compile(r'^\-(\D\w+)')
+        reKeyBool = re.compile(r'^\+(\D\w+)')
+        while argDex < len(args):
+            arg = args[argDex]
+            if reKeyArg.match(arg):
+                keyword = reKeyArg.match(arg).group(1)
+                value = args[argDex + 1]
+                keywords[keyword] = value
+                del args[argDex:argDex + 2]
+            elif reKeyBool.match(arg):
+                keyword = reKeyBool.match(arg).group(1)
+                keywords[keyword] = 1
+                del args[argDex]
+            else:
+                argDex = argDex + 1
+        # --Apply
+        apply(callObj, args, keywords)
+
+
+# --Callables Singleton
+callables = Callables()
+
+
+def mainFunction(func):
+    """A function for adding functions to callables."""
+    callables.add(func)
+    return func
+
 
 # Data ------------------------------------------------------------------------
 htmlHead = """
@@ -94,6 +183,7 @@ BODY { background-color: #ffffcc; }
 """
 
 # Conversion ------------------------------------------------------------------
+@mainFunction
 def genHtml(srcFile, outFile=None, cssDir=''):
     """Generates an html file from a wtxt file. CssDir specifies a directory to search for css files."""
     if not outFile:
@@ -102,7 +192,7 @@ def genHtml(srcFile, outFile=None, cssDir=''):
     # Setup ---------------------------------------------------------
     # --Headers
     reHead = re.compile(r'(=+) *(.+)')
-    headFormat = "<h%d><a name='%s'>%s</a></h%d>\n"
+    headFormat = '<h%d class="header%d" id="%s">%s</h%d>\n'
     # --List
     reList = re.compile(r'( *)([-!?\.\+\*o]) (.*)')
     # --Misc. text
@@ -165,12 +255,14 @@ def genHtml(srcFile, outFile=None, cssDir=''):
     inFileRoot = re.sub('\.[a-zA-Z]+$', '', srcFile)
     # --Init
     outLines = []
-    contents = []
-    addContents = 0
+    contents = [] # The list variable for the Table of Contents
+    addContents = 0 # When set to 0 headers are not added to the TOC
     inPre = False
     isInParagraph = False
+    htmlIDSet = list()
     # --Read source file --------------------------------------------------
     ins = file(srcFile)
+    dupeEntryCount = 1
     for line in ins:
         isInParagraph, wasInParagraph = False, isInParagraph
         # --Preformatted? -----------------------------
@@ -205,8 +297,15 @@ def genHtml(srcFile, outFile=None, cssDir=''):
             text = re.sub(' *=*#?$', '', text.strip())
             anchor = reWd.sub('', text)
             level = len(lead)
-            line = headFormat % (level, anchor, text, level)
-            if addContents: contents.append((level, anchor, text))
+            if not htmlIDSet.count(anchor):
+                htmlIDSet.append(anchor)
+            else:
+                anchor += str(dupeEntryCount)
+                htmlIDSet.append(anchor)
+                dupeEntryCount += 1
+            line = headFormat % (level, level, anchor, text, level)
+            if addContents:
+                contents.append((level, anchor, text))
             # --Title?
             if not title and level <= 2: title = text
         # --List item
@@ -219,8 +318,8 @@ def genHtml(srcFile, outFile=None, cssDir=''):
             elif bullet == '*':
                 bullet = '&bull;'
             level = len(spaces) / 2 + 1
-            line = spaces + '<p class=list-' + `level` + '>' + bullet + '&nbsp; '
-            line = line + text + '\n'
+            line = spaces + '<p class="list-' + `level` + '">' + bullet + '&nbsp; '
+            line = line + text + '</p>\n'
         # --HRule
         elif maHRule:
             line = '<hr>\n'
@@ -283,5 +382,8 @@ def genHtml(srcFile, outFile=None, cssDir=''):
                 didContents = True
         else:
             out.write(line)
-    out.write('</body>\n</html>\n')
+    out.write('</div>\n</section>\n')
     out.close()
+
+if __name__ == '__main__':
+        callables.main()
